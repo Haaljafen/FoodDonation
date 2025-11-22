@@ -30,12 +30,60 @@
                             <constraint firstItem="ySs-1c-Ca6" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="24" id="d3h-Fk-eH9"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" image="list.bullet" catalog="system" id="DnH-0C-pGe"/>
+                    <tabBarItem key="tabBarItem" title="List" image="list.bullet" catalog="system" id="DnH-0C-pGe"/>
                     <navigationItem key="navigationItem" id="5eo-Xb-pmJ"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-64" y="-324"/>
+            <point key="canvasLocation" x="-201" y="-376"/>
+        </scene>
+        <!--History-->
+        <scene sceneID="ekb-RS-Mmh">
+            <objects>
+                <viewController title="History" id="UAP-WR-Vyr" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="v2k-r6-D9k">
+                        <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="vqT-FI-gpH"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="History" image="clock" catalog="system" id="1Nd-Wg-Z2U"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="NWf-D0-ghB" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="815" y="-376"/>
+        </scene>
+        <!--Impact-->
+        <scene sceneID="mSC-WR-1Lh">
+            <objects>
+                <viewController id="gnT-sL-KPf" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="nMf-6s-CBN">
+                        <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="E8W-mf-H61"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Impact" image="chart.xyaxis.line" catalog="system" id="svX-Rh-vhF"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eTD-wH-DrF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1737" y="-376"/>
+        </scene>
+        <!--Profile-->
+        <scene sceneID="B6Z-pb-666">
+            <objects>
+                <viewController id="5px-db-CjM" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="SwE-gW-zcF">
+                        <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="NRK-Dl-0U6"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Profile" image="person.fill" catalog="system" id="Aqn-XB-2VX"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BYH-wT-KZd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2670" y="-376"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="EXR-TJ-YzA">
@@ -48,15 +96,21 @@
                     </tabBar>
                     <connections>
                         <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="lqz-RI-dhg"/>
+                        <segue destination="UAP-WR-Vyr" kind="relationship" relationship="viewControllers" id="ng6-yo-xQy"/>
+                        <segue destination="gnT-sL-KPf" kind="relationship" relationship="viewControllers" id="8Bg-W6-mIu"/>
+                        <segue destination="5px-db-CjM" kind="relationship" relationship="viewControllers" id="PeS-mm-mEH"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="r5v-Et-XV4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="815" y="-1159"/>
+            <point key="canvasLocation" x="1343" y="-1167"/>
         </scene>
     </scenes>
     <resources>
+        <image name="chart.xyaxis.line" catalog="system" width="128" height="102"/>
+        <image name="clock" catalog="system" width="128" height="123"/>
         <image name="list.bullet" catalog="system" width="128" height="87"/>
+        <image name="person.fill" catalog="system" width="128" height="120"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

@@ -24,18 +24,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		324258E42EC906CF008A2654 /* Project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Project.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		324258FA2EC906D0008A2654 /* ProjectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProjectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		324259042EC906D0008A2654 /* ProjectUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProjectUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		324258E42EC906CF008A2654 /* Takaffal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Takaffal.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		324258FA2EC906D0008A2654 /* TakaffalTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TakaffalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		324259042EC906D0008A2654 /* TakaffalUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TakaffalUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		3242590C2EC906D0008A2654 /* Exceptions for "Project" folder in "Project" target */ = {
+		3242590C2EC906D0008A2654 /* Exceptions for "Project" folder in "Takaffal" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 324258E32EC906CF008A2654 /* Project */;
+			target = 324258E32EC906CF008A2654 /* Takaffal */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -43,7 +43,7 @@
 		324258E62EC906CF008A2654 /* Project */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				3242590C2EC906D0008A2654 /* Exceptions for "Project" folder in "Project" target */,
+				3242590C2EC906D0008A2654 /* Exceptions for "Project" folder in "Takaffal" target */,
 			);
 			path = Project;
 			sourceTree = "<group>";
@@ -98,9 +98,9 @@
 		324258E52EC906CF008A2654 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				324258E42EC906CF008A2654 /* Project.app */,
-				324258FA2EC906D0008A2654 /* ProjectTests.xctest */,
-				324259042EC906D0008A2654 /* ProjectUITests.xctest */,
+				324258E42EC906CF008A2654 /* Takaffal.app */,
+				324258FA2EC906D0008A2654 /* TakaffalTests.xctest */,
+				324259042EC906D0008A2654 /* TakaffalUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -108,9 +108,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		324258E32EC906CF008A2654 /* Project */ = {
+		324258E32EC906CF008A2654 /* Takaffal */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3242590D2EC906D0008A2654 /* Build configuration list for PBXNativeTarget "Project" */;
+			buildConfigurationList = 3242590D2EC906D0008A2654 /* Build configuration list for PBXNativeTarget "Takaffal" */;
 			buildPhases = (
 				324258E02EC906CF008A2654 /* Sources */,
 				324258E12EC906CF008A2654 /* Frameworks */,
@@ -123,16 +123,16 @@
 			fileSystemSynchronizedGroups = (
 				324258E62EC906CF008A2654 /* Project */,
 			);
-			name = Project;
+			name = Takaffal;
 			packageProductDependencies = (
 			);
 			productName = Project;
-			productReference = 324258E42EC906CF008A2654 /* Project.app */;
+			productReference = 324258E42EC906CF008A2654 /* Takaffal.app */;
 			productType = "com.apple.product-type.application";
 		};
-		324258F92EC906D0008A2654 /* ProjectTests */ = {
+		324258F92EC906D0008A2654 /* TakaffalTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 324259122EC906D0008A2654 /* Build configuration list for PBXNativeTarget "ProjectTests" */;
+			buildConfigurationList = 324259122EC906D0008A2654 /* Build configuration list for PBXNativeTarget "TakaffalTests" */;
 			buildPhases = (
 				324258F62EC906D0008A2654 /* Sources */,
 				324258F72EC906D0008A2654 /* Frameworks */,
@@ -146,16 +146,16 @@
 			fileSystemSynchronizedGroups = (
 				324258FD2EC906D0008A2654 /* ProjectTests */,
 			);
-			name = ProjectTests;
+			name = TakaffalTests;
 			packageProductDependencies = (
 			);
 			productName = ProjectTests;
-			productReference = 324258FA2EC906D0008A2654 /* ProjectTests.xctest */;
+			productReference = 324258FA2EC906D0008A2654 /* TakaffalTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		324259032EC906D0008A2654 /* ProjectUITests */ = {
+		324259032EC906D0008A2654 /* TakaffalUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 324259152EC906D0008A2654 /* Build configuration list for PBXNativeTarget "ProjectUITests" */;
+			buildConfigurationList = 324259152EC906D0008A2654 /* Build configuration list for PBXNativeTarget "TakaffalUITests" */;
 			buildPhases = (
 				324259002EC906D0008A2654 /* Sources */,
 				324259012EC906D0008A2654 /* Frameworks */,
@@ -169,11 +169,11 @@
 			fileSystemSynchronizedGroups = (
 				324259072EC906D0008A2654 /* ProjectUITests */,
 			);
-			name = ProjectUITests;
+			name = TakaffalUITests;
 			packageProductDependencies = (
 			);
 			productName = ProjectUITests;
-			productReference = 324259042EC906D0008A2654 /* ProjectUITests.xctest */;
+			productReference = 324259042EC906D0008A2654 /* TakaffalUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -199,7 +199,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 324258DF2EC906CF008A2654 /* Build configuration list for PBXProject "Project" */;
+			buildConfigurationList = 324258DF2EC906CF008A2654 /* Build configuration list for PBXProject "Takaffal" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -213,9 +213,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				324258E32EC906CF008A2654 /* Project */,
-				324258F92EC906D0008A2654 /* ProjectTests */,
-				324259032EC906D0008A2654 /* ProjectUITests */,
+				324258E32EC906CF008A2654 /* Takaffal */,
+				324258F92EC906D0008A2654 /* TakaffalTests */,
+				324259032EC906D0008A2654 /* TakaffalUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -271,12 +271,12 @@
 /* Begin PBXTargetDependency section */
 		324258FC2EC906D0008A2654 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 324258E32EC906CF008A2654 /* Project */;
+			target = 324258E32EC906CF008A2654 /* Takaffal */;
 			targetProxy = 324258FB2EC906D0008A2654 /* PBXContainerItemProxy */;
 		};
 		324259062EC906D0008A2654 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 324258E32EC906CF008A2654 /* Project */;
+			target = 324258E32EC906CF008A2654 /* Takaffal */;
 			targetProxy = 324259052EC906D0008A2654 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -469,7 +469,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Project.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Project";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Takaffal.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Takaffal";
 			};
 			name = Debug;
 		};
@@ -487,7 +487,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Project.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Project";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Takaffal.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Takaffal";
 			};
 			name = Release;
 		};
@@ -526,7 +526,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		324258DF2EC906CF008A2654 /* Build configuration list for PBXProject "Project" */ = {
+		324258DF2EC906CF008A2654 /* Build configuration list for PBXProject "Takaffal" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				324259102EC906D0008A2654 /* Debug */,
@@ -535,7 +535,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3242590D2EC906D0008A2654 /* Build configuration list for PBXNativeTarget "Project" */ = {
+		3242590D2EC906D0008A2654 /* Build configuration list for PBXNativeTarget "Takaffal" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3242590E2EC906D0008A2654 /* Debug */,
@@ -544,7 +544,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		324259122EC906D0008A2654 /* Build configuration list for PBXNativeTarget "ProjectTests" */ = {
+		324259122EC906D0008A2654 /* Build configuration list for PBXNativeTarget "TakaffalTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				324259132EC906D0008A2654 /* Debug */,
@@ -553,7 +553,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		324259152EC906D0008A2654 /* Build configuration list for PBXNativeTarget "ProjectUITests" */ = {
+		324259152EC906D0008A2654 /* Build configuration list for PBXNativeTarget "TakaffalUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				324259162EC906D0008A2654 /* Debug */,

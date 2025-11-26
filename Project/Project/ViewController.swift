@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Cloudinary
 
 class ViewController: UIViewController {
 

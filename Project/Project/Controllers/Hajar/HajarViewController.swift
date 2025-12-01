@@ -83,8 +83,15 @@ class HajarViewController: UIViewController {
                                  for: .touchUpInside)
 
         navContainer.addSubview(nav)
+        
         // comment this out while debugging if you want to see the container color
-        navContainer.backgroundColor = .red
+//        navContainer.backgroundColor = .red
+//        header.backBtn.isHidden = true
+//        nav.donationsBtn.isHidden = true
+//        nav.donationsLab.isHidden = true
+//        nav.ngoLab.isHidden = true
+//        nav.usersBtn.isHidden = true
+//        nav.usersLab.isHidden = true
 
         print("✅ Nav added to container, nav frame:", nav.frame)
     }

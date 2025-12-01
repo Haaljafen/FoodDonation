@@ -7,14 +7,20 @@
 
 import UIKit
 
-    class BottomNavView: UIView {
-        // your outlets + code here
-        @IBOutlet weak var listBtn: UIButton!
-        @IBOutlet weak var profileBtn: UIButton!
-        @IBOutlet weak var impactBtn: UIButton!
-        @IBOutlet weak var historyBtn: UIButton!
-        @IBOutlet weak var listLab: UILabel!
-        @IBOutlet weak var historyLab: UILabel!
-        @IBOutlet weak var impactLab: UILabel!
-        @IBOutlet weak var profileLab: UILabel!
-    }
+class BottomNavView: UIView {
+    // your outlets + code here
+    @IBOutlet weak var listBtn: UIButton!
+    @IBOutlet weak var profileBtn: UIButton!
+    @IBOutlet weak var impactBtn: UIButton!
+    @IBOutlet weak var historyBtn: UIButton!
+    @IBOutlet weak var listLab: UILabel!
+    @IBOutlet weak var historyLab: UILabel!
+    @IBOutlet weak var impactLab: UILabel!
+    @IBOutlet weak var profileLab: UILabel!
+    @IBOutlet weak var usersLab: UILabel!
+    @IBOutlet weak var ngoLab: UILabel!
+    @IBOutlet weak var usersBtn: UIButton!
+    @IBOutlet weak var donationsLab: UILabel!
+    @IBOutlet weak var donationsBtn: UIButton!
+    @IBOutlet weak var formBtn: UIButton!
+}

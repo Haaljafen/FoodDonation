@@ -8,11 +8,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="BottomNavView" customModule="Takaffal" customModuleProvider="target">
-            <connections>
-                <outlet property="formBtn" destination="LHQ-6w-uBV" id="352-NS-fEv"/>
-            </connections>
-        </placeholder>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="BottomNavView" customModule="Takaffal" customModuleProvider="target"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT" customClass="BottomNavView" customModule="Takaffal" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
@@ -68,13 +64,6 @@
                             <color key="textColor" systemColor="tintColor"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="users" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EBF-62-7Kt">
-                            <rect key="frame" x="134" y="61" width="34" height="16"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                            <color key="textColor" systemColor="tintColor"/>
-                            <nil key="highlightedColor"/>
-                        </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="impact" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yrh-qP-fXa">
                             <rect key="frame" x="234" y="61" width="42" height="16"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -90,37 +79,38 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="donations" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="MZI-Az-kfX">
-                            <rect key="frame" x="17" y="61" width="60" height="16"/>
+                            <rect key="frame" x="66" y="50" width="60" height="16"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                             <color key="textColor" systemColor="tintColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NGO's" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="oXT-ym-ah9">
-                            <rect key="frame" x="27" y="61" width="40" height="16"/>
+                            <rect key="frame" x="69" y="74" width="40" height="16"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                             <color key="textColor" systemColor="tintColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CZ6-IK-2Vh">
-                            <rect key="frame" x="21" y="31" width="51" height="35"/>
+                            <rect key="frame" x="87" y="8" width="51" height="35"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <state key="normal" title="Button"/>
                             <buttonConfiguration key="configuration" style="plain" image="heart" catalog="system"/>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DMA-Hn-p5y">
-                            <rect key="frame" x="122" y="31" width="59" height="35"/>
+                            <rect key="frame" x="162" y="18" width="59" height="35"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <state key="normal" title="Button"/>
                             <buttonConfiguration key="configuration" style="plain" image="person.2.fill" catalog="system"/>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LHQ-6w-uBV">
-                            <rect key="frame" x="171" y="-12" width="50" height="35"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="users" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EBF-62-7Kt">
+                            <rect key="frame" x="162" y="79" width="34" height="16"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <state key="normal" title="Button"/>
-                            <buttonConfiguration key="configuration" style="plain" image="plus.circle.fill" catalog="system"/>
-                        </button>
+                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                            <color key="textColor" systemColor="tintColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </view>
@@ -128,19 +118,19 @@
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <connections>
-                <outlet property="donationsBtn" destination="CZ6-IK-2Vh" id="xZl-iQ-oph"/>
-                <outlet property="donationsLab" destination="oXT-ym-ah9" id="ZUL-zb-rUS"/>
-                <outlet property="historyBtn" destination="EQ3-Q2-AMI" id="k3k-Uk-cK9"/>
-                <outlet property="historyLab" destination="cnR-jg-5Z4" id="YyE-TS-ylJ"/>
-                <outlet property="impactBtn" destination="U8e-H2-ezS" id="d77-HI-PVN"/>
-                <outlet property="impactLab" destination="Yrh-qP-fXa" id="U7A-Hb-g1q"/>
-                <outlet property="listBtn" destination="kwy-ig-amc" id="wV1-mN-bYL"/>
-                <outlet property="listLab" destination="t7M-Gn-uiU" id="XSq-wu-gpp"/>
-                <outlet property="ngoLab" destination="oXT-ym-ah9" id="aq3-fc-adA"/>
-                <outlet property="profileBtn" destination="TwH-2c-BgS" id="ydA-yo-tLy"/>
-                <outlet property="profileLab" destination="vv8-kz-O9a" id="eb9-M9-w4i"/>
-                <outlet property="usersBtn" destination="CZ6-IK-2Vh" id="9DC-w3-hnI"/>
-                <outlet property="usersLab" destination="EBF-62-7Kt" id="07E-lB-zFH"/>
+                <outlet property="donLab" destination="MZI-Az-kfX" id="OFY-8x-vpM"/>
+                <outlet property="heartBtn" destination="CZ6-IK-2Vh" id="inz-5i-cpy"/>
+                <outlet property="hisBtn" destination="EQ3-Q2-AMI" id="6BS-f7-Dnn"/>
+                <outlet property="hisLab" destination="cnR-jg-5Z4" id="sZP-mE-Kec"/>
+                <outlet property="impBtn" destination="U8e-H2-ezS" id="MMb-Ql-vxV"/>
+                <outlet property="listBtn" destination="kwy-ig-amc" id="nZH-tU-66g"/>
+                <outlet property="listLab" destination="t7M-Gn-uiU" id="FWx-Ld-gr7"/>
+                <outlet property="ngoLab" destination="oXT-ym-ah9" id="Xev-kr-2WR"/>
+                <outlet property="ompLab" destination="Yrh-qP-fXa" id="8eI-3k-xvP"/>
+                <outlet property="proBtn" destination="TwH-2c-BgS" id="1K6-hH-qwv"/>
+                <outlet property="proLab" destination="vv8-kz-O9a" id="bZD-Ku-dI9"/>
+                <outlet property="userBtn" destination="DMA-Hn-p5y" id="huZ-Ix-EAv"/>
+                <outlet property="userLab" destination="EBF-62-7Kt" id="ixn-pB-TEC"/>
             </connections>
             <point key="canvasLocation" x="136.64122137404578" y="19.718309859154932"/>
         </view>
@@ -152,12 +142,11 @@
         <image name="list.bullet" catalog="system" width="128" height="87"/>
         <image name="person.2.fill" catalog="system" width="128" height="86"/>
         <image name="person.fill" catalog="system" width="128" height="120"/>
-        <image name="plus.circle.fill" catalog="system" width="128" height="123"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="tintColor">
-            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

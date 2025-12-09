@@ -211,6 +211,8 @@ class HajarViewController: UIViewController {
             nav.heartBtn.isHidden = true
             nav.donLab.isHidden = true
 
+            nav.formBtn.isHidden = false
+
 
         case .ngo:
         
@@ -235,6 +237,8 @@ class HajarViewController: UIViewController {
             nav.heartBtn.isHidden = true
             nav.donLab.isHidden = true
 
+            nav.formBtn.isHidden = true
+            
         case .admin:
             // Hide EVERYTHING in BottomNavView
             nav.listBtn.isHidden = true
@@ -256,6 +260,8 @@ class HajarViewController: UIViewController {
 
             nav.heartBtn.isHidden = true
             nav.donLab.isHidden = true
+
+            nav.formBtn.isHidden = true
 
         }
 

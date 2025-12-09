@@ -21,5 +21,6 @@ class BottomNavView: UIView {
     @IBOutlet weak var hisBtn: UIButton!
     @IBOutlet weak var hisLab: UILabel!
     @IBOutlet weak var heartBtn: UIButton!
+    @IBOutlet weak var formBtn: UIButton!
     @IBOutlet weak var donLab: UILabel!
 }

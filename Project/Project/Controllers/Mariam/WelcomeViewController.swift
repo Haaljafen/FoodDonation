@@ -1,13 +1,13 @@
 //
-//  MariamViewController2.swift
+//  WelcomeViewController.swift
 //  Takaffal
 //
-//  Created by Hajar on 01/12/2025.
+//  Created by Mariam Sharaf on 10/12/2025.
 //
 
 import UIKit
 
-class MariamViewController2: UIViewController {
+class WelcomeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()

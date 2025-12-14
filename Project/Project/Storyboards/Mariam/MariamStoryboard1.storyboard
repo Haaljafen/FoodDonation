@@ -301,21 +301,24 @@
                                                         <rect key="frame" x="0.0" y="332.66666666666669" width="353" height="20"/>
                                                         <subviews>
                                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="-5" translatesAutoresizingMaskIntoConstraints="NO" id="ENy-eD-TFD" userLabel="Dont have account Stack View">
-                                                                <rect key="frame" x="62.666666666666671" y="-5.3333333333333712" width="227.66666666666663" height="31"/>
+                                                                <rect key="frame" x="69.000000000000014" y="-4.6666666666666856" width="215.33333333333337" height="29.666666666666668"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Don’t have an account? " textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tH4-nV-s5v">
-                                                                        <rect key="frame" x="0.0" y="7" width="155.33333333333334" height="17"/>
-                                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                        <rect key="frame" x="0.0" y="6.9999999999999991" width="146" height="15.666666666666661"/>
+                                                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                                         <color key="textColor" red="0.0078431372550000003" green="0.094117647060000004" blue="0.16862745100000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9yF-w7-D4B">
-                                                                        <rect key="frame" x="150.33333333333331" y="0.0" width="77.333333333333314" height="31"/>
+                                                                        <rect key="frame" x="141" y="0.0" width="74.333333333333314" height="29.666666666666668"/>
                                                                         <color key="tintColor" red="0.75294117650000003" green="0.3411764706" blue="0.27450980390000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                                         <state key="normal" title="Button"/>
                                                                         <buttonConfiguration key="configuration" style="plain" title="Register">
-                                                                            <fontDescription key="titleFontDescription" type="system" pointSize="14"/>
+                                                                            <fontDescription key="titleFontDescription" type="system" pointSize="13"/>
                                                                         </buttonConfiguration>
+                                                                        <connections>
+                                                                            <action selector="registerTapped:" destination="gD4-DO-37b" eventType="touchUpInside" id="7tD-ve-DtI"/>
+                                                                        </connections>
                                                                     </button>
                                                                 </subviews>
                                                             </stackView>
@@ -701,6 +704,9 @@
                                                                         <buttonConfiguration key="configuration" style="plain" title="Log in">
                                                                             <fontDescription key="titleFontDescription" type="system" pointSize="13"/>
                                                                         </buttonConfiguration>
+                                                                        <connections>
+                                                                            <action selector="loginTappedloginTapped:" destination="vCx-dE-TOO" eventType="touchUpInside" id="joJ-i9-RJl"/>
+                                                                        </connections>
                                                                     </button>
                                                                 </subviews>
                                                             </stackView>

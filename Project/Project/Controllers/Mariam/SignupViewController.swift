@@ -268,7 +268,19 @@ class SignupViewController: UIViewController, UIImagePickerControllerDelegate, U
             showErrorAlert(error.localizedDescription)
         }
     }
+    
+    //MARK: - Login Redirecting
 
+    @IBAction func loginTappedloginTapped(_ sender: UIButton) {
+        
+        let vc = storyboard?.instantiateViewController(
+               withIdentifier: "LoginViewController"
+           ) as! LoginViewController
+
+           present(vc, animated: true)
+        
+    }
+    
 }
 
     // MARK: - Helpers

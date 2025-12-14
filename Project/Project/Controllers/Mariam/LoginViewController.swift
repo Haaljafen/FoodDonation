@@ -183,6 +183,17 @@ class LoginViewController: UIViewController {
             showAlert(title: "Error", message: error.localizedDescription)
         }
     }
+
+    //MARK: - Signup Redirecting
+    
+    @IBAction func registerTapped(_ sender: UIButton) {
+        let vc = storyboard?.instantiateViewController(
+            withIdentifier: "SignupViewController"
+        ) as! SignupViewController
+
+        present(vc, animated: true)
+    }
+    
 }
 
     // MARK: - Helpers

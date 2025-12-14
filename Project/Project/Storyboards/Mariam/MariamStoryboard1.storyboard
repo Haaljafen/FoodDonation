@@ -96,7 +96,7 @@
         <!--Forgot Password View Controller-->
         <scene sceneID="RaS-KS-rA1">
             <objects>
-                <viewController id="mkj-r9-PkC" userLabel="Forgot Password View Controller" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ForgotPasswordViewController" id="mkj-r9-PkC" userLabel="Forgot Password View Controller" customClass="ForgotPasswordViewController" customModule="Takaffal" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Bn1-8x-Yau">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -152,13 +152,18 @@
                                         </constraints>
                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Reset password"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Reset password">
+                                            <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="18"/>
+                                        </buttonConfiguration>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                 <integer key="value" value="12"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                         </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="resetPasswordTapped:" destination="mkj-r9-PkC" eventType="touchUpInside" id="rJB-IQ-01r"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                             </stackView>
@@ -172,6 +177,10 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="3Uu-aC-tzN"/>
+                    <connections>
+                        <outlet property="emailTextField" destination="hFV-wd-qBW" id="Oj1-Lw-bqD"/>
+                        <outlet property="resetPasswordButton" destination="xiw-9m-UL5" id="7s0-Fd-d5g"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="amd-Px-HeR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -217,7 +226,7 @@
                                                                 <textInputTraits key="textInputTraits"/>
                                                             </textField>
                                                         </subviews>
-                                                        <color key="backgroundColor" systemColor="systemGray6Color"/>
+                                                        <color key="backgroundColor" systemColor="systemGray5Color"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="60" id="oea-8T-D6t"/>
                                                         </constraints>
@@ -245,7 +254,7 @@
                                                                 <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                                                             </textField>
                                                         </subviews>
-                                                        <color key="backgroundColor" systemColor="systemGray6Color"/>
+                                                        <color key="backgroundColor" systemColor="systemGray5Color"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="60" id="eso-RM-4hS"/>
                                                         </constraints>
@@ -771,9 +780,6 @@
         </systemColor>
         <systemColor name="systemGray5Color">
             <color red="0.8980392157" green="0.8980392157" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemGray6Color">
-            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="tertiarySystemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

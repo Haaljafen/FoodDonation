@@ -22,7 +22,7 @@ class SignupViewController: UIViewController, UIImagePickerControllerDelegate, U
         roleSegmentedControl.selectedSegmentIndex = 0
         selectedRole = .donor
         updateUIForRole()
-//        profileImageView.image = UIImage(named: "no-pfp")
+        profileImageView.image = UIImage(named: "no-pfp")
 
     }
     

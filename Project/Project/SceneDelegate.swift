@@ -20,7 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let window = UIWindow(windowScene: windowScene)
 
-        let storyboard = UIStoryboard(name: "MariamStoryboard1", bundle: nil)
+        let storyboard = UIStoryboard(name: "HistoryDonorAdminStoryboard", bundle: nil)
 
         let initialVC = storyboard.instantiateInitialViewController()
         window.rootViewController = initialVC

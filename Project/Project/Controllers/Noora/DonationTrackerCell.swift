@@ -1,44 +1,8 @@
-//import UIKit
-//
-//final class DonationTrackerCell: UITableViewCell {
-//
-//    @IBOutlet weak var circle1: UIImageView!
-//    @IBOutlet weak var circle2: UIImageView!
-//    @IBOutlet weak var circle3: UIImageView!
-//
-//    @IBOutlet weak var label1: UILabel! // Accepted
-//    @IBOutlet weak var label2: UILabel! // Collected
-//    @IBOutlet weak var label3: UILabel! // Delivered
-//
-//    func configure(currentStatus: String) {
-//        selectionStyle = .none
-//
-//        circle1.image = UIImage(systemName: "circle")
-//        circle2.image = UIImage(systemName: "circle")
-//        circle3.image = UIImage(systemName: "circle")
-//
-//        let s = currentStatus.lowercased()
-//
-//        // step 1 = accepted/pending
-//        // step 2 = collected/received
-//        // step 3 = delivered
-//        let step: Int
-//        if s == "delivered" { step = 3 }
-//        else if s == "collected" || s == "received" { step = 2 }
-//        else { step = 1 } // pending / accepted / anything else
-//
-//        if step >= 1 { circle1.image = UIImage(systemName: "checkmark.circle.fill") }
-//        if step >= 2 { circle2.image = UIImage(systemName: "checkmark.circle.fill") }
-//        if step >= 3 { circle3.image = UIImage(systemName: "checkmark.circle.fill") }
-//    }
-//}
-
-
 //
 //  DonationTrackerCell 2.swift
 //  Takaffal
 //
-//  Created by Eshraq Mohamed on 18/12/2025.
+//  Created by Noora Humaid on 18/12/2025.
 //
 
 
@@ -86,7 +50,8 @@ final class DonationTrackerCell: UITableViewCell {
         // fill completed steps
         for i in 0..<step {
             circles[i]?.image = UIImage(systemName: "checkmark.circle.fill")
-//            circles[i]?.tintColor = .systemGreen
+            circles[i]?.tintColor = .systemBlue
+            
         }
     }
 }

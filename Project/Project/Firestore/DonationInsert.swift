@@ -10,35 +10,35 @@ import FirebaseFirestore
 
 final class DonationInsert {
 
-    static func insertDonation() {
+    static func insertTestDonation() {
 
         let db = Firestore.firestore()
         let donationId = UUID().uuidString
 
         let data: [String: Any] = [
             "id": donationId,
-            "donorId": "7yfpJrFgU3YfH1vm8CiGRpwjpjj2",
-            "collectorId": "ZwGkvR1MoCMS6UV6jY9qDO0OcZX2",
+            "donorId": "jOUkkHYArvYZvO5WAU0bgtHsqbN2",
+            "collectorId": "tmp3A5GbeFMQceAhcsS6j8MJlRI2",
 
-            "item": "cookies",
-            "quantity": 24,
+            "item": "pasta",
+            "quantity": 1,
             "unit": "pcs",
 
             "manufacturingDate": NSNull(),
-            "expiryDate": "12/5/2027",
+            "expiryDate": NSNull(),
 
-            "category": "Cooked Meals",
-            "impactType": "mealsProvided",
+            "category": "cooked meals",
+            "impactType": "waste prevent",
 
-            "imageUrl": "https://example.com/grapeleaves.jpg",
-            "donationMethod": "dropoff",
+            "imageUrl": NSNull(),
+            "donationMethod": "pickup",
 
-            "status": "pending",
+            "status": "accepted",
 
             "pickupRequestId": NSNull(),
 
             "donorName": "Noora Humaid",
-            "donorCity": "Muharaq",
+            "donorCity": "Muharraq",
 
             "createdAt": Timestamp(date: Date())
         ]

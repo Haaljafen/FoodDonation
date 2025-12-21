@@ -304,7 +304,7 @@
                                                                 <rect key="frame" x="69.000000000000014" y="-4.6666666666666856" width="215.33333333333337" height="29.666666666666668"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Don’t have an account? " textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tH4-nV-s5v">
-                                                                        <rect key="frame" x="0.0" y="6.9999999999999991" width="146" height="15.666666666666661"/>
+                                                                        <rect key="frame" x="0.0" y="6.9999999999999991" width="146" height="15.666666666666664"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                                         <color key="textColor" red="0.0078431372550000003" green="0.094117647060000004" blue="0.16862745100000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                         <nil key="highlightedColor"/>

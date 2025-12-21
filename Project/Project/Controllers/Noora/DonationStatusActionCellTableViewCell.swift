@@ -5,37 +5,6 @@
 //  Created by Noora Humaid on 19/12/2025.
 //
 //
-//import UIKit
-//
-//final class DonationStatusActionCell: UITableViewCell {
-//
-//    @IBOutlet weak var statusTitleLabel: UILabel!   // e.g. "Current Status"
-//    @IBOutlet weak var statusValueLabel: UILabel!   // e.g. "Pending"
-//    @IBOutlet weak var changeStatusButton: UIButton!
-//
-//    private var onChangeTapped: (() -> Void)?
-//
-//    override func awakeFromNib() {
-//        super.awakeFromNib()
-//
-//        selectionStyle = .none
-//        changeStatusButton.layer.cornerRadius = 10
-//    }
-//
-//    func configure(currentStatus: String, buttonTitle: String = "Change Status", onChangeTapped: @escaping () -> Void) {
-//        statusTitleLabel.text = "Current Status"
-//        statusValueLabel.text = currentStatus.capitalized
-//        changeStatusButton.setTitle(buttonTitle, for: .normal)
-//        self.onChangeTapped = onChangeTapped
-//    }
-//
-//    @IBAction func changeTapped(_ sender: UIButton) {
-//        onChangeTapped?()
-//    }
-//}
-//
-
-
 import UIKit
 
 final class DonationStatusActionCell: UITableViewCell {

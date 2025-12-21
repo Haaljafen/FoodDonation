@@ -12,6 +12,8 @@ struct DonationHistoryItem {
 
 
 final class HistoryViewController: BaseChromeViewController {
+    
+
 
     // MARK: - Outlets (from storyboard)
     @IBOutlet weak var table: UITableView!
@@ -25,15 +27,15 @@ final class HistoryViewController: BaseChromeViewController {
     private var didResolveRole = false
 
     
-    ///hard coded id for testing case
-    private let TEST_USER_ID: String? = "tmp3A5GbeFMQceAhcsS6j8MJlRI2"
-    private let FORCE_TEST_ROLE: UserRole? = nil     // e.g. .admin / .donor / .collector
-    ///
+//    ///hard coded id for testing case
+//    private let TEST_USER_ID: String? = "nvjfqWavDePSwn28xbHT4aUoEUC2"
+//    private let FORCE_TEST_ROLE: UserRole? = nil     // e.g. .admin / .donor / .collector
+//    ///
     
     
     //defualt role (for the actual app role)
-//    private let TEST_USER_ID: String? = nil
-//    private let FORCE_TEST_ROLE: UserRole? = nil
+    private let TEST_USER_ID: String? = nil
+    private let FORCE_TEST_ROLE: UserRole? = nil
 
 
     // Date formatter (reuse)
@@ -49,9 +51,15 @@ final class HistoryViewController: BaseChromeViewController {
     override func viewDidLoad() {
                 
         super.viewDidLoad()
-        
+
 //        DonationInsert.insertTestDonation()
 
+        guard Auth.auth().currentUser != nil || TEST_USER_ID != nil else {
+            donations.removeAll()
+            showEmptyPlaceholder(message: "Please log in.")
+            table.reloadData()
+            return
+        }
 
         // Table setup
         table.dataSource = self
@@ -63,7 +71,7 @@ final class HistoryViewController: BaseChromeViewController {
         showEmptyPlaceholder(message: "Loading…")
         
         
-        ///
+        
         ///        // If you forced a role for testing, skip fetching role from Firestore.
         if let forcedRole = FORCE_TEST_ROLE {
             self.currentRole = forcedRole
@@ -82,7 +90,7 @@ final class HistoryViewController: BaseChromeViewController {
                     guard let role = role else {
 //                        self.currentRole = nil
                         self.didResolveRole = false
-                        self.updateTitleForUnknownRole() // ✅ ADDED
+                        self.updateTitleForUnknownRole()
                         self.donations = []
                         self.showEmptyPlaceholder(message: "Role missing/invalid. Fix Users/{uid}.role")
                         self.table.reloadData()
@@ -97,32 +105,37 @@ final class HistoryViewController: BaseChromeViewController {
         
     }
 
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//
-//        // Refresh using already-known role
-//        guard didResolveRole else { return }
-//        updateTitleForRole(currentRole)
-//        loadDonationsForCurrentRole()
-//    }
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        // ✅ Hide system nav bar on History (because History uses a custom header)
+        // Hide system nav bar on History (because History uses a custom header)
         navigationController?.setNavigationBarHidden(true, animated: false)
 
-        // ✅ Refresh using already-known role
+        
+        // ALWAYS clear UI if no user(in case)
+            guard Auth.auth().currentUser != nil || TEST_USER_ID != nil else {
+                donations.removeAll()
+                showEmptyPlaceholder(message: "Please log in.")
+                table.reloadData()
+                didResolveRole = false
+                return
+            }
+//        print("Auth uid =", Auth.auth().currentUser?.uid as Any,
+//              "anonymous =", Auth.auth().currentUser?.isAnonymous as Any)
+        
+        //  Refresh using already-known role
         guard didResolveRole else { return }
         updateTitleForRole(currentRole)
         loadDonationsForCurrentRole()
     }
 
     
-    //delete it later(this is only to test)
+    //
     private func resolvedUserIdForTestingOrAuth() -> String? {
            return TEST_USER_ID ?? Auth.auth().currentUser?.uid
     }
-//
+    //
     
     // MARK: - Role
     private func fetchCurrentUserRole(completion: @escaping (UserRole?) -> Void) {
@@ -134,13 +147,12 @@ final class HistoryViewController: BaseChromeViewController {
 //            return
 //        }
 
-        //
+        
         guard let uid = resolvedUserIdForTestingOrAuth() else {
                     print("❌ No uid (user not logged in).")
                     completion(nil)
                     return
-                }
-        //
+        }
         
         
         db.collection("Users").document(uid).getDocument { snap, error in
@@ -149,7 +161,6 @@ final class HistoryViewController: BaseChromeViewController {
                 completion(nil)
                 return
             }
-
 
             
             let roleStr = ((snap?.data()?["role"] as? String) ?? "")
@@ -160,19 +171,18 @@ final class HistoryViewController: BaseChromeViewController {
 
                     completion(UserRole(rawValue: roleStr))
             
-            
         }
     }
+    
     
     private func updateTitleForUnknownRole() {
             DispatchQueue.main.async {
                 self.title = "Donations"
             }
-        }
+    }
 
+    
     private func updateTitleForRole(_ role: UserRole) {
-        
-        
         
         DispatchQueue.main.async {
             switch role {
@@ -185,10 +195,12 @@ final class HistoryViewController: BaseChromeViewController {
             }
         }
     }
+    
+    
 
     // MARK: - Load Donations (role-based)
     private func loadDonationsForCurrentRole() {
-//        showEmptyPlaceholder(message: "Loading…")
+        showEmptyPlaceholder(message: "Loading…")
         
 //        guard let role = currentRole else {
 //                    donations = []
@@ -199,7 +211,6 @@ final class HistoryViewController: BaseChromeViewController {
         
         let role = currentRole
 
-        
         guard let uid = resolvedUserIdForTestingOrAuth() else {
                    donations = []
                    showEmptyPlaceholder(message: "Please log in to view donations.")
@@ -216,12 +227,10 @@ final class HistoryViewController: BaseChromeViewController {
 //            return
 //        }
         
-
         var query: Query = db.collection("donations")
 //            .order(by: "createdAt", descending: true)
 
 
-        
         switch role {
         case .admin:
             // all donations
@@ -234,7 +243,6 @@ final class HistoryViewController: BaseChromeViewController {
             // ✅ only donations accepted by this collector
             query = query.whereField("collectorId", isEqualTo: uid)
 
-       
         }
 
         query.getDocuments { [weak self] snapshot, error in
@@ -249,7 +257,6 @@ final class HistoryViewController: BaseChromeViewController {
                    }
 
                    let docs = snapshot?.documents ?? []
-//                   print("📦 docs count =", docs.count)
 
                    self.donations = docs.compactMap { doc in
                        let data = doc.data()
@@ -288,6 +295,8 @@ final class HistoryViewController: BaseChromeViewController {
 
         }
     }
+    
+    
 
     // MARK: - Placeholder UI
     private func showEmptyPlaceholder(message: String) {
@@ -308,6 +317,7 @@ final class HistoryViewController: BaseChromeViewController {
         table.separatorStyle = .singleLine
     }
 }
+
 
 
 // MARK: - Table DataSource + Delegate

@@ -19,6 +19,15 @@ final class DonationTrackerCell: UITableViewCell {
     @IBOutlet weak var label2: UILabel! // Accepted
     @IBOutlet weak var label3: UILabel! // Collected
     @IBOutlet weak var label4: UILabel! // Delivered
+    
+    
+    private let navyBlue = UIColor(
+        red: 10/255,
+        green: 30/255,
+        blue: 70/255,
+        alpha: 1
+    )
+
 
     func configure(currentStatus: String) {
         selectionStyle = .none
@@ -50,7 +59,7 @@ final class DonationTrackerCell: UITableViewCell {
         // fill completed steps
         for i in 0..<step {
             circles[i]?.image = UIImage(systemName: "checkmark.circle.fill")
-            circles[i]?.tintColor = .systemBlue
+            circles[i]?.tintColor = navyBlue
             
         }
     }

@@ -1,4 +1,4 @@
-//
+
 //  BaseChromeViewController.swift
 //  Takaffal
 //
@@ -13,10 +13,9 @@ class BaseChromeViewController: UIViewController {
 
     private var headerView: HeaderView?
     private var bottomNav: BottomNavView?
-
     private var didSetupViews = false
 
-    // ✅ Each screen can set this (or you set it after Firestore fetch)
+    // Role is set by child screens or after Firestore fetch
     var currentRole: UserRole = .donor {
         didSet { applyRoleToNav() }
     }
@@ -28,34 +27,26 @@ class BaseChromeViewController: UIViewController {
             didSetupViews = true
             setupHeader()
             setupNav()
-            applyRoleToNav() // ✅ apply after nav is created
+            applyRoleToNav()
         }
-        
-        print("navContainer frame:", navContainer.frame)
-        print("headerContainer frame:", headerContainer.frame)
-
     }
 
     // MARK: - Header
     private func setupHeader() {
         guard let header = Bundle.main
             .loadNibNamed("HeaderView", owner: nil, options: nil)?
-            .first as? HeaderView else {
-            print("❌ Failed to load HeaderView.xib")
-            return
-        }
+            .first as? HeaderView else { return }
 
         header.frame = headerContainer.bounds
         header.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
         header.takaffalLabel.text = "Takaffal"
         header.backBtn.isHidden = true
-
         header.notiBtn.addTarget(self, action: #selector(openNotifications), for: .touchUpInside)
 
         headerContainer.addSubview(header)
         headerContainer.backgroundColor = .clear
-        self.headerView = header
+        headerView = header
     }
 
     @objc private func openNotifications() {
@@ -64,108 +55,183 @@ class BaseChromeViewController: UIViewController {
 
     // MARK: - Bottom Nav
     private func setupNav() {
+        guard let nav = Bundle.main
+            .loadNibNamed("BottomNavView", owner: nil, options: nil)?
+            .first as? BottomNavView else { return }
 
-        navContainer.clipsToBounds = true
+        nav.frame = navContainer.bounds
+        nav.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
-        let loaded = Bundle.main.loadNibNamed("BottomNavView", owner: nil, options: nil)
-        print("📦 BottomNavView.xib loaded objects:", loaded?.count ?? 0)
+        nav.listBtn.addTarget(self, action: #selector(openHome), for: .touchUpInside)
+        nav.hisBtn.addTarget(self, action: #selector(openHistory), for: .touchUpInside)
+        nav.impBtn.addTarget(self, action: #selector(openImpact), for: .touchUpInside)
+        nav.proBtn.addTarget(self, action: #selector(openProfile), for: .touchUpInside)
+        nav.userBtn.addTarget(self, action: #selector(openUsers), for: .touchUpInside)
 
-        guard let first = loaded?.first else {
-            print("❌ BottomNavView.xib returned nil")
-            return
-        }
-
-        print("👀 First object type:", type(of: first))
-
-        guard let nav = first as? BottomNavView else {
-            print("❌ First object is NOT BottomNavView. Check xib root class!")
-            return
-        }
-
-        // 🔥 Make it impossible to miss
-//        nav.translatesAutoresizingMaskIntoConstraints = false
-//        nav.backgroundColor = .systemRed.withAlphaComponent(0.25)
-
+        nav.backgroundColor = .clear
         navContainer.addSubview(nav)
-
-        NSLayoutConstraint.activate([
-            nav.leadingAnchor.constraint(equalTo: navContainer.leadingAnchor),
-            nav.trailingAnchor.constraint(equalTo: navContainer.trailingAnchor),
-            nav.topAnchor.constraint(equalTo: navContainer.topAnchor),
-            nav.bottomAnchor.constraint(equalTo: navContainer.bottomAnchor)
-        ])
-
-        navContainer.layoutIfNeeded()
-        print("🔧 nav frame after layout:", nav.frame)
-
-        self.bottomNav = nav
-        view.bringSubviewToFront(navContainer)
-
-        print("✅ BottomNav added + constrained. nav frame:", nav.frame)
+        bottomNav = nav
     }
 
-    // ✅ One place to show/hide based on role
+    // MARK: - Role Handling
     private func applyRoleToNav() {
         guard let nav = bottomNav else { return }
 
-        func set(_ view: UIView?, hidden: Bool) { view?.isHidden = hidden }
+        nav.formBtn.isHidden = true
+        nav.listBtn.isHidden = true
+        nav.proBtn.isHidden = true
+        nav.impBtn.isHidden = true
+        nav.hisBtn.isHidden = true
+        nav.userBtn.isHidden = true
+        nav.heartBtn.isHidden = true
 
-        // Everything you have (buttons + labels)
-        let allViews: [UIView?] = [
-            nav.listBtn, nav.listLab,
-            nav.hisBtn, nav.hisLab,
-            nav.impBtn, nav.ompLab,     // ⚠️ make sure this outlet name is correct
-            nav.proBtn, nav.proLab,
-            nav.userBtn, nav.userLab,
-            nav.heartBtn, nav.donLab,
-            nav.formBtn,
-            nav.ngoLab
-        ]
-
-        // Hide all first
-        allViews.forEach { set($0, hidden: true) }
-
-        // Role-specific views (NOW actually used ✅)
-        let donorViews: [UIView?] = [
-            nav.formBtn,
-            nav.listBtn, nav.listLab,
-            nav.hisBtn, nav.hisLab,
-            nav.proBtn, nav.proLab
-        ]
-
-        let ngoViews: [UIView?] = [
-            nav.hisBtn, nav.hisLab,
-            nav.proBtn, nav.proLab,
-            nav.ngoLab
-        ]
-
-        let adminViews: [UIView?] = [
-            nav.userBtn, nav.userLab,
-            nav.heartBtn, nav.donLab,
-            nav.hisBtn, nav.hisLab,
-            nav.proBtn, nav.proLab
-        ]
-
-        let viewsToShow: [UIView?]
         switch currentRole {
         case .donor:
-            viewsToShow = donorViews
-        case .ngo:
-            viewsToShow = ngoViews
-        case .admin:
-            viewsToShow = adminViews
-        }
+            nav.formBtn.isHidden = false
 
-        viewsToShow.forEach { set($0, hidden: false) }
+        case .ngo:
+            nav.listBtn.isHidden = false
+            nav.proBtn.isHidden = false
+            nav.impBtn.isHidden = false
+            nav.hisBtn.isHidden = false
+
+        case .admin:
+            nav.userBtn.isHidden = false
+        }
     }
 
-
-    // MARK: - Actions
-    @objc func openHome() { print("🏠 Home") }
-    @objc func openHistory() { print("📜 History") }
-    @objc func openImpact() { print("📈 Impact") }
-    @objc func openProfile() { print("👤 Profile") }
-    @objc func openUsers() { print("👥 Users") }
-    @objc func openDonations() { print("🎁 Donations") }
-    @objc func openForm() { print("📝 Form") }
+    // MARK: - Nav Actions
+    @objc private func openHome()    { print("🏠 Home") }
+    @objc private func openHistory() { print("📜 History") }
+    @objc private func openImpact()  { print("📈 Impact") }
+    @objc private func openProfile() { print("👤 Profile") }
+    @objc private func openUsers()   { print("👥 Users") }
 }
+
+
+
+
+
+
+
+//
+//import UIKit
+//
+//class BaseChromeViewController: UIViewController {
+//
+//    @IBOutlet weak var headerContainer: UIView!
+//    @IBOutlet weak var navContainer: UIView!
+//
+//    private var headerView: HeaderView?
+//    private var bottomNav: BottomNavView?
+//
+//    private var didSetupViews = false
+//
+//    // ✅ Each screen can set this (or you set it after Firestore fetch)
+//    var currentRole: UserRole = .donor {
+//        didSet { applyRoleToNav() }
+//    }
+//
+//    override func viewDidLayoutSubviews() {
+//        super.viewDidLayoutSubviews()
+//
+//        if !didSetupViews {
+//            didSetupViews = true
+//            setupHeader()
+//            setupNav()
+//            applyRoleToNav() // ✅ apply after nav is created
+//        }
+//        
+//        print("navContainer frame:", navContainer.frame)
+//        print("headerContainer frame:", headerContainer.frame)
+//
+//    }
+//
+//    // MARK: - Header
+//    private func setupHeader() {
+//        guard let header = Bundle.main
+//            .loadNibNamed("HeaderView", owner: nil, options: nil)?
+//            .first as? HeaderView else {
+//            print("❌ Failed to load HeaderView.xib")
+//            return
+//        }
+//
+//        header.frame = headerContainer.bounds
+//        header.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+//
+//        header.takaffalLabel.text = "Takaffal"
+//        header.backBtn.isHidden = true
+//
+//        header.notiBtn.addTarget(self, action: #selector(openNotifications), for: .touchUpInside)
+//
+//        headerContainer.addSubview(header)
+//        headerContainer.backgroundColor = .clear
+//        self.headerView = header
+//    }
+//
+//    @objc private func openNotifications() {
+//        print("🔔 Notifications tapped")
+//    }
+//
+//    // MARK: - Bottom Nav
+//    private func setupNav() {
+//           guard let nav = Bundle.main
+//               .loadNibNamed("BottomNavView", owner: nil, options: nil)?
+//               .first as? BottomNavView else {
+//               print("❌ Failed to load BottomNavView.xib")
+//               return
+//           }
+//
+//           nav.frame = navContainer.bounds
+//           nav.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+//
+//           // Example role handling
+//           let currentRole: UserRole = .ngo
+//
+//           switch currentRole {
+//           case .donor:
+//               nav.formBtn.isHidden = false
+//               nav.listBtn.isHidden = true
+//               nav.proBtn.isHidden = true
+//               nav.impBtn.isHidden = true
+//               nav.userBtn.isHidden = true
+//               nav.hisBtn.isHidden = true
+//               nav.heartBtn.isHidden = true
+//
+//           case .ngo:
+//               nav.formBtn.isHidden = true
+//               nav.listBtn.isHidden = false
+//               nav.proBtn.isHidden = false
+//               nav.impBtn.isHidden = false
+//               nav.hisBtn.isHidden = false
+//               nav.userBtn.isHidden = true
+//               nav.heartBtn.isHidden = true
+//
+//           case .admin:
+//               nav.formBtn.isHidden = true
+//               nav.listBtn.isHidden = true
+//               nav.proBtn.isHidden = true
+//               nav.impBtn.isHidden = true
+//               nav.hisBtn.isHidden = true
+//               nav.userBtn.isHidden = true
+//               nav.heartBtn.isHidden = true
+//           }
+//
+//           nav.listBtn.addTarget(self, action: #selector(openHome), for: .touchUpInside)
+//           nav.hisBtn.addTarget(self, action: #selector(openHistory), for: .touchUpInside)
+//           nav.impBtn.addTarget(self, action: #selector(openImpact), for: .touchUpInside)
+//           nav.proBtn.addTarget(self, action: #selector(openProfile), for: .touchUpInside)
+//           nav.userBtn.addTarget(self, action: #selector(openUsers), for: .touchUpInside)
+//
+//           nav.backgroundColor = .clear
+//           navContainer.addSubview(nav)
+//           bottomNav = nav
+//       }
+//
+//       // MARK: - Nav Actions
+//       @objc private func openHome() { print("🏠 Home tapped") }
+//       @objc private func openHistory() { print("📜 History tapped") }
+//       @objc private func openImpact() { print("📈 Impact tapped") }
+//       @objc private func openProfile() { print("👤 Profile tapped") }
+//       @objc private func openUsers() { print("👥 Users tapped") }
+//   }

@@ -16,6 +16,7 @@ final class HistoryViewController: BaseChromeViewController {
     // MARK: - Outlets (from storyboard)
     @IBOutlet weak var table: UITableView!
 
+
     // MARK: - Firestore
     private let db = Firestore.firestore()
     private var donations: [DonationHistoryItem] = []
@@ -24,13 +25,13 @@ final class HistoryViewController: BaseChromeViewController {
     private var didResolveRole = false
 
     
-    ///
+    ///hard coded id for testing case
     private let TEST_USER_ID: String? = "tmp3A5GbeFMQceAhcsS6j8MJlRI2"
     private let FORCE_TEST_ROLE: UserRole? = nil     // e.g. .admin / .donor / .collector
     ///
     
     
-    //defualt role
+    //defualt role (for the actual app role)
 //    private let TEST_USER_ID: String? = nil
 //    private let FORCE_TEST_ROLE: UserRole? = nil
 
@@ -42,32 +43,7 @@ final class HistoryViewController: BaseChromeViewController {
         f.timeStyle = .short
         return f
     }()
-//
-//    // MARK: - Layout (your hard-coded frames)
-//    override func viewDidLayoutSubviews() {
-//        super.viewDidLayoutSubviews()
-//
-//        headerContainer.translatesAutoresizingMaskIntoConstraints = true
-//        navContainer.translatesAutoresizingMaskIntoConstraints = true
-//        table.translatesAutoresizingMaskIntoConstraints = true
-//
-//        let safe = view.safeAreaInsets
-//        let w = view.bounds.width
-//        let h = view.bounds.height
-//
-//        let headerH: CGFloat = 90
-//        let navH: CGFloat = 90
-//
-//        headerContainer.frame = CGRect(x: 0, y: safe.top, width: w, height: headerH)
-//        navContainer.frame = CGRect(x: 0, y: h - safe.bottom - navH, width: w, height: navH)
-//
-//        let tableY = headerContainer.frame.maxY
-//        let tableBottom = navContainer.frame.minY
-//        table.frame = CGRect(x: 0, y: tableY, width: w, height: max(0, tableBottom - tableY))
-//    }
 
-    
-//    private var didResolveRole = false
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -75,7 +51,6 @@ final class HistoryViewController: BaseChromeViewController {
         super.viewDidLoad()
         
 //        DonationInsert.insertTestDonation()
-
 
 
         // Table setup
@@ -103,7 +78,7 @@ final class HistoryViewController: BaseChromeViewController {
         fetchCurrentUserRole { [weak self] (role: UserRole?) in
                     guard let self = self else { return }
 
-                    // ✅ ADDED: require role (no default)
+                    // require role (no default)
                     guard let role = role else {
 //                        self.currentRole = nil
                         self.didResolveRole = false
@@ -122,25 +97,37 @@ final class HistoryViewController: BaseChromeViewController {
         
     }
 
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//
+//        // Refresh using already-known role
+//        guard didResolveRole else { return }
+//        updateTitleForRole(currentRole)
+//        loadDonationsForCurrentRole()
+//    }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        // Refresh using already-known role
+        // ✅ Hide system nav bar on History (because History uses a custom header)
+        navigationController?.setNavigationBarHidden(true, animated: false)
+
+        // ✅ Refresh using already-known role
         guard didResolveRole else { return }
         updateTitleForRole(currentRole)
         loadDonationsForCurrentRole()
     }
+
     
     //delete it later(this is only to test)
     private func resolvedUserIdForTestingOrAuth() -> String? {
            return TEST_USER_ID ?? Auth.auth().currentUser?.uid
-       }
+    }
 //
     
     // MARK: - Role
     private func fetchCurrentUserRole(completion: @escaping (UserRole?) -> Void) {
         
-        //coming back to u
+        //might need it later
 //        guard let uid = Auth.auth().currentUser?.uid else {
 //        print("❌ No uid (testing/auth).")
 //            completion(nil)
@@ -169,7 +156,7 @@ final class HistoryViewController: BaseChromeViewController {
                         .trimmingCharacters(in: .whitespacesAndNewlines)
                         .lowercased()
             
-            print("🧩 role from Firestore =", roleStr, " doc exists =", snap?.exists ?? false)
+//            print("🧩 role from Firestore =", roleStr, " doc exists =", snap?.exists ?? false)
 
                     completion(UserRole(rawValue: roleStr))
             
@@ -221,7 +208,7 @@ final class HistoryViewController: BaseChromeViewController {
                }
 
         
-//        //comming back to u later
+//        //might need it later
 //        guard let uid = Auth.auth().currentUser?.uid else {
 //            donations = []
 //            showEmptyPlaceholder(message: "Please log in to view donations.")
@@ -247,11 +234,7 @@ final class HistoryViewController: BaseChromeViewController {
             // ✅ only donations accepted by this collector
             query = query.whereField("collectorId", isEqualTo: uid)
 
-//        default:
-//            donations = []
-//            showEmptyPlaceholder(message: "No permission to view donations.")
-//            table.reloadData()
-//            return
+       
         }
 
         query.getDocuments { [weak self] snapshot, error in
@@ -266,7 +249,7 @@ final class HistoryViewController: BaseChromeViewController {
                    }
 
                    let docs = snapshot?.documents ?? []
-                   print("📦 docs count =", docs.count)
+//                   print("📦 docs count =", docs.count)
 
                    self.donations = docs.compactMap { doc in
                        let data = doc.data()
@@ -326,9 +309,6 @@ final class HistoryViewController: BaseChromeViewController {
     }
 }
 
-// MARK: - Segue helper
-//(might delete it later)
-
 
 // MARK: - Table DataSource + Delegate
 extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
@@ -360,9 +340,8 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
         return cell
     }
 
-    // ✅ Role-based segue:
-    // - donor/admin: showDonationDetails
-    // - collector: showCollectorDonation (you create this segue)
+    //  Role-based segue:
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
 
@@ -381,10 +360,8 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
 
            if let detailsVC = segue.destination as? DonationDetailsViewController {
                detailsVC.donation = selected
-               detailsVC.roleFromHistory = currentRole.rawValue
+               detailsVC.roleFromHistory = currentRole.rawValue  // PASS ROLE (as String) into details
 
-               // ✅ PASS ROLE (as String) into details
-//               detailsVC.roleFromHistory = currentRole?.rawValue
            }
        }
 }

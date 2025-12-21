@@ -76,7 +76,7 @@ class HussainViewController1: UIViewController {
         
         setupBadges()
         
-        // Example usage: set initial progress for testing
+        // Example usage: set initial progress for testing // test
         setProgress(0.3, for: progress1, badge: badge1, imageBadge: imageBadge1, unlockLabel: unlockDate1)
         setProgress(1.0, for: progress2, badge: badge2, imageBadge: imageBadge2, unlockLabel: unlockDate2)
         setProgress(1.0, for: progress3, badge: badge3, imageBadge: imageBadge3, unlockLabel: unlockDate3)

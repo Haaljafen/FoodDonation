@@ -1,3 +1,10 @@
+//
+//  DonationCell.swift
+//  Takaffal
+//
+//  Created by Noora Humaid on 17/12/2025.
+//
+
 import UIKit
 
 final class DonationCell: UITableViewCell {

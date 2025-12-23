@@ -1,3 +1,9 @@
+//
+//  DonationHeaderCell.swift
+//  Takaffal
+//
+//  Created by Noora Humaid on 18/12/2025.
+//
 import UIKit
 
 final class DonationHeaderCell: UITableViewCell {

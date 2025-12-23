@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A361F352EFA18FF0091604E /* DGCharts in Frameworks */ = {isa = PBXBuildFile; productRef = 1A361F342EFA18FF0091604E /* DGCharts */; };
 		486254012ED7352500696B95 /* FirebaseAI in Frameworks */ = {isa = PBXBuildFile; productRef = 486254002ED7352500696B95 /* FirebaseAI */; };
 		486254032ED7352500696B95 /* FirebaseAILogic in Frameworks */ = {isa = PBXBuildFile; productRef = 486254022ED7352500696B95 /* FirebaseAILogic */; };
 		486254052ED7352500696B95 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 486254042ED7352500696B95 /* FirebaseAnalytics */; };
@@ -93,6 +94,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A361F352EFA18FF0091604E /* DGCharts in Frameworks */,
 				4862540D2ED7352500696B95 /* FirebaseAppDistribution-Beta in Frameworks */,
 				486254192ED7352500696B95 /* FirebaseFirestore in Frameworks */,
 				486254112ED7352500696B95 /* FirebaseAuthCombine-Community in Frameworks */,
@@ -138,12 +140,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1A361F332EFA18FF0091604E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		324258DB2EC906CF008A2654 = {
 			isa = PBXGroup;
 			children = (
 				324258E62EC906CF008A2654 /* Project */,
 				324258FD2EC906D0008A2654 /* ProjectTests */,
 				324259072EC906D0008A2654 /* ProjectUITests */,
+				1A361F332EFA18FF0091604E /* Frameworks */,
 				324258E52EC906CF008A2654 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -203,6 +213,7 @@
 				4862542C2ED7352500696B95 /* FirebaseStorage */,
 				4862542E2ED7352500696B95 /* FirebaseStorageCombine-Community */,
 				486254312ED765CD00696B95 /* Cloudinary */,
+				1A361F342EFA18FF0091604E /* DGCharts */,
 			);
 			productName = Project;
 			productReference = 324258E42EC906CF008A2654 /* Takaffal.app */;
@@ -289,6 +300,7 @@
 			packageReferences = (
 				486253FF2ED7352500696B95 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				486254302ED765CD00696B95 /* XCRemoteSwiftPackageReference "cloudinary_ios" */,
+				1A361F322EFA00350091604E /* XCRemoteSwiftPackageReference "Charts" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 324258E52EC906CF008A2654 /* Products */;
@@ -649,6 +661,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		1A361F322EFA00350091604E /* XCRemoteSwiftPackageReference "Charts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/danielgindi/Charts";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.0;
+			};
+		};
 		486253FF2ED7352500696B95 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -668,6 +688,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		1A361F342EFA18FF0091604E /* DGCharts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1A361F322EFA00350091604E /* XCRemoteSwiftPackageReference "Charts" */;
+			productName = DGCharts;
+		};
 		486254002ED7352500696B95 /* FirebaseAI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 486253FF2ED7352500696B95 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

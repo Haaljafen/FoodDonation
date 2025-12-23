@@ -20,24 +20,24 @@ final class DonationInsert {
             "donorId": "jOUkkHYArvYZvO5WAU0bgtHsqbN2",
             "collectorId": "tmp3A5GbeFMQceAhcsS6j8MJlRI2",
 
-            "item": "pasta",
-            "quantity": 1,
+            "item": "banana",
+            "quantity": 6,
             "unit": "pcs",
 
             "manufacturingDate": NSNull(),
             "expiryDate": NSNull(),
 
-            "category": "cooked meals",
-            "impactType": "waste prevent",
+            "category": "Fruits",
+            "impactType": "Meals Provided",
 
             "imageUrl": NSNull(),
             "donationMethod": "pickup",
 
-            "status": "accepted",
+            "status": "pending",
 
             "pickupRequestId": NSNull(),
 
-            "donorName": "Noora Humaid",
+            "donorName": "anfal",
             "donorCity": "Muharraq",
 
             "createdAt": Timestamp(date: Date())

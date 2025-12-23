@@ -1,3 +1,10 @@
+//
+//  HistoryViewController.swift
+//  Takaffal
+//
+//  Created by Noora Humaid on 16/12/2025.
+//
+
 import UIKit
 import FirebaseFirestore
 import FirebaseAuth

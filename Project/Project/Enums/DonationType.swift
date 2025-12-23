@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum DonationType: String, Codable {
+enum DonationType: String, Codable, CaseIterable {
     case mealsProvided = "Meals Provided"
     case wastePrevented = "Waste Prevented"
     case other = "Other"

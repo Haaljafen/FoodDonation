@@ -6,31 +6,37 @@
 //
 
 import UIKit
+import FirebaseAuth
+import FirebaseFirestore
 
 class ChangePasswordViewController: UIViewController {
-
+    
+    // MARK: - IBOutlets
+    
+    @IBOutlet weak var navContainer: UIView!
+    @IBOutlet weak var headerContainer: UIView!
+    
+    @IBOutlet weak var currentPasswordTextField: UITextField!
+    @IBOutlet weak var newPasswordTextField: UITextField!
+    @IBOutlet weak var confirmPasswordTextField: UITextField!
+    @IBOutlet weak var saveButton: UIButton!
+    
+    
+    private var headerView: HeaderView?
+    private var bottomNav: BottomNavView?
+    private var didSetupViews = false
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.tintColor = UIColor.white
 
     }
-    
-   
-    @IBOutlet weak var navContainer: UIView!
-    @IBOutlet weak var headerContainer: UIView!
-    
-    // Keep references if you need them later
-    private var headerView: HeaderView?
-    private var bottomNav: BottomNavView?
 
-    // Make sure we only add them once
-    private var didSetupViews = false
-
-    // MARK: - Lifecycle
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        // This is called multiple times so protect it
         if !didSetupViews {
             didSetupViews = true
             setupHeader()
@@ -40,6 +46,95 @@ class ChangePasswordViewController: UIViewController {
         }
         
     }
+    
+    
+    // MARK: - Change Password
+    
+    @IBAction func didTapSave(_ sender: UIButton) {
+        changePassword()
+    }
+    
+    
+    private func changePassword() {
+
+        guard
+            let currentPassword = currentPasswordTextField.text, !currentPassword.isEmpty,
+            let newPassword = newPasswordTextField.text, !newPassword.isEmpty,
+            let confirmPassword = confirmPasswordTextField.text, !confirmPassword.isEmpty
+        else {
+            showAlert(title: "Error", message: "Please fill in all fields.")
+            return
+        }
+
+        guard newPassword == confirmPassword else {
+            showAlert(title: "Error", message: "New passwords do not match.")
+            return
+        }
+
+        guard newPassword.count >= 6 else {
+            showAlert(title: "Error", message: "Password must be at least 6 characters.")
+            return
+        }
+
+        guard let user = Auth.auth().currentUser,
+              let email = user.email else {
+            showAlert(title: "Error", message: "User not logged in.")
+            return
+        }
+
+        let credential = EmailAuthProvider.credential(
+            withEmail: email,
+            password: currentPassword
+        )
+
+        user.reauthenticate(with: credential) { _, error in
+            if let error = error {
+                self.showAlert(title: "Error", message: "Current password is incorrect.")
+                print(error.localizedDescription)
+                return
+            }
+
+            user.updatePassword(to: newPassword) { error in
+                if let error = error {
+                    self.showAlert(title: "Error", message: error.localizedDescription)
+                    return
+                }
+
+                self.clearFields()
+                self.showAlert(
+                    title: "Success",
+                    message: "Password updated successfully.",
+                    shouldGoBack: true
+                )
+            }
+        }
+    }
+    
+
+    // MARK: - Alerts
+    
+    private func showAlert(title: String, message: String, shouldGoBack: Bool = false) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+            if shouldGoBack {
+                self.navigationController?.popViewController(animated: true)
+            }
+        })
+
+        present(alert, animated: true)
+    }
+    
+
+    // MARK: - Clear Fields
+
+    private func clearFields() {
+        currentPasswordTextField.text = ""
+        newPasswordTextField.text = ""
+        confirmPasswordTextField.text = ""
+    }
+
+    
 
     // MARK: - Header
 
@@ -47,7 +142,7 @@ class ChangePasswordViewController: UIViewController {
         guard let header = Bundle.main
             .loadNibNamed("HeaderView", owner: nil, options: nil)?
             .first as? HeaderView else {
-            print("❌ Failed to load HeaderView.xib")
+            print("Failed to load HeaderView.xib")
             return
         }
 
@@ -68,11 +163,10 @@ class ChangePasswordViewController: UIViewController {
 
         self.headerView = header
 
-        print("✅ Header added to container, header frame:", header.frame)
     }
 
     @objc private func openNotifications() {
-        print("🔔 Notifications tapped")
+        print("Notifications tapped")
         // later: push notifications screen
     }
 
@@ -81,7 +175,7 @@ class ChangePasswordViewController: UIViewController {
            guard let nav = Bundle.main
                .loadNibNamed("BottomNavView", owner: nil, options: nil)?
                .first as? BottomNavView else {
-               print("❌ Failed to load BottomNavView.xib")
+               print("Failed to load BottomNavView.xib")
                return
            }
 
@@ -95,39 +189,6 @@ class ChangePasswordViewController: UIViewController {
             nav.trailingAnchor.constraint(equalTo: navContainer.trailingAnchor)
         ])
 
-
-           // Example role handling
-           let currentRole: UserRole = .ngo
-
-           switch currentRole {
-           case .donor:
-               nav.formBtn.isHidden = false
-               nav.listBtn.isHidden = true
-               nav.proBtn.isHidden = true
-               nav.impBtn.isHidden = true
-               nav.userBtn.isHidden = true
-               nav.hisBtn.isHidden = true
-               nav.heartBtn.isHidden = true
-
-           case .ngo:
-               nav.formBtn.isHidden = true
-               nav.listBtn.isHidden = false
-               nav.proBtn.isHidden = false
-               nav.impBtn.isHidden = false
-               nav.hisBtn.isHidden = false
-               nav.userBtn.isHidden = true
-               nav.heartBtn.isHidden = true
-
-           case .admin:
-               nav.formBtn.isHidden = true
-               nav.listBtn.isHidden = true
-               nav.proBtn.isHidden = true
-               nav.impBtn.isHidden = true
-               nav.hisBtn.isHidden = true
-               nav.userBtn.isHidden = true
-               nav.heartBtn.isHidden = true
-           }
-
            nav.listBtn.addTarget(self, action: #selector(openHome), for: .touchUpInside)
            nav.hisBtn.addTarget(self, action: #selector(openHistory), for: .touchUpInside)
            nav.impBtn.addTarget(self, action: #selector(openImpact), for: .touchUpInside)
@@ -135,9 +196,86 @@ class ChangePasswordViewController: UIViewController {
            nav.userBtn.addTarget(self, action: #selector(openUsers), for: .touchUpInside)
 
            nav.backgroundColor = .clear
-           navContainer.addSubview(nav)
            bottomNav = nav
+            fetchUserRoleAndConfigureNav(nav)
        }
+    
+    private func fetchUserRoleAndConfigureNav(_ nav: BottomNavView) {
+
+        guard let uid = Auth.auth().currentUser?.uid else {
+            print("No logged in user")
+            return
+        }
+
+        Firestore.firestore()
+            .collection("Users")
+            .document(uid)
+            .getDocument { snapshot, error in
+
+                if let error = error {
+                    print("Failed to fetch role:", error.localizedDescription)
+                    return
+                }
+
+                guard
+                    let data = snapshot?.data(),
+                    let roleString = data["role"] as? String,
+                    let role = UserRole(rawValue: roleString)
+                else {
+                    print("Role missing or invalid")
+                    return
+                }
+
+                self.configureNav(nav, for: role)
+            }
+    }
+    
+    private func configureNav(_ nav: BottomNavView, for role: UserRole) {
+
+        switch role {
+
+        case .donor:
+            nav.formBtn.isHidden = true
+            nav.listBtn.isHidden = false
+            nav.proBtn.isHidden = false
+            nav.impBtn.isHidden = false
+            nav.userBtn.isHidden = true
+            nav.hisBtn.isHidden = false
+            nav.heartBtn.isHidden = true
+            
+            nav.userLab.isHidden = true
+            nav.donLab.isHidden = true
+            nav.listLab.isHidden = true
+
+        case .ngo:
+            nav.formBtn.isHidden = true
+            nav.listBtn.isHidden = false
+            nav.proBtn.isHidden = false
+            nav.impBtn.isHidden = false
+            nav.hisBtn.isHidden = false
+            nav.userBtn.isHidden = true
+            nav.heartBtn.isHidden = true
+            
+            nav.userLab.isHidden = true
+            nav.donLab.isHidden = true
+            nav.ngoLab.isHidden = true
+
+        case .admin:
+            nav.formBtn.isHidden = true
+            nav.listBtn.isHidden = true
+            nav.proBtn.isHidden = false
+            nav.impBtn.isHidden = false
+            nav.hisBtn.isHidden = true
+            nav.userBtn.isHidden = false
+            nav.heartBtn.isHidden = false
+            
+            nav.hisLab.isHidden = true
+            nav.listLab.isHidden = true
+            nav.ngoLab.isHidden = true
+    
+        }
+    }
+
 
        // MARK: - Nav Actions
        @objc private func openHome() { print("🏠 Home tapped") }

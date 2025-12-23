@@ -1,21 +1,13 @@
 //
-//  EditProfileViewController.swift
+//  ChangePasswordViewController.swift
 //  Takaffal
 //
-//  Created by Mariam Sharaf on 22/12/2025.
+//  Created by Mariam Sharaf on 23/12/2025.
 //
 
 import UIKit
 
-class EditProfileViewController: UIViewController {
-
-    @IBOutlet weak var navContainer: UIView!
-    @IBOutlet weak var headerContainer: UIView!
-    
-    private var headerView: HeaderView?
-    private var bottomNav: BottomNavView?
-    private var didSetupViews = false
-
+class ChangePasswordViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,6 +15,18 @@ class EditProfileViewController: UIViewController {
 
     }
     
+   
+    @IBOutlet weak var navContainer: UIView!
+    @IBOutlet weak var headerContainer: UIView!
+    
+    // Keep references if you need them later
+    private var headerView: HeaderView?
+    private var bottomNav: BottomNavView?
+
+    // Make sure we only add them once
+    private var didSetupViews = false
+
+    // MARK: - Lifecycle
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
@@ -31,7 +35,10 @@ class EditProfileViewController: UIViewController {
             didSetupViews = true
             setupHeader()
             setupNav()
+            print("Nav container frame:", navContainer.frame)
+            print("Safe area insets:", view.safeAreaInsets)
         }
+        
     }
 
     // MARK: - Header
@@ -49,8 +56,8 @@ class EditProfileViewController: UIViewController {
 
         // Customize header
         header.takaffalLabel.text = "Takaffal"
-        header.backBtn.isHidden = true
         header.search.isHidden = true
+        header.backBtn.isHidden = true
 
         header.notiBtn.addTarget(self,
                                  action: #selector(openNotifications),
@@ -78,21 +85,29 @@ class EditProfileViewController: UIViewController {
                return
            }
 
-           nav.frame = navContainer.bounds
-           nav.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        nav.translatesAutoresizingMaskIntoConstraints = false
+        navContainer.addSubview(nav)
+
+        NSLayoutConstraint.activate([
+            nav.topAnchor.constraint(equalTo: navContainer.topAnchor),
+            nav.bottomAnchor.constraint(equalTo: navContainer.bottomAnchor),
+            nav.leadingAnchor.constraint(equalTo: navContainer.leadingAnchor),
+            nav.trailingAnchor.constraint(equalTo: navContainer.trailingAnchor)
+        ])
+
 
            // Example role handling
-           let currentRole: UserRole = .donor
+           let currentRole: UserRole = .ngo
 
            switch currentRole {
            case .donor:
                nav.formBtn.isHidden = false
                nav.listBtn.isHidden = true
-               nav.proBtn.isHidden = false
-               nav.impBtn.isHidden = false
+               nav.proBtn.isHidden = true
+               nav.impBtn.isHidden = true
                nav.userBtn.isHidden = true
-               nav.hisBtn.isHidden = false
-               nav.heartBtn.isHidden = false
+               nav.hisBtn.isHidden = true
+               nav.heartBtn.isHidden = true
 
            case .ngo:
                nav.formBtn.isHidden = true

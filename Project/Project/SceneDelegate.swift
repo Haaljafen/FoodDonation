@@ -20,7 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let window = UIWindow(windowScene: windowScene)
 
-        let storyboard = UIStoryboard(name: "ImpactAdmin", bundle: nil)
+        let storyboard = UIStoryboard(name: "ImpactNoora", bundle: nil)
 
         let initialVC = storyboard.instantiateInitialViewController()
         window.rootViewController = initialVC

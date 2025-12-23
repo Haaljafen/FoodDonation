@@ -37,7 +37,10 @@ final class DashboardViewController: BaseChromeViewController {
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        deleteDonation(donationId: "B1C0F755-2745-482F-B5ED-91527EF8F23B")
+
         
 //                DonationInsert.insertTestDonation()
 
@@ -75,7 +78,7 @@ final class DashboardViewController: BaseChromeViewController {
     private func loadDonorDashboard(uid: String) {
         
         section1TitleLabe.text = "Your Impact"
-        section2TitleLabe.text = "Your total donations impact"
+        section2TitleLabe.text = "Your Impact Distribution"
 
         statTitle1Label.text = "Total Donations"
         statTitle3Label.text = "Total Impact Types"
@@ -88,7 +91,7 @@ final class DashboardViewController: BaseChromeViewController {
                 let docs = snapshot?.documents ?? []
                 
                 let totalDonations = docs.count
-                let totalImpact = docs.reduce(0) { $0 + ($1["impactValue"] as? Int ?? 0) }
+//                let totalImpact = docs.reduce(0) { $0 + ($1["impactValue"] as? Int ?? 0) }
                 let categories = Set(docs.compactMap { $0["category"] as? String })
                 
                 self.statValue1Label.text = "\(totalDonations)"
@@ -103,7 +106,7 @@ final class DashboardViewController: BaseChromeViewController {
     private func loadNGODashboard(uid: String) {
         
         section1TitleLabe.text = "Your Impact"
-        section2TitleLabe.text = "Your total accepted donations impact"
+        section2TitleLabe.text = "Your Impact Distribution"
 
 
         statTitle1Label.text = "Accepted Donations"
@@ -133,7 +136,7 @@ final class DashboardViewController: BaseChromeViewController {
     private func loadAdminDashboard() {
         
         section1TitleLabe.text = "Takaffal Users"
-        section2TitleLabe.text = "Total user's impact"
+        section2TitleLabe.text = "User's Impact Distribution"
 
 
         statTitle1Label.text = "Total Donors"
@@ -176,6 +179,7 @@ final class DashboardViewController: BaseChromeViewController {
     }
 
 
+
     
     // MARK: - Impact Percentage Chart
     private func updateImpactChart(_ docs: [QueryDocumentSnapshot]) {
@@ -205,7 +209,7 @@ final class DashboardViewController: BaseChromeViewController {
         dataSet.colors = [
             UIColor(hex: "B35D4C"),
             UIColor(hex: "DF9B6D"),
-            UIColor(hex: "DF9B6D")
+            UIColor(hex: "738290")
         ]
         dataSet.valueTextColor = .white
         dataSet.valueFont = .boldSystemFont(ofSize: 12)

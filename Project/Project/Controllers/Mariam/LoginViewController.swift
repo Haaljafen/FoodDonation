@@ -19,80 +19,85 @@ class LoginViewController: UIViewController {
     // MARK: - Properties
     private let db = Firestore.firestore()
     private var userRole: UserRole?
-
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
     }
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+    
     // MARK: - UI Setup
     private func setupUI() {
         passwordTextField.isSecureTextEntry = true
     }
-
+    
     // MARK: - Actions
     @IBAction func loginButtonTapped(_ sender: UIButton) {
         loginUser()
     }
-
+    
     // MARK: - Login Flow
     private func loginUser() {
-
+        
         let email = emailTextField.text?.trimmed ?? ""
         let password = passwordTextField.text?.trimmed ?? ""
-
+        
         if let errorMessage = validateInputs(email: email, password: password) {
             showAlert(title: "Error", message: errorMessage)
             return
         }
-
+        
         Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
             guard let self = self else { return }
-
+            
             if let error = error as NSError? {
                 self.handleAuthError(error)
                 return
             }
-
+            
             guard let uid = result?.user.uid else {
                 self.showAlert(title: "Error", message: "Unable to retrieve user ID.")
                 return
             }
-
+            
             self.fetchUserRole(userId: uid)
         }
     }
-
+    
     // MARK: - Validation
     private func validateInputs(email: String, password: String) -> String? {
-
+        
         if email.isEmpty || password.isEmpty {
             return "Please fill in all fields."
         }
-
+        
         if !email.contains("@") {
             return "Please enter a valid email address."
         }
-
+        
         if password.count < 6 {
             return "Password must be at least 6 characters."
         }
-
+        
         return nil
     }
-
+    
     // MARK: - Fetch Role from Firestore
     private func fetchUserRole(userId: String) {
-
+        
         db.collection("Users").document(userId).getDocument { [weak self] snapshot, error in
             guard let self = self else { return }
-
+            
             if let error = error {
                 self.showAlert(title: "Error", message: error.localizedDescription)
                 return
             }
-
+            
             guard
                 let data = snapshot?.data(),
                 let roleString = data["role"] as? String,
@@ -101,40 +106,40 @@ class LoginViewController: UIViewController {
                 self.showAlert(title: "Error", message: "User role not found.")
                 return
             }
-
+            
             self.userRole = role
             self.showSuccessAlert()
         }
     }
-
+    
     // MARK: - Alerts
     private func showSuccessAlert() {
-
+        
         let alert = UIAlertController(
             title: "Success",
             message: "You logged in successfully!",
             preferredStyle: .alert
         )
-
+        
         alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
             self.handleRoleRouting()
         })
-
+        
         present(alert, animated: true)
     }
-
+    
     private func showAlert(title: String, message: String) {
-
+        
         let alert = UIAlertController(
             title: title,
             message: message,
             preferredStyle: .alert
         )
-
+        
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
-
+    
     // MARK: - Role Routing
     private func handleRoleRouting() {
         
@@ -142,61 +147,74 @@ class LoginViewController: UIViewController {
             showAlert(title: "Error", message: "No role assigned.")
             return
         }
-
+        
         let sb = UIStoryboard(name: "MariamStoryboard2", bundle: nil)
         let vc: UIViewController
-
+        
         switch role {
         case .donor:
             print("Logged in as DONOR")
             vc = sb.instantiateViewController(withIdentifier: "ProfileViewController")
         case .ngo:
             print("Logged in as NGO")
-            vc = sb.instantiateViewController(withIdentifier: "NGOHomeViewController")
+            vc = sb.instantiateViewController(withIdentifier: "ProfileViewController")
         case .admin:
             print("Logged in as ADMIN")
-            vc = sb.instantiateViewController(withIdentifier: "AdminDashboardViewController")
+            vc = sb.instantiateViewController(withIdentifier: "ProfileViewController")
         }
-
+        
         navigationController?.pushViewController(vc, animated: true)
     }
-
+    
     // MARK: - Firebase Auth Errors
     private func handleAuthError(_ error: NSError) {
-
+        
         guard let code = AuthErrorCode(rawValue: error.code) else {
             showAlert(title: "Error", message: error.localizedDescription)
             return
         }
-
+        
         switch code {
         case .userNotFound:
             showAlert(title: "Error", message: "No account found with this email.")
-
+            
         case .wrongPassword:
             showAlert(title: "Error", message: "Incorrect password.")
-
+            
         case .invalidEmail:
             showAlert(title: "Error", message: "Invalid email address.")
-
+            
         case .networkError:
             showAlert(title: "Error", message: "Network error. Please try again.")
-
+            
         default:
             showAlert(title: "Error", message: error.localizedDescription)
         }
     }
-
+    
+    
+    @IBAction func forgotPasswordTapped(_ sender: UIButton) {
+        
+        let sb = UIStoryboard(name: "MariamStoryboard1", bundle: nil)
+        let vc = sb.instantiateViewController(
+            withIdentifier: "ForgotPasswordViewController"
+        )
+        
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    
     //MARK: - Signup Redirecting
     
     @IBAction func registerTapped(_ sender: UIButton) {
-        let vc = storyboard?.instantiateViewController(
+        let sb = UIStoryboard(name: "MariamStoryboard1", bundle: nil)
+        let vc = sb.instantiateViewController(
             withIdentifier: "SignupViewController"
         ) as! SignupViewController
-
-        present(vc, animated: true)
+        
+        navigationController?.pushViewController(vc, animated: true)
+        
     }
-    
 }
 
     // MARK: - Helpers

@@ -180,6 +180,11 @@ class EditProfileViewController: UIViewController {
                                 message: error.localizedDescription
                             )
                         } else {
+                            self.updateRealtimeUserMirror(
+                                user: user,
+                                profileImageUrl: imageUrl
+                            )
+
                             self.showAlert(
                                 title: "Success",
                                 message: "Profile updated successfully.",
@@ -194,13 +199,20 @@ class EditProfileViewController: UIViewController {
     
     // MARK: - Save in Real Time
     
-    private func updateRealtimeUserMirror(user: User) {
+    private func updateRealtimeUserMirror(
+        user: User,
+        profileImageUrl: String?
+    ) {
 
         guard let uid = Auth.auth().currentUser?.uid else { return }
 
+        let finalImageUrl = profileImageUrl
+            ?? currentUser?.profileImageUrl
+            ?? ""
+
         var liveData: [String: Any] = [
             "role": user.role.rawValue,
-            "profileImageUrl": currentUser?.profileImageUrl ?? "",
+            "profileImageUrl": finalImageUrl,
             "updatedAt": ServerValue.timestamp()
         ]
 
@@ -209,7 +221,8 @@ class EditProfileViewController: UIViewController {
             liveData["displayName"] = usernameTextField.text ?? ""
 
         case .ngo:
-            liveData["displayName"] = organizationNameTextField.text?.lowercased() ?? ""
+            liveData["displayName"] =
+                organizationNameTextField.text?.lowercased() ?? ""
         }
 
         rtdb
@@ -432,8 +445,13 @@ class EditProfileViewController: UIViewController {
 
         // Customize header
         header.takaffalLabel.text = "Takaffal"
-        header.backBtn.isHidden = true
         header.search.isHidden = true
+        header.backBtn.isHidden = false
+        
+        header.backBtn.addTarget(self,
+                                 action: #selector(didTapBack),
+                                 for: .touchUpInside)
+
 
         header.notiBtn.addTarget(self,
                                  action: #selector(openNotifications),
@@ -444,6 +462,10 @@ class EditProfileViewController: UIViewController {
 
         self.headerView = header
 
+    }
+    
+    @objc private func didTapBack() {
+        navigationController?.popViewController(animated: true)
     }
 
     @objc private func openNotifications() {

@@ -34,7 +34,7 @@
                                     <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </buttonConfiguration>
                                 <connections>
-                                    <segue destination="gD4-DO-37b" kind="show" id="5wp-I5-nkx"/>
+                                    <segue destination="gD4-DO-37b" kind="push" id="5wp-I5-nkx"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RRt-vP-JUg">
@@ -48,7 +48,7 @@
                                     <color key="baseForegroundColor" red="0.75294117647058822" green="0.3411764705882353" blue="0.27450980392156865" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 </buttonConfiguration>
                                 <connections>
-                                    <segue destination="vCx-dE-TOO" kind="show" id="dSG-th-xA8"/>
+                                    <segue destination="vCx-dE-TOO" kind="push" id="dSG-th-xA8"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Welcome to" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oT6-8N-EqY">
@@ -102,7 +102,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="wbv-U1-Hr2">
-                                <rect key="frame" x="20" y="268" width="362" height="259.33333333333326"/>
+                                <rect key="frame" x="20" y="223.99999999999997" width="362" height="259.33333333333326"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Forgot Password" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="njS-Ye-ezW">
                                         <rect key="frame" x="0.0" y="0.0" width="362" height="45.666666666666664"/>
@@ -273,7 +273,7 @@
                                                             <fontDescription key="titleFontDescription" type="system" pointSize="15"/>
                                                         </buttonConfiguration>
                                                         <connections>
-                                                            <segue destination="mkj-r9-PkC" kind="show" id="4Ax-hQ-WZE"/>
+                                                            <action selector="forgotPasswordTapped:" destination="gD4-DO-37b" eventType="touchUpInside" id="rwo-cr-1Jq"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7fd-RY-kmo">

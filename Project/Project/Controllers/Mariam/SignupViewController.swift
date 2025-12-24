@@ -33,6 +33,11 @@ class SignupViewController: UIViewController, UIImagePickerControllerDelegate, U
         profileImageView.clipsToBounds = true
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+    
     
     // MARK: - IBOutlets
     @IBOutlet weak var profileImageView: UIImageView!
@@ -277,7 +282,7 @@ class SignupViewController: UIViewController, UIImagePickerControllerDelegate, U
                withIdentifier: "LoginViewController"
            ) as! LoginViewController
 
-           present(vc, animated: true)
+        navigationController?.popViewController(animated: true)
         
     }
     

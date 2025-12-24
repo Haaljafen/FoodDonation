@@ -335,17 +335,17 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jnH-Wm-ErB" userLabel="Header">
-                                <rect key="frame" x="0.0" y="44" width="402" height="170"/>
+                                <rect key="frame" x="0.0" y="0.0" width="402" height="170"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="170" id="2k6-Zt-Igc"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9di-h1-JlS" userLabel="ContentView">
-                                <rect key="frame" x="0.0" y="222" width="402" height="560.33333333333337"/>
+                                <rect key="frame" x="0.0" y="178" width="402" height="553"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="8ac-NI-x2R">
-                                        <rect key="frame" x="24" y="5" width="354" height="551.33333333333337"/>
+                                        <rect key="frame" x="24" y="5" width="354" height="544"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BEA-nT-AOz" userLabel="ProfileCardView">
                                                 <rect key="frame" x="0.0" y="0.0" width="354" height="160"/>
@@ -391,7 +391,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="qiA-Cf-DQy" userLabel="SettingsStackView">
-                                                <rect key="frame" x="0.0" y="229.99999999999997" width="354" height="258.33333333333326"/>
+                                                <rect key="frame" x="0.0" y="230" width="354" height="251"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zyY-Rp-TsH" userLabel="EditProfileButton">
                                                         <rect key="frame" x="0.0" y="0.0" width="354" height="44"/>
@@ -444,7 +444,7 @@
                                                         </buttonConfiguration>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hXn-FW-ThH" userLabel="OrganizationButton">
-                                                        <rect key="frame" x="0.0" y="176" width="354" height="38.333333333333343"/>
+                                                        <rect key="frame" x="0.0" y="176" width="354" height="44"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="44" id="9r6-dh-OhV"/>
                                                         </constraints>
@@ -453,16 +453,19 @@
                                                         <buttonConfiguration key="configuration" style="plain" title="Organization Name"/>
                                                     </button>
                                                     <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="j2j-QS-uIr" userLabel="Notification Stack View">
-                                                        <rect key="frame" x="0.0" y="214.33333333333337" width="354" height="44"/>
+                                                        <rect key="frame" x="0.0" y="220" width="354" height="31"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="  Notifications" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K6l-iM-fTt" userLabel="Notifications">
-                                                                <rect key="frame" x="0.0" y="11.999999999999998" width="301" height="20.333333333333329"/>
+                                                                <rect key="frame" x="0.0" y="5.3333333333333712" width="301" height="20.333333333333332"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0qR-yD-eGJ">
-                                                                <rect key="frame" x="305" y="6.6666666666666288" width="51" height="31"/>
+                                                                <rect key="frame" x="305" y="0.0" width="51" height="31"/>
+                                                                <connections>
+                                                                    <action selector="notificationSwitchChanged:" destination="oxh-NZ-0Bk" eventType="valueChanged" id="cf3-nM-7G4"/>
+                                                                </connections>
                                                             </switch>
                                                         </subviews>
                                                         <constraints>
@@ -475,7 +478,7 @@
                                                 </constraints>
                                             </stackView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="weC-rM-qK3" userLabel="LogoutButton">
-                                                <rect key="frame" x="0.0" y="501.33333333333337" width="354" height="50"/>
+                                                <rect key="frame" x="0.0" y="494" width="354" height="50"/>
                                                 <color key="backgroundColor" red="0.75294117650000003" green="0.3411764706" blue="0.27450980390000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="50" id="neT-ew-zPI"/>
@@ -491,6 +494,9 @@
                                                     </userDefinedRuntimeAttribute>
                                                     <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                                 </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="didTapLogout:" destination="oxh-NZ-0Bk" eventType="touchUpInside" id="YKX-oX-UYe"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                     </stackView>
@@ -504,7 +510,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qh2-3U-Dcr" userLabel="Nav">
-                                <rect key="frame" x="0.0" y="782.33333333333337" width="402" height="120"/>
+                                <rect key="frame" x="0.0" y="731" width="402" height="120"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="120" id="4gp-40-17q"/>
@@ -515,7 +521,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="Qh2-3U-Dcr" firstAttribute="trailing" secondItem="OG5-To-FRL" secondAttribute="trailing" id="7st-mc-pcd"/>
-                            <constraint firstItem="jnH-Wm-ErB" firstAttribute="top" secondItem="OG5-To-FRL" secondAttribute="top" constant="-124" id="9yH-8S-P75"/>
+                            <constraint firstItem="jnH-Wm-ErB" firstAttribute="top" secondItem="rbG-8E-o7N" secondAttribute="top" id="9yH-8S-P75"/>
                             <constraint firstItem="9di-h1-JlS" firstAttribute="bottom" secondItem="Qh2-3U-Dcr" secondAttribute="top" id="Aq4-WP-BPo"/>
                             <constraint firstItem="9di-h1-JlS" firstAttribute="trailing" secondItem="OG5-To-FRL" secondAttribute="trailing" id="YQG-zz-eAg"/>
                             <constraint firstItem="9di-h1-JlS" firstAttribute="leading" secondItem="OG5-To-FRL" secondAttribute="leading" id="cs8-LQ-5P6"/>
@@ -523,13 +529,22 @@
                             <constraint firstItem="jnH-Wm-ErB" firstAttribute="trailing" secondItem="OG5-To-FRL" secondAttribute="trailing" id="hdl-kp-LHs"/>
                             <constraint firstItem="jnH-Wm-ErB" firstAttribute="leading" secondItem="OG5-To-FRL" secondAttribute="leading" id="q1y-ho-v99"/>
                             <constraint firstItem="9di-h1-JlS" firstAttribute="top" secondItem="jnH-Wm-ErB" secondAttribute="bottom" constant="8" symbolic="YES" id="rag-We-kQS"/>
-                            <constraint firstItem="Qh2-3U-Dcr" firstAttribute="bottom" secondItem="OG5-To-FRL" secondAttribute="bottom" id="uBM-Ko-MPp"/>
+                            <constraint firstItem="Qh2-3U-Dcr" firstAttribute="bottom" secondItem="rbG-8E-o7N" secondAttribute="bottom" id="uBM-Ko-MPp"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="gim-1Y-u3o"/>
                     <connections>
+                        <outlet property="achievementsButton" destination="5hJ-Dd-FEF" id="dsA-1U-ddj"/>
+                        <outlet property="chatbotButton" destination="ZU7-uT-yJ2" id="9mD-rz-IHj"/>
+                        <outlet property="editProfileButton" destination="zyY-Rp-TsH" id="Moy-oh-xSh"/>
                         <outlet property="headerContainer" destination="jnH-Wm-ErB" id="lVs-uz-TN1"/>
+                        <outlet property="logoutButton" destination="weC-rM-qK3" id="lgT-5o-S28"/>
                         <outlet property="navContainer" destination="Qh2-3U-Dcr" id="wZS-zR-6kd"/>
+                        <outlet property="notificationSwitch" destination="0qR-yD-eGJ" id="A2N-Yx-WkR"/>
+                        <outlet property="organizationButton" destination="hXn-FW-ThH" id="gzI-Dj-AqF"/>
+                        <outlet property="profileImageView" destination="0sr-tJ-RN9" id="8NU-IR-OEw"/>
+                        <outlet property="roleLabel" destination="YIt-8f-t5x" id="MKw-No-gMu"/>
+                        <outlet property="usernameLabel" destination="6KP-Vn-yO9" id="MRh-B7-3np"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wZw-sd-s3y" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

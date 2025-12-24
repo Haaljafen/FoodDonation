@@ -142,29 +142,39 @@ class LoginViewController: UIViewController {
     
     // MARK: - Role Routing
     private func handleRoleRouting() {
-        
+
         guard let role = userRole else {
             showAlert(title: "Error", message: "No role assigned.")
             return
         }
-        
-        let sb = UIStoryboard(name: "MariamStoryboard2", bundle: nil)
-        let vc: UIViewController
-        
+
+        let storyboardName: String
+        let viewControllerID: String
+
         switch role {
+
         case .donor:
             print("Logged in as DONOR")
-            vc = sb.instantiateViewController(withIdentifier: "ProfileViewController")
+            storyboardName = "AbdullaStoryboard1"
+            viewControllerID = "AbdullaViewController1"
+
         case .ngo:
             print("Logged in as NGO")
-            vc = sb.instantiateViewController(withIdentifier: "ProfileViewController")
+            storyboardName = "HajarStoryboard"
+            viewControllerID = "HajarHomeVC"
+
         case .admin:
             print("Logged in as ADMIN")
-            vc = sb.instantiateViewController(withIdentifier: "ProfileViewController")
+            storyboardName = "HistoryDonorAdminStoryboard"
+            viewControllerID = "HistoryViewController"
         }
-        
-        navigationController?.pushViewController(vc, animated: true)
+
+        let storyboard = UIStoryboard(name: storyboardName, bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: viewControllerID)
+
+        navigationController?.setViewControllers([vc], animated: true)
     }
+
     
     // MARK: - Firebase Auth Errors
     private func handleAuthError(_ error: NSError) {

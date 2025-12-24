@@ -442,6 +442,9 @@
                                                         <buttonConfiguration key="configuration" style="plain" imagePlacement="trailing" title="My Achievements" imagePadding="169">
                                                             <imageReference key="image" image="chevron.right" catalog="system" symbolScale="medium"/>
                                                         </buttonConfiguration>
+                                                        <connections>
+                                                            <action selector="goToAchivTapped:" destination="oxh-NZ-0Bk" eventType="touchUpInside" id="3kb-h2-K2i"/>
+                                                        </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hXn-FW-ThH" userLabel="OrganizationButton">
                                                         <rect key="frame" x="0.0" y="176" width="354" height="44"/>

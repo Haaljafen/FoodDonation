@@ -323,34 +323,6 @@ class SignupViewController: UIViewController, UIImagePickerControllerDelegate, U
         }
     }
     
-    //MARK: - Signup Redirecting
-    
-    private func routeAfterAuth(role: UserRole) {
-
-        let storyboardName: String
-        let controllerID: String
-
-        switch role {
-        case .donor:
-            storyboardName = "AbdullaStoryboard1"
-            controllerID = "AbdullaViewController1"
-
-        case .ngo:
-            storyboardName = "HajarStoryboard"
-            controllerID = "HajarHomeVC"
-
-        case .admin:
-            storyboardName = "HistoryDonorAdminStoryboard"
-            controllerID = "HistoryViewController"
-        }
-
-        let sb = UIStoryboard(name: storyboardName, bundle: nil)
-        let vc = sb.instantiateViewController(withIdentifier: controllerID)
-
-        navigationController?.setViewControllers([vc], animated: true)
-    }
-
-    
     //MARK: - Login Redirecting
 
     @IBAction func loginTappedloginTapped(_ sender: UIButton) {

@@ -12,7 +12,7 @@
         <!--History View Controller-->
         <scene sceneID="MiG-dd-i83">
             <objects>
-                <viewController storyboardIdentifier="HistoryViewController" id="jXp-Ti-Suv" customClass="HistoryViewController" customModule="Takaffal" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="jXp-Ti-Suv" customClass="HistoryViewController" customModule="Takaffal" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="SY0-7Y-H3j">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

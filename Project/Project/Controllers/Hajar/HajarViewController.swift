@@ -227,7 +227,7 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
 //    }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "DonationCell", for: indexPath) as? DonationCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "DonationCell", for: indexPath) as? DonationCellHajar else {
             return UITableViewCell()
         }
 
@@ -273,52 +273,29 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
 
     // MARK: - Bottom Nav
-
     private func setupNav() {
-        print("⚪️ setupNav, navContainer frame:", navContainer.frame)
+           guard let nav = Bundle.main
+               .loadNibNamed("BottomNavView", owner: nil, options: nil)?
+               .first as? BottomNavView else {
+               print("❌ Failed to load BottomNavView.xib")
+               return
+           }
 
-        guard let nav = Bundle.main
-            .loadNibNamed("BottomNavView", owner: nil, options: nil)?
-            .first as? BottomNavView else {
-            print("❌ Failed to load BottomNavView.xib or cast to BottomNavView")
-            return
-        }
+           nav.frame = navContainer.bounds
+           nav.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
-        print("✅ BottomNavView loaded")
+           // Example role handling
+           let currentRole: UserRole = .ngo
 
-        nav.frame = navContainer.bounds
-        nav.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-
-        // ====== CONTROL WHAT IS HIDDEN HERE ======
-
-        // Example: assume current user is a donor for now
-        let currentRole: UserRole = .ngo   // later: replace with real value
-
-        switch currentRole {
-        case .donor:
-            // Hide EVERYTHING in BottomNavView
-            nav.listBtn.isHidden = true
-            nav.listLab.isHidden = true
-
-            nav.ngoLab.isHidden = true
-
-            nav.proBtn.isHidden = true
-            nav.proLab.isHidden = true
-
-            nav.impBtn.isHidden = true
-            nav.ompLab.isHidden = true   // (impact label)
-
-            nav.userBtn.isHidden = true
-            nav.userLab.isHidden = true
-
-            nav.hisBtn.isHidden = true
-            nav.hisLab.isHidden = true
-
-            nav.heartBtn.isHidden = true
-            nav.donLab.isHidden = true
-
-            nav.formBtn.isHidden = false
-
+           switch currentRole {
+           case .donor:
+               nav.formBtn.isHidden = false
+               nav.listBtn.isHidden = true
+               nav.proBtn.isHidden = true
+               nav.impBtn.isHidden = true
+               nav.userBtn.isHidden = true
+               nav.hisBtn.isHidden = true
+               nav.heartBtn.isHidden = true
 
         case .ngo:
         
@@ -392,48 +369,15 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
                                action: #selector(openUsers),
                                for: .touchUpInside)
 
-        nav.listBtn.addTarget(self,
-                                   action: #selector(openDonations),
-                                   for: .touchUpInside)
+           nav.backgroundColor = .clear
+           navContainer.addSubview(nav)
+           bottomNav = nav
+       }
 
-        // Optional styling example
-        nav.backgroundColor = .clear
-
-        navContainer.addSubview(nav)
-        self.bottomNav = nav
-
-        print("✅ Nav added to container, nav frame:", nav.frame)
-    }
-
-    // MARK: - Navigation Actions (for now just print; later you push/segue)
-
-    @objc private func openHome() {
-        print("🏠 Home tapped")
-        // TODO: show Hajar's main listing screen
-    }
-
-    @objc private func openHistory() {
-        print("📜 History tapped")
-        // TODO: show donation history VC
-    }
-
-    @objc private func openImpact() {
-        print("📈 Impact tapped")
-        // TODO: show impact/analytics VC
-    }
-
-    @objc private func openProfile() {
-        print("👤 Profile tapped")
-        // TODO: show profile VC
-    }
-
-    @objc private func openUsers() {
-        print("👥 Users tapped (admin)")
-        // TODO: admin users VC
-    }
-
-    @objc private func openDonations() {
-        print("🎁 Donations tapped (admin)")
-        // TODO: admin donations management VC
-    }
-}
+       // MARK: - Nav Actions
+       @objc private func openHome() { print("🏠 Home tapped") }
+       @objc private func openHistory() { print("📜 History tapped") }
+       @objc private func openImpact() { print("📈 Impact tapped") }
+       @objc private func openProfile() { print("👤 Profile tapped") }
+       @objc private func openUsers() { print("👥 Users tapped") }
+   }

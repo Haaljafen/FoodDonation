@@ -1,6 +1,6 @@
 import UIKit
 
-class DonationCell: UITableViewCell {
+class DonationCellHajar: UITableViewCell {
 
     @IBOutlet weak var cardView: UIView!
     @IBOutlet weak var locationLabel: UILabel!

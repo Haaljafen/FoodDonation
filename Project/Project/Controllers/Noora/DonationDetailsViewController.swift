@@ -351,7 +351,23 @@ extension DonationDetailsViewController: UITableViewDelegate, UITableViewDataSou
             let cell = tableView.dequeueReusableCell(withIdentifier: "DonationDetailsCell", for: indexPath) as! DonationDetailsCell
 
             let item = (details["item"] as? String) ?? "—"
-            let category = (details["category"] as? String) ?? "—"
+//            let category = (details["category"] as? String) ?? "—"
+            
+            let expiryText: String = {
+                if let ts = details["expiryDate"] as? Timestamp {
+                    let df = DateFormatter()
+                    df.dateStyle = .medium
+                    df.timeStyle = .none
+                    return df.string(from: ts.dateValue())
+                }
+
+                if let s = details["expiryDate"] as? String, !s.isEmpty {
+                    return s
+                }
+
+                return "—"
+            }()
+
 
             let quantityInt: Int = {
                 if let q = details["quantity"] as? Int { return q }
@@ -366,7 +382,7 @@ extension DonationDetailsViewController: UITableViewDelegate, UITableViewDataSou
             cell.configure(
                 item: item,
                 quantity: "\(quantityInt)",
-                category: category,
+                expiryDate: expiryText,
                 impact: impact,
                 imageUrlString: imageUrlString
             )

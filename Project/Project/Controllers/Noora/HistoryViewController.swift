@@ -41,7 +41,10 @@ final class HistoryViewController: BaseChromeViewController {
     
     
     //defualt role (for the actual app role)
-    private let TEST_USER_ID: String? = nil
+//    private let TEST_USER_ID: String? = "tmp3A5GbeFMQceAhcsS6j8MJlRI2" //NGO
+//    private let TEST_USER_ID: String? = "vFxkvcW50ENC7DufTWFNISF2fHi2" //Donor
+    private let TEST_USER_ID: String? = "nvjfqWavDePSwn28xbHT4aUoEUC2"//Admin
+
     private let FORCE_TEST_ROLE: UserRole? = nil
 
 
@@ -348,6 +351,7 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
 
         let donation = donations[indexPath.row]
         let dateString = dateFormatter.string(from: donation.createdAt.dateValue())
+        cell.methodLabel.textColor = .label
 
         cell.donationIDLabel.text = "ID: \(donation.donationID)"
         cell.methodLabel.text = "Method: \(donation.method)"
@@ -363,7 +367,6 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
 
         if currentRole == .ngo {
-            ///here the prop
                     performSegue(withIdentifier: "showNGODonationDetails", sender: indexPath)
                 } else {
                     performSegue(withIdentifier: "showDonationDetails", sender: indexPath)

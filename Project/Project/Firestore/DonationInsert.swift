@@ -17,28 +17,28 @@ final class DonationInsert {
 
         let data: [String: Any] = [
             "id": donationId,
-            "donorId": "jOUkkHYArvYZvO5WAU0bgtHsqbN2",
+            "donorId": "ij0OTAo2nASJ1Zk6lr9U8buRJ412",
             "collectorId": "tmp3A5GbeFMQceAhcsS6j8MJlRI2",
 
-            "item": "banana",
-            "quantity": 6,
+            "item": "pasts",
+            "quantity": 12,
             "unit": "pcs",
 
             "manufacturingDate": NSNull(),
-            "expiryDate": NSNull(),
+            "expiryDate": "10/04/2027",
 
-            "category": "Fruits",
+            "category": "Cooked Meals",
             "impactType": "Meals Provided",
 
-            "imageUrl": NSNull(),
-            "donationMethod": "pickup",
+            "imageUrl": "https://res.cloudinary.com/dquu356xs/image/upload/v1765719626/qgcfxotbtwj4psxh6fjm.jpg",
+            "donationMethod": "locationPickup",
 
-            "status": "pending",
+            "status": "delivered",
 
             "pickupRequestId": NSNull(),
 
-            "donorName": "anfal",
-            "donorCity": "Muharraq",
+            "donorName": "Sarah",
+            "donorCity": "Manama",
 
             "createdAt": Timestamp(date: Date())
         ]

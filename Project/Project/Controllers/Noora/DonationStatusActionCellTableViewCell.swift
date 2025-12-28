@@ -9,7 +9,6 @@ import UIKit
 
 final class DonationStatusActionCell: UITableViewCell {
 
-    @IBOutlet weak var statusTitleLabel: UILabel!
     @IBOutlet weak var statusValueLabel: UILabel!
     @IBOutlet weak var changeStatusButton: UIButton!
 
@@ -26,7 +25,6 @@ final class DonationStatusActionCell: UITableViewCell {
         buttonTitle: String = "Change Status",
         onChangeTapped: @escaping () -> Void
     ) {
-        statusTitleLabel.text = "Current Status"
         statusValueLabel.text = currentStatus.capitalized
         changeStatusButton.setTitle(buttonTitle, for: .normal)
         self.onChangeTapped = onChangeTapped

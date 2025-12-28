@@ -13,6 +13,8 @@ import DGCharts
 final class DashboardViewController: BaseChromeViewController {
     
     // MARK: - Outlets
+    @IBOutlet weak var MotiveSentence: UILabel!
+    @IBOutlet weak var AdminTotalDonations: UILabel!
     @IBOutlet weak var section1TitleLabe: UILabel!
     @IBOutlet weak var section2TitleLabe: UILabel!
     @IBOutlet weak var statTitle1Label: UILabel!
@@ -27,9 +29,8 @@ final class DashboardViewController: BaseChromeViewController {
     // MARK: - Properties
     private let db = Firestore.firestore()
     private var listener: ListenerRegistration?
-    private let testUID: String? = "jOUkkHYArvYZvO5WAU0bgtHsqbN2" // set to nil after when done testing
-    
-
+//    private let testUID: String? = "nvjfqWavDePSwn28xbHT4aUoEUC2" // set to nil after when done testing admin
+    private let testUID: String? = "tmp3A5GbeFMQceAhcsS6j8MJlRI2" // ngo
     private var currentUID: String? {
         return testUID ?? Auth.auth().currentUser?.uid
     }
@@ -39,11 +40,13 @@ final class DashboardViewController: BaseChromeViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        deleteDonation(donationId: "B1C0F755-2745-482F-B5ED-91527EF8F23B")
+//        deleteDonations(by: [
+//            "1BD8E4C6-DC24-4C0E-88A1-7807EB933BD5",
+//            "233370AB-3B23-4D04-8332-F9ABF52F1C33",
+//            "278D774A-4CB7-40F5-9600-8C4D34068A54"
+//        ])
 
-        
-//                DonationInsert.insertTestDonation()
-
+//        DonationInsert.insertTestDonation()
         setupPieChart()
         loadDashboard()
     }
@@ -77,7 +80,9 @@ final class DashboardViewController: BaseChromeViewController {
     // MARK: - DONOR DASHBOARD
     private func loadDonorDashboard(uid: String) {
         
+        AdminTotalDonations.text = ""
         section1TitleLabe.text = "Your Impact"
+        MotiveSentence.text = "Every contribution makes a real difference.."
         section2TitleLabe.text = "Your Impact Distribution"
 
         statTitle1Label.text = "Total Donations"
@@ -91,7 +96,7 @@ final class DashboardViewController: BaseChromeViewController {
                 let docs = snapshot?.documents ?? []
                 
                 let totalDonations = docs.count
-//                let totalImpact = docs.reduce(0) { $0 + ($1["impactValue"] as? Int ?? 0) }
+                let totalImpact = docs.reduce(0) { $0 + ($1["impactValue"] as? Int ?? 0) }
                 let categories = Set(docs.compactMap { $0["category"] as? String })
                 
                 self.statValue1Label.text = "\(totalDonations)"
@@ -105,7 +110,9 @@ final class DashboardViewController: BaseChromeViewController {
     // MARK: - NGO DASHBOARD
     private func loadNGODashboard(uid: String) {
         
+        AdminTotalDonations.text = ""
         section1TitleLabe.text = "Your Impact"
+        MotiveSentence.text = "Every contribution makes a real difference.."
         section2TitleLabe.text = "Your Impact Distribution"
 
 
@@ -114,7 +121,7 @@ final class DashboardViewController: BaseChromeViewController {
         statTitle3Label.text = "Delivered Donations"
         
         listener = db.collection("donations")
-            .whereField("ngoId", isEqualTo: uid)
+            .whereField("collectorId", isEqualTo: uid)
             .addSnapshotListener { snapshot, _ in
                 
                 let docs = snapshot?.documents ?? []
@@ -136,12 +143,13 @@ final class DashboardViewController: BaseChromeViewController {
     private func loadAdminDashboard() {
         
         section1TitleLabe.text = "Takaffal Users"
+        MotiveSentence.text = "Every user makes a real difference.."
         section2TitleLabe.text = "User's Impact Distribution"
 
 
         statTitle1Label.text = "Total Donors"
         statTitle2Label.text = "Total NGOs"
-        statTitle3Label.text = "Total Donations"
+        statTitle3Label.text = "Total Users"
         
         db.collection("Users").whereField("role", isEqualTo: "donor")
             .addSnapshotListener { snap, _ in
@@ -156,9 +164,16 @@ final class DashboardViewController: BaseChromeViewController {
         listener = db.collection("donations")
             .addSnapshotListener { snapshot, _ in
                 let docs = snapshot?.documents ?? []
-                self.statValue3Label.text = "\(docs.count)"
+                self.AdminTotalDonations.text = "Total Donations: \(docs.count)"
+//                self.statValue3Label.text = "\(docs.count)"
                 self.updateImpactChart(docs)
             }
+        
+        db.collection("Users")
+            .addSnapshotListener { snapshot, _ in
+                self.statValue3Label.text = "\(snapshot?.documents.count ?? 0)"
+            }
+
     }
     
     // MARK: - Chart Setup

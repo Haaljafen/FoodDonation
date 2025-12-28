@@ -148,13 +148,13 @@ class LoginViewController: UIViewController {
             return
         }
         
-        let sb = UIStoryboard(name: "MariamStoryboard2", bundle: nil)
+        let sb = UIStoryboard(name: "HajarStoryboard", bundle: nil)
         let vc: UIViewController
         
         switch role {
         case .donor:
             print("Logged in as DONOR")
-            vc = sb.instantiateViewController(withIdentifier: "ProfileViewController")
+            vc = sb.instantiateViewController(withIdentifier: "HajarHomeVC")
         case .ngo:
             print("Logged in as NGO")
             vc = sb.instantiateViewController(withIdentifier: "ProfileViewController")

@@ -18,14 +18,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LBH-Ol-rw5">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="200"/>
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="170"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="200" id="OOF-6t-rgf"/>
+                                    <constraint firstAttribute="height" constant="170" id="OOF-6t-rgf"/>
                                 </constraints>
                             </view>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VwG-bJ-bpB">
-                                <rect key="frame" x="0.0" y="200" width="393" height="584"/>
+                                <rect key="frame" x="0.0" y="170" width="393" height="614"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i0V-BD-i0b">
                                         <rect key="frame" x="0.0" y="0.0" width="393" height="744"/>
@@ -100,7 +100,7 @@
                                                         <rect key="frame" x="0.0" y="280" width="361" height="60"/>
                                                         <subviews>
                                                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Expiry Date" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Saa-Jn-HFy">
-                                                                <rect key="frame" x="16" y="20.666666666666629" width="361" height="18.666666666666671"/>
+                                                                <rect key="frame" x="16" y="20.666666666666686" width="361" height="18.666666666666671"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                 <textInputTraits key="textInputTraits"/>
                                                             </textField>
@@ -243,7 +243,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGray6Color">
-            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

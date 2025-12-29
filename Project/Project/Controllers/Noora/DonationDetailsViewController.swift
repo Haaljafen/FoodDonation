@@ -287,30 +287,6 @@ extension DonationDetailsViewController: UITableViewDelegate, UITableViewDataSou
             cell.configure(title: "Donation Status", donationID: donation.donationID)
             return cell
 
-//        case 1: // donor/admin = pipeline, collector = change-status button
-//            let status = currentStatusString()
-//
-//            if currentRole == .ngo {
-//                let cell = tableView.dequeueReusableCell(
-//                    withIdentifier: "DonationStatusActionCell",
-//                    for: indexPath
-//                ) as! DonationStatusActionCell
-//
-//                cell.configure(currentStatus: status, buttonTitle: "Next Status") { [weak self] in
-//                    self?.toggleToNextStatus()
-//                
-//                
-//                }
-//                return cell
-//            } else {
-//                let cell = tableView.dequeueReusableCell(
-//                    withIdentifier: "DonationTrackerCell",
-//                    for: indexPath
-//                ) as! DonationTrackerCell
-//
-//                cell.configure(currentStatus: status)
-//                return cell
-//            }
         case 1: // donor/admin = pipeline, NGO = change-status button (next status)
             let status = currentStatusString()
 

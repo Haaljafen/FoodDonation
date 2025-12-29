@@ -8,7 +8,7 @@
 import UIKit
 
 final class DonationDetailsCell: UITableViewCell {
-//
+
     @IBOutlet weak var donationImageView: UIImageView!
     @IBOutlet weak var itemValueLabel: UILabel!
     @IBOutlet weak var quantityValueLabel: UILabel!

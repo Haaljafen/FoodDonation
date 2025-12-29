@@ -33,13 +33,6 @@ final class HistoryViewController: BaseChromeViewController {
     
     private var didResolveRole = false
 
-    
-//    ///hard coded id for testing case
-//    private let TEST_USER_ID: String? = "nvjfqWavDePSwn28xbHT4aUoEUC2"
-//    private let FORCE_TEST_ROLE: UserRole? = nil     // e.g. .admin / .donor / .collector
-//    ///
-    
-    
     //defualt role (for the actual app role)
 //    private let TEST_USER_ID: String? = "tmp3A5GbeFMQceAhcsS6j8MJlRI2" //NGO
 //    private let TEST_USER_ID: String? = "vFxkvcW50ENC7DufTWFNISF2fHi2" //Donor

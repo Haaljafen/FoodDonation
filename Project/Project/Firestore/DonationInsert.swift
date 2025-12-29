@@ -20,20 +20,20 @@ final class DonationInsert {
             "donorId": "ij0OTAo2nASJ1Zk6lr9U8buRJ412",
             "collectorId": "tmp3A5GbeFMQceAhcsS6j8MJlRI2",
 
-            "item": "pasts",
+            "item": "pizza",
             "quantity": 12,
             "unit": "pcs",
 
             "manufacturingDate": NSNull(),
-            "expiryDate": "10/04/2027",
+            "expiryDate": "18/04/2027",
 
             "category": "Cooked Meals",
             "impactType": "Meals Provided",
 
-            "imageUrl": "https://res.cloudinary.com/dquu356xs/image/upload/v1765719626/qgcfxotbtwj4psxh6fjm.jpg",
+            "imageUrl": "https://res.cloudinary.com/dquu356xs/image/upload/v1765716822/no-pfp_uc0zvk.jpg",
             "donationMethod": "locationPickup",
 
-            "status": "delivered",
+            "status": "accepted",
 
             "pickupRequestId": NSNull(),
 

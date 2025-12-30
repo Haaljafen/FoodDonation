@@ -56,7 +56,7 @@ final class HistoryViewController: BaseChromeViewController {
                 
         super.viewDidLoad()
 
-        DonationInsert.insertTestDonation()
+//        DonationInsert.insertTestDonation()
 
         guard Auth.auth().currentUser != nil || TEST_USER_ID != nil else {
             Donations.removeAll()
@@ -232,7 +232,7 @@ final class HistoryViewController: BaseChromeViewController {
 //        }
         
         var query: Query = db.collection("Donations")
-//            .order(by: "createdAt", descending: true)
+            .order(by: "createdAt", descending: true)
 
 
         switch role {

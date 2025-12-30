@@ -16,7 +16,7 @@ final class DonationInsert {
         let donationId = UUID().uuidString
 
         let data: [String: Any] = [
-            "id": "donationTest123",
+            "id": donationId,
             "donorId": "ij0OTAo2nASJ1Zk6lr9U8buRJ412",
             "collectorId": "tmp3A5GbeFMQceAhcsS6j8MJlRI2",
 

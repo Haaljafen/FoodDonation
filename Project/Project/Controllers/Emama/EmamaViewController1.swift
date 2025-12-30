@@ -1,29 +1,24 @@
-//
-//  EmamaViewController.swift
-//  Takaffal
-//
-//  Created by Hajar on 28/11/2025.
-//
-
 import UIKit
 
 class EmamaViewController: UIViewController {
 
+    @IBOutlet weak var filterView: FilterView! // Ensure this is connected in Storyboard
+
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        
+        // Set the delegate so this class hears button clicks
+        filterView.delegate = self
+        
+        // Initialize the filter bar with food categories
+        filterView.setupFilter(for: .foodCategories)
     }
-    
+}
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+// MARK: - FilterViewDelegate
+extension EmamaViewController: FilterViewDelegate {
+    func didSelectCategory(_ category: String) {
+        print("Category selected: \(category)")
+        // This is where you will eventually trigger your table view to filter
     }
-    */
-
 }

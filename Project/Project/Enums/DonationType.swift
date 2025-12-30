@@ -18,15 +18,15 @@ enum DonationType: String, Codable, CaseIterable {
     var chartColor: UIColor {
         switch self {
         case .mealsProvided:
-            // 🍽 Meals Provided → Warm red (food / nourishment)
+            // Meals Provided → Warm red
             return UIColor(hex: "B35D4C")
             
         case .wastePrevented:
-            // ♻️ Waste Prevented → Soft orange (sustainability)
+            // Waste Prevented → Soft orange
             return UIColor(hex: "DF9B6D")
             
         case .other:
-            // 📦 Other → Neutral blue-gray
+            // Other → Neutral blue-gray
             return UIColor(hex: "738290")
         }
     }

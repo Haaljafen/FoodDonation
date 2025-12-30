@@ -24,7 +24,7 @@ final class DonationCell: UITableViewCell {
 
         // Text styling (force visible)
         donationIDLabel.textColor = .label
-        methodLabel.textColor = .secondaryLabel
+        methodLabel.textColor = .label
         dateLabel.textColor = .secondaryLabel
         statusLabel.textColor = .label
 

@@ -16,7 +16,7 @@ final class DonationInsert {
         let donationId = UUID().uuidString
 
         let data: [String: Any] = [
-            "id": donationId,
+            "id": "donationTest123",
             "donorId": "ij0OTAo2nASJ1Zk6lr9U8buRJ412",
             "collectorId": "tmp3A5GbeFMQceAhcsS6j8MJlRI2",
 
@@ -30,12 +30,12 @@ final class DonationInsert {
             "category": "Cooked Meals",
             "impactType": "Meals Provided",
 
-            "imageUrl": "https://res.cloudinary.com/dquu356xs/image/upload/v1765716822/no-pfp_uc0zvk.jpg",
+            "imageUrl": "https://res.cloudinary.com/dquu356xs/image/upload/v1766880277/xjd3de2fplwarcvx2ad7.jpg",
             "donationMethod": "locationPickup",
 
             "status": "accepted",
 
-            "pickupRequestId": NSNull(),
+            "pickupRequestId": "pickupTest123",
 
             "donorName": "Sarah",
             "donorCity": "Manama",
@@ -43,7 +43,7 @@ final class DonationInsert {
             "createdAt": Timestamp(date: Date())
         ]
 
-        db.collection("donations")
+        db.collection("Donations")
             .document(donationId)
             .setData(data) { error in
                 if let error = error {

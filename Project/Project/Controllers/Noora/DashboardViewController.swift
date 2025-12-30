@@ -29,8 +29,9 @@ final class DashboardViewController: BaseChromeViewController {
     // MARK: - Properties
     private let db = Firestore.firestore()
     private var listener: ListenerRegistration?
-//    private let testUID: String? = "nvjfqWavDePSwn28xbHT4aUoEUC2" // set to nil after when done testing admin
-    private let testUID: String? = "vFxkvcW50ENC7DufTWFNISF2fHi2" // ngo
+    private let testUID: String? = "nvjfqWavDePSwn28xbHT4aUoEUC2" // set to nil after when done testing admin
+//    private let testUID: String? = "vFxkvcW50ENC7DufTWFNISF2fHi2" // ngo
+//    private let testUID: String? = "tmp3A5GbeFMQceAhcsS6j8MJlRI2" // donor
     private var currentUID: String? {
         return testUID ?? Auth.auth().currentUser?.uid
     }
@@ -89,7 +90,7 @@ final class DashboardViewController: BaseChromeViewController {
         statTitle3Label.text = "Total Impact Types"
         statTitle2Label.text = "Total Categories"
         
-        listener = db.collection("donations")
+        listener = db.collection("Donations")
             .whereField("donorId", isEqualTo: uid)
             .addSnapshotListener { snapshot, _ in
                 
@@ -120,7 +121,7 @@ final class DashboardViewController: BaseChromeViewController {
         statTitle2Label.text = "Collected Donations"
         statTitle3Label.text = "Delivered Donations"
         
-        listener = db.collection("donations")
+        listener = db.collection("Donations")
             .whereField("collectorId", isEqualTo: uid)
             .addSnapshotListener { snapshot, _ in
                 
@@ -161,7 +162,7 @@ final class DashboardViewController: BaseChromeViewController {
                 self.statValue2Label.text = "\(snap?.documents.count ?? 0)"
             }
         
-        listener = db.collection("donations")
+        listener = db.collection("Donations")
             .addSnapshotListener { snapshot, _ in
                 let docs = snapshot?.documents ?? []
                 self.AdminTotalDonations.text = "Total Donations: \(docs.count)"

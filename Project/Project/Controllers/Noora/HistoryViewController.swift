@@ -28,13 +28,14 @@ final class HistoryViewController: BaseChromeViewController {
 
     // MARK: - Firestore
     private let db = Firestore.firestore()
-    private var donations: [DonationHistoryItem] = []
+    private var Donations: [DonationHistoryItem] = []
 
     
     private var didResolveRole = false
 
     //defualt role (for the actual app role)
 //    private let TEST_USER_ID: String? = "tmp3A5GbeFMQceAhcsS6j8MJlRI2" //NGO
+//    private let TEST_USER_ID: String? = "testUser123" //NGO
 //    private let TEST_USER_ID: String? = "vFxkvcW50ENC7DufTWFNISF2fHi2" //Donor
     private let TEST_USER_ID: String? = "nvjfqWavDePSwn28xbHT4aUoEUC2"//Admin
 
@@ -55,10 +56,10 @@ final class HistoryViewController: BaseChromeViewController {
                 
         super.viewDidLoad()
 
-//        DonationInsert.insertTestDonation()
+        DonationInsert.insertTestDonation()
 
         guard Auth.auth().currentUser != nil || TEST_USER_ID != nil else {
-            donations.removeAll()
+            Donations.removeAll()
             showEmptyPlaceholder(message: "Please log in.")
             table.reloadData()
             return
@@ -85,7 +86,7 @@ final class HistoryViewController: BaseChromeViewController {
                 }
         ///
 
-        // 1) Fetch role then 2) load donations
+        // 1) Fetch role then 2) load Donations
         fetchCurrentUserRole { [weak self] (role: UserRole?) in
                     guard let self = self else { return }
 
@@ -94,7 +95,7 @@ final class HistoryViewController: BaseChromeViewController {
 //                        self.currentRole = nil
                         self.didResolveRole = false
                         self.updateTitleForUnknownRole()
-                        self.donations = []
+                        self.Donations = []
                         self.showEmptyPlaceholder(message: "Role missing/invalid. Fix Users/{uid}.role")
                         self.table.reloadData()
                         return
@@ -118,7 +119,7 @@ final class HistoryViewController: BaseChromeViewController {
         
         // ALWAYS clear UI if no user(in case)
             guard Auth.auth().currentUser != nil || TEST_USER_ID != nil else {
-                donations.removeAll()
+                Donations.removeAll()
                 showEmptyPlaceholder(message: "Please log in.")
                 table.reloadData()
                 didResolveRole = false
@@ -206,8 +207,8 @@ final class HistoryViewController: BaseChromeViewController {
         showEmptyPlaceholder(message: "Loading…")
         
 //        guard let role = currentRole else {
-//                    donations = []
-//                    showEmptyPlaceholder(message: "Role not set. Cannot load donations.")
+//                    Donations = []
+//                    showEmptyPlaceholder(message: "Role not set. Cannot load Donations.")
 //                    table.reloadData()
 //                    return
 //                }
@@ -215,8 +216,8 @@ final class HistoryViewController: BaseChromeViewController {
         let role = currentRole
 
         guard let uid = resolvedUserIdForTestingOrAuth() else {
-                   donations = []
-                   showEmptyPlaceholder(message: "Please log in to view donations.")
+                   Donations = []
+                   showEmptyPlaceholder(message: "Please log in to view Donations.")
                    table.reloadData()
                    return
                }
@@ -224,26 +225,26 @@ final class HistoryViewController: BaseChromeViewController {
         
 //        //might need it later
 //        guard let uid = Auth.auth().currentUser?.uid else {
-//            donations = []
-//            showEmptyPlaceholder(message: "Please log in to view donations.")
+//            Donations = []
+//            showEmptyPlaceholder(message: "Please log in to view Donations.")
 //            table.reloadData()
 //            return
 //        }
         
-        var query: Query = db.collection("donations")
+        var query: Query = db.collection("Donations")
 //            .order(by: "createdAt", descending: true)
 
 
         switch role {
         case .admin:
-            // all donations
+            // all Donations
             break
 
         case .donor:
             query = query.whereField("donorId", isEqualTo: uid)
 
         case .ngo:
-            // ✅ only donations accepted by this collector
+            // ✅ only Donations accepted by this collector
             query = query.whereField("collectorId", isEqualTo: uid)
 
         }
@@ -253,15 +254,15 @@ final class HistoryViewController: BaseChromeViewController {
 
                    if let error = error {
                        print("❌ Firestore error:", error)
-                       self.donations = []
-                       self.showEmptyPlaceholder(message: "Failed to load donations.")
+                       self.Donations = []
+                       self.showEmptyPlaceholder(message: "Failed to load Donations.")
                        self.table.reloadData()
                        return
                    }
 
                    let docs = snapshot?.documents ?? []
 
-                   self.donations = docs.compactMap { doc in
+                   self.Donations = docs.compactMap { doc in
                        let data = doc.data()
 
                        guard
@@ -283,8 +284,8 @@ final class HistoryViewController: BaseChromeViewController {
                        )
                    }
 
-            if self.donations.isEmpty {
-                self.showEmptyPlaceholder(message: "No donations yet.")
+            if self.Donations.isEmpty {
+                self.showEmptyPlaceholder(message: "No Donations yet.")
             } else {
                 self.hideEmptyPlaceholder()
             }
@@ -329,7 +330,7 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int { 1 }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        donations.count
+        Donations.count
     }
 
     func tableView(_ tableView: UITableView,
@@ -342,14 +343,14 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
             return UITableViewCell()
         }
 
-        let donation = donations[indexPath.row]
+        let donation = Donations[indexPath.row]
         let dateString = dateFormatter.string(from: donation.createdAt.dateValue())
         cell.methodLabel.textColor = .label
 
         cell.donationIDLabel.text = "ID: \(donation.donationID)"
-        cell.methodLabel.text = "Method: \(donation.method)"
+        cell.methodLabel.text = "Method: \(donation.method.displayText)"
         cell.dateLabel.text = dateString
-        cell.statusLabel.text = donation.status
+        cell.statusLabel.text = donation.status.displayText
 
         return cell
     }
@@ -369,7 +370,7 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
            guard let indexPath = sender as? IndexPath else { return }
-           let selected = donations[indexPath.row]
+           let selected = Donations[indexPath.row]
 
            if let detailsVC = segue.destination as? DonationDetailsViewController {
                detailsVC.donation = selected
@@ -377,4 +378,18 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
 
            }
        }
+    
+    
+}
+
+extension String {
+    var displayText: String {
+        let spaced = self.replacingOccurrences(
+            of: "([a-z])([A-Z])",
+            with: "$1 $2",
+            options: .regularExpression
+        )
+
+        return spaced.capitalized
+    }
 }

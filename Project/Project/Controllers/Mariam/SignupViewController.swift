@@ -33,8 +33,17 @@ class SignupViewController: UIViewController, UIImagePickerControllerDelegate, U
         profileImageView.clipsToBounds = true
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+    
     
     // MARK: - IBOutlets
+    @IBOutlet weak var aboutTextField: UITextField!
+    @IBOutlet weak var missionTextField: UITextField!
+    @IBOutlet weak var aboutView: UIView!
+    @IBOutlet weak var missionView: UIView!
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var organizationContainerView: UIView!
     @IBOutlet weak var usernameContainerView: UIView!
@@ -64,14 +73,33 @@ class SignupViewController: UIViewController, UIImagePickerControllerDelegate, U
     }
     
     private func updateUIForRole() {
-        if selectedRole == .donor {
+
+        switch selectedRole {
+
+        case .donor:
             usernameContainerView.isHidden = false
+
             organizationContainerView.isHidden = true
-        } else {
-            usernameContainerView.isHidden = true
+            missionView.isHidden = true
+            aboutView.isHidden = true
+
+            organizationNameTextField.text = ""
+            missionTextField.text = ""
+            aboutTextField.text = ""
+
+        case .ngo:
             organizationContainerView.isHidden = false
+            missionView.isHidden = false
+            aboutView.isHidden = false
+
+            usernameContainerView.isHidden = true
+            usernameTextField.text = ""
+            
+        default:
+            break
         }
     }
+
     
     // MARK: - Alerts
     private func showErrorAlert(_ message: String) {
@@ -181,6 +209,27 @@ class SignupViewController: UIViewController, UIImagePickerControllerDelegate, U
         if selectedRole == .ngo && organizationNameTextField.text?.trimmed.isEmpty == true {
             return "Organization name is required for NGOs"
         }
+        
+        switch selectedRole {
+
+            case .donor:
+                if usernameTextField.text?.trimmed.isEmpty == true {
+                    return "Username is required for donors."
+                }
+
+            case .ngo:
+                if organizationNameTextField.text?.trimmed.isEmpty == true {
+                    return "Organization name is required."
+                }
+                if missionTextField.text?.trimmed.isEmpty == true {
+                    return "Mission is required."
+                }
+                if aboutTextField.text?.trimmed.isEmpty == true {
+                    return "About information is required."
+                }
+        default:
+            break
+            }
 
         return nil
     }
@@ -229,8 +278,13 @@ class SignupViewController: UIViewController, UIImagePickerControllerDelegate, U
                     createdAt: Date(),
                     username: self.selectedRole == .donor ? self.usernameTextField.text?.trimmed : nil,
                     organizationName: self.selectedRole == .ngo ? self.organizationNameTextField.text?.trimmed : nil,
-                    mission: nil,
-                    about: nil,
+                    mission: self.selectedRole == .ngo
+                        ? self.missionTextField.text?.trimmed
+                        : nil,
+
+                    about: self.selectedRole == .ngo
+                        ? self.aboutTextField.text?.trimmed
+                        : nil,
                     logoUrl: nil,
                     status: self.selectedRole == .ngo ? .pending : nil,
                     verified: self.selectedRole == .ngo ? false : nil
@@ -277,7 +331,7 @@ class SignupViewController: UIViewController, UIImagePickerControllerDelegate, U
                withIdentifier: "LoginViewController"
            ) as! LoginViewController
 
-           present(vc, animated: true)
+        navigationController?.popViewController(animated: true)
         
     }
     

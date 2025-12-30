@@ -14,9 +14,8 @@
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="djg-KC-xRx">
-                    <rect key="frame" x="0.0" y="732" width="393" height="120"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="djg-KC-xRx">
+                    <rect key="frame" x="0.0" y="118" width="393" height="734"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kwy-ig-amc">
                             <rect key="frame" x="21" y="31" width="51" height="35"/>
@@ -123,6 +122,12 @@
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="djg-KC-xRx" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="FGj-tX-6nY"/>
+                <constraint firstItem="djg-KC-xRx" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="LGa-ZD-umZ"/>
+                <constraint firstItem="djg-KC-xRx" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="jMC-dQ-DC7"/>
+                <constraint firstAttribute="bottom" secondItem="djg-KC-xRx" secondAttribute="bottom" id="mE3-eU-yBa"/>
+            </constraints>
             <connections>
                 <outlet property="donLab" destination="MZI-Az-kfX" id="OFY-8x-vpM"/>
                 <outlet property="formBtn" destination="RP6-fk-msk" id="8YI-f4-DhT"/>

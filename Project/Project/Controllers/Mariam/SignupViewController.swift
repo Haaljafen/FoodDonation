@@ -292,8 +292,22 @@ class SignupViewController: UIViewController, UIImagePickerControllerDelegate, U
 
                 do {
                     let data = try Firestore.Encoder().encode(user)
-                    self.db.collection("Users").document(userId).setData(data)
-                    self.showSuccessAlert()
+                    self.db.collection("Users").document(userId).setData(data) { [weak self] error in
+                        guard let self = self else { return }
+                        if let error = error {
+                            self.showErrorAlert("Failed to save user data: \(error.localizedDescription)")
+                            return
+                        }
+
+                        DonationService.shared.notify(
+                            type: .userRegistered,
+                            relatedDonationId: nil,
+                            toUserId: userId,
+                            audience: nil
+                        )
+
+                        self.showSuccessAlert()
+                    }
                 } catch {
                     self.showErrorAlert("Failed to save user data.")
                 }

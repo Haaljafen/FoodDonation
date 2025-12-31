@@ -322,6 +322,7 @@ class FacilityDropOffViewController: UIViewController, DonationDraftReceivable {
         saveDropoffAndDonation(
             draft: draft,
             facilityName: ngo.name,
+            ngoId: ngo.id,
             dropoffDateTime: dropoffDateTime
         )
     }
@@ -329,6 +330,7 @@ class FacilityDropOffViewController: UIViewController, DonationDraftReceivable {
     private func saveDropoffAndDonation(
         draft: DonationDraft,
         facilityName: String,
+        ngoId: String,
         dropoffDateTime: Date
     ) {
 
@@ -371,6 +373,20 @@ class FacilityDropOffViewController: UIViewController, DonationDraftReceivable {
                 DispatchQueue.main.async {
                     switch result {
                     case .success:
+                        DonationService.shared.notify(
+                            type: .ngoAssignedDonation,
+                            relatedDonationId: draft.id,
+                            toUserId: ngoId,
+                            audience: nil
+                        )
+
+                        DonationService.shared.notify(
+                            type: .ngoPickupScheduled,
+                            relatedDonationId: draft.id,
+                            toUserId: ngoId,
+                            audience: nil
+                        )
+
                         self.showSuccessAndRedirect()
                     case .failure(let error):
                         self.showAlert(
@@ -488,6 +504,16 @@ class FacilityDropOffViewController: UIViewController, DonationDraftReceivable {
     @objc private func openNotifications() {
         print("Notifications tapped")
         // later: push notifications screen
+        let sb = UIStoryboard(name: "NotificationsStoryboard", bundle: nil)
+        guard let vc = sb.instantiateViewController(withIdentifier: "NotificationVC") as? NotificationViewController else {
+            print("❌ Could not instantiate NotificationViewController")
+            return
+        }
+        if let nav = navigationController {
+            nav.pushViewController(vc, animated: true)
+        } else {
+            present(vc, animated: true)
+        }
     }
 
     

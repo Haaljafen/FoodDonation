@@ -181,6 +181,13 @@ class EditProfileViewController: UIViewController {
                                 message: error.localizedDescription
                             )
                         } else {
+                            DonationService.shared.notify(
+                                type: .profileUpdated,
+                                relatedDonationId: nil,
+                                toUserId: uid,
+                                audience: nil
+                            )
+
                             self.updateRealtimeUserMirror(
                                 user: user,
                                 profileImageUrl: imageUrl
@@ -472,6 +479,16 @@ class EditProfileViewController: UIViewController {
     @objc private func openNotifications() {
         print("Notifications tapped")
         // later: push notifications screen
+        let sb = UIStoryboard(name: "NotificationsStoryboard", bundle: nil)
+        guard let vc = sb.instantiateViewController(withIdentifier: "NotificationVC") as? NotificationViewController else {
+            print("❌ Could not instantiate NotificationViewController")
+            return
+        }
+        if let nav = navigationController {
+            nav.pushViewController(vc, animated: true)
+        } else {
+            present(vc, animated: true)
+        }
     }
 
     

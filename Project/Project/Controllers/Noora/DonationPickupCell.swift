@@ -1,4 +1,9 @@
-
+//
+//  DonationPickupCell.swift
+//  Takaffal
+//
+//  Created by Noora Humaid on 18/12/2025.
+//
 import UIKit
 
 final class DonationPickupCell: UITableViewCell {
@@ -8,6 +13,9 @@ final class DonationPickupCell: UITableViewCell {
     @IBOutlet weak var methodLabel: UILabel!
 
     func configure(address: String, dateTime: String, method: String) {
+        
+        
+    
         selectionStyle = .none
         addressLabel.text = address
         dateTimeLabel.text = dateTime
@@ -17,7 +25,7 @@ final class DonationPickupCell: UITableViewCell {
     private func methodDisplay(_ raw: String) -> String {
         let s = raw.lowercased()
         if s == "dropoff" { return "Drop-off at facility" }
-        if s == "pickup" { return "Pickup from address" }
+        if s == "locationpickup" { return "Pickup from address" }
         return raw
     }
 }

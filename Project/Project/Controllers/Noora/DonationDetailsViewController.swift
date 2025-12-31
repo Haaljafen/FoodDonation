@@ -1,3 +1,10 @@
+//
+//  DonationDetailsViewController.swift
+//  Takaffal
+//
+//  Created by Noora Humaid on 17/12/2025.
+//
+
 import UIKit
 import FirebaseFirestore
 import FirebaseAuth
@@ -44,6 +51,10 @@ final class DonationDetailsViewController: UIViewController {
 
     // pickupRequests (matched by donationId)
     private var pickup: [String: Any] = [:]
+    // Resolved pickup UI values
+    private var pickupAddress: String = "Unavaliable yet"
+    private var pickupDateTime: String = "Unavalible yet"
+
 
     private lazy var dateFormatter: DateFormatter = {
         let f = DateFormatter()
@@ -160,7 +171,7 @@ final class DonationDetailsViewController: UIViewController {
     private func fetchDonationDetails() {
         let id = donation.donationID
 
-        db.collection("donations").document(id).getDocument { [weak self] snap, err in
+        db.collection("Donations").document(id).getDocument { [weak self] snap, err in
             guard let self = self else { return }
 
             if let err = err {
@@ -189,8 +200,47 @@ final class DonationDetailsViewController: UIViewController {
                     return
                 }
 
-                self.pickup = snap?.documents.first?.data() ?? [:]
-                self.tableView.reloadData()
+                guard let doc = snap?.documents.first else {
+                    self.pickup = [:]
+                    self.tableView.reloadData()
+                    return
+                }
+
+                self.pickup = doc.data()
+
+                // MARK: - scheduledAt → dateTimeLabel
+                if let ts = self.pickup["scheduledAt"] as? Timestamp {
+                    self.pickupDateTime = self.dateFormatter.string(from: ts.dateValue())
+                } else {
+                    self.pickupDateTime = "—"
+                }
+
+                // MARK: - method
+                let method = (self.pickup["method"] as? String)?.lowercased()
+                    ?? ((self.details["donationMethod"] as? String)?.lowercased()
+                    ?? self.donation.method.lowercased())
+
+                // MARK: - Decide which user to fetch
+                let userId: String?
+                if method == "pickup" {
+                    userId = self.details["donorId"] as? String
+                } else {
+                    userId = self.pickup["collectorId"] as? String
+                }
+
+                guard let uid = userId else {
+                    self.pickupAddress = "Address not available"
+                    self.tableView.reloadData()
+                    return
+                }
+
+                // MARK: - Fetch address from Users
+                self.db.collection("Users").document(uid).getDocument { userSnap, _ in
+                    self.pickupAddress =
+                        (userSnap?.data()?["address"] as? String) ?? "Address not available"
+
+                    self.tableView.reloadData()
+                }
             }
     }
 
@@ -208,7 +258,7 @@ final class DonationDetailsViewController: UIViewController {
         let id = donation.donationID
         view.isUserInteractionEnabled = false
 
-        db.collection("donations").document(id).updateData([
+        db.collection("Donations").document(id).updateData([
             "status": newStatus
         ]) { [weak self] error in
             guard let self = self else { return }
@@ -280,30 +330,6 @@ extension DonationDetailsViewController: UITableViewDelegate, UITableViewDataSou
             cell.configure(title: "Donation Status", donationID: donation.donationID)
             return cell
 
-//        case 1: // donor/admin = pipeline, collector = change-status button
-//            let status = currentStatusString()
-//
-//            if currentRole == .ngo {
-//                let cell = tableView.dequeueReusableCell(
-//                    withIdentifier: "DonationStatusActionCell",
-//                    for: indexPath
-//                ) as! DonationStatusActionCell
-//
-//                cell.configure(currentStatus: status, buttonTitle: "Next Status") { [weak self] in
-//                    self?.toggleToNextStatus()
-//                
-//                
-//                }
-//                return cell
-//            } else {
-//                let cell = tableView.dequeueReusableCell(
-//                    withIdentifier: "DonationTrackerCell",
-//                    for: indexPath
-//                ) as! DonationTrackerCell
-//
-//                cell.configure(currentStatus: status)
-//                return cell
-//            }
         case 1: // donor/admin = pipeline, NGO = change-status button (next status)
             let status = currentStatusString()
 
@@ -344,7 +370,23 @@ extension DonationDetailsViewController: UITableViewDelegate, UITableViewDataSou
             let cell = tableView.dequeueReusableCell(withIdentifier: "DonationDetailsCell", for: indexPath) as! DonationDetailsCell
 
             let item = (details["item"] as? String) ?? "—"
-            let category = (details["category"] as? String) ?? "—"
+//            let category = (details["category"] as? String) ?? "—"
+            
+            let expiryText: String = {
+                if let ts = details["expiryDate"] as? Timestamp {
+                    let df = DateFormatter()
+                    df.dateStyle = .medium
+                    df.timeStyle = .none
+                    return df.string(from: ts.dateValue())
+                }
+
+                if let s = details["expiryDate"] as? String, !s.isEmpty {
+                    return s
+                }
+
+                return "—"
+            }()
+
 
             let quantityInt: Int = {
                 if let q = details["quantity"] as? Int { return q }
@@ -359,36 +401,31 @@ extension DonationDetailsViewController: UITableViewDelegate, UITableViewDataSou
             cell.configure(
                 item: item,
                 quantity: "\(quantityInt)",
-                category: category,
+                expiryDate: expiryText,
                 impact: impact,
                 imageUrlString: imageUrlString
             )
             return cell
-
+            
         case 3: // Pickup / Dropoff
-            let cell = tableView.dequeueReusableCell(withIdentifier: "DonationPickupCell", for: indexPath) as! DonationPickupCell
-
-            let facility = (pickup["facilityName"] as? String) ?? "Not set"
+            let cell = tableView.dequeueReusableCell(
+                withIdentifier: "DonationPickupCell",
+                for: indexPath
+            ) as! DonationPickupCell
 
             let method = (pickup["method"] as? String)
                 ?? ((details["donationMethod"] as? String) ?? donation.method)
 
-            let dropoffTimestamp = (pickup["dropoffDate"] as? Timestamp)
-                ?? ((details["createdAt"] as? Timestamp) ?? donation.createdAt)
-
-            let dateFormatterOnly = DateFormatter()
-            dateFormatterOnly.dateStyle = .medium
-            dateFormatterOnly.timeStyle = .none
-
-            let dateText = dateFormatterOnly.string(from: dropoffTimestamp.dateValue())
-            let timeText = (pickup["dropoffTime"] as? String) ?? ""
-            let finalDateTime = timeText.isEmpty ? dateText : "\(dateText) at \(timeText)"
-
-            cell.configure(address: facility, dateTime: finalDateTime, method: method)
+            cell.configure(
+                address: pickupAddress,
+                dateTime: pickupDateTime,
+                method: method
+            )
             return cell
+            
+                    default:
+                        return UITableViewCell()
 
-        default:
-            return UITableViewCell()
         }
     }
 }

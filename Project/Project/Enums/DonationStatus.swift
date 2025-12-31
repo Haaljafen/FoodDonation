@@ -10,7 +10,6 @@ import Foundation
 enum DonationStatus: String, Codable {
     case pending
     case accepted
-    case onTheWay
     case collected
     case delivered
 }

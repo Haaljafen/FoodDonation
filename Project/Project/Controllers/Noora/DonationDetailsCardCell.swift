@@ -1,13 +1,18 @@
+//
+//  DonationDetailsCardCell.swift
+//  Takaffal
+//
+//  Created by Noora Humaid on 18/12/2025.
+//
+
 import UIKit
 
 final class DonationDetailsCell: UITableViewCell {
-//
-    @IBOutlet weak var donationImageView: UIImageView!
 
-//    @IBOutlet weak var cardView: UIView!
+    @IBOutlet weak var donationImageView: UIImageView!
     @IBOutlet weak var itemValueLabel: UILabel!
     @IBOutlet weak var quantityValueLabel: UILabel!
-    @IBOutlet weak var categoryValueLabel: UILabel!
+    @IBOutlet weak var expiryValueLabel: UILabel!
     @IBOutlet weak var impactValueLabel: UILabel!
 
     override func awakeFromNib() {
@@ -22,27 +27,20 @@ final class DonationDetailsCell: UITableViewCell {
     func configure(
         item: String,
         quantity: String,
-        category: String,
+        expiryDate: String,
         impact: String,
         imageUrlString: String?
     ) {
         itemValueLabel.text = item
         quantityValueLabel.text = quantity
-        categoryValueLabel.text = category
+        expiryValueLabel.text = expiryDate
         impactValueLabel.text = impact
-//
-        loadImage(urlString: imageUrlString)
+        
+        loadImage(urlString: imageUrlString) 
     }
+
     
-//    private func setupCard() {
-//           cardView.layer.cornerRadius = 16
-//           cardView.layer.shadowColor = UIColor.black.cgColor
-//           cardView.layer.shadowOpacity = 0.1
-//           cardView.layer.shadowRadius = 8
-//           cardView.layer.shadowOffset = CGSize(width: 0, height: 4)
-//        cardView.layer.masksToBounds = false   // 🔴 REQUIRED
-//
-//       }
+
     private func loadImage(urlString: String?) {
         donationImageView.image = UIImage(named: "placeholder") // optional
 

@@ -170,7 +170,7 @@ final class CreateDonationViewController: UIViewController,
         guard let categoryStr = selectedCategory else { showAlert(message: "Select category"); return }
         guard let typeStr = selectedType else { showAlert(message: "Select type"); return }
         guard let method = selectedMethod else { showAlert(message: "Choose donation method"); return }
-        guard selectedImage != nil else { showAlert(message: "Select an image"); return }
+        guard let image = selectedImage else { showAlert(message: "Select an image"); return }
 
         guard let categoryEnum = DonationCategory(rawValue: categoryStr) else {
             showAlert(message: "Invalid category")
@@ -184,33 +184,52 @@ final class CreateDonationViewController: UIViewController,
             return
         }
 
-        let draft = DonationDraft(
-            id: UUID().uuidString,
-            donorId: uid,
-            item: item,
-            quantity: quantity,
-            unit: typeStr,
-            manufacturingDate: nil,
-            expiryDate: nil,
-            category: categoryEnum,
-            impactType: typeEnum,
-            imageUrl: "",
-            donorName: nil,
-            donorCity: nil
-        )
+        setUploadingUI(true)
+        CloudinaryService.shared.upload(image: image) { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                self.setUploadingUI(false)
 
-        switch method {
-        case .dropoff:
-            pushDraft(toStoryboard: "ScheduleDropOffStoryboard",
-                      vcIdentifier: "FacilityDropOffViewController",
-                      draft: draft)
+                switch result {
+                case .success(let imageUrl):
+                    let draft = DonationDraft(
+                        id: UUID().uuidString,
+                        donorId: uid,
+                        item: item,
+                        quantity: quantity,
+                        unit: typeStr,
+                        manufacturingDate: nil,
+                        expiryDate: nil,
+                        category: categoryEnum,
+                        impactType: typeEnum,
+                        imageUrl: imageUrl,
+                        donorName: nil,
+                        donorCity: nil
+                    )
 
-        case .locationPickup:
-            pushDraft(toStoryboard: "ScheduleLocationPickup",
-                      vcIdentifier: "LocationPickupViewController",
-                      draft: draft)
+                    switch method {
+                    case .dropoff:
+                        self.pushDraft(toStoryboard: "ScheduleDropOffStoryboard",
+                                      vcIdentifier: "FacilityDropOffViewController",
+                                      draft: draft)
+                    case .locationPickup:
+                        self.pushDraft(toStoryboard: "ScheduleLocationPickup",
+                                      vcIdentifier: "LocationPickupViewController",
+                                      draft: draft)
+                    }
+
+                case .failure:
+                    self.showAlert(message: "Image upload failed")
+                }
+            }
         }
     }
+
+     private func setUploadingUI(_ uploading: Bool) {
+         btnDropoff.isEnabled = !uploading
+         btnLocationPickup.isEnabled = !uploading
+         view.isUserInteractionEnabled = !uploading
+     }
 
     private func pushDraft(toStoryboard name: String,
                            vcIdentifier: String,

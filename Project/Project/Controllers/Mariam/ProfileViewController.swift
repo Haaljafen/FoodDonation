@@ -411,7 +411,7 @@ class ProfileViewController: UIViewController {
         switch role {
 
         case .donor:
-            nav.formBtn.isHidden = true
+            nav.formBtn.isHidden = false
             nav.listBtn.isHidden = false
             nav.proBtn.isHidden = false
             nav.impBtn.isHidden = false

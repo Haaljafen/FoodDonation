@@ -118,17 +118,22 @@
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Viy-IN-53a">
                                                         <rect key="frame" x="0.0" y="356" width="361" height="120"/>
                                                         <subviews>
-                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="square.and.arrow.up" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="yNI-Qk-eA6">
-                                                                <rect key="frame" x="152" y="22.333333333333371" width="57" height="69.333333333333343"/>
-                                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="40" scale="large" weight="regular"/>
+                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yNI-Qk-eA6">
+                                                                <rect key="frame" x="16" y="23" width="329" height="69.333333333333343"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="120" id="7Oo-KW-gaS"/>
+                                                                </constraints>
+                                                            </imageView>
+                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="square.and.arrow.up" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="8FO-B7-QVi">
+                                                                <rect key="frame" x="157" y="-4.6666666666666856" width="46" height="127.99999999999999"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             </imageView>
                                                         </subviews>
-                                                        <color key="backgroundColor" systemColor="systemGray6Color"/>
                                                         <color key="tintColor" red="0.030337337410000002" green="0.030725426300000001" blue="0.1612304688" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <constraints>
-                                                            <constraint firstItem="yNI-Qk-eA6" firstAttribute="centerX" secondItem="Viy-IN-53a" secondAttribute="centerX" id="RjE-PC-LpM"/>
+                                                            <constraint firstItem="yNI-Qk-eA6" firstAttribute="leading" secondItem="Viy-IN-53a" secondAttribute="leading" constant="16" id="OV8-9K-UtI"/>
                                                             <constraint firstAttribute="height" constant="120" id="egA-VD-xAY"/>
-                                                            <constraint firstItem="yNI-Qk-eA6" firstAttribute="centerY" secondItem="Viy-IN-53a" secondAttribute="centerY" id="j78-Ms-okv"/>
+                                                            <constraint firstAttribute="trailing" secondItem="yNI-Qk-eA6" secondAttribute="trailing" constant="16" id="gM0-Ib-RrE"/>
                                                         </constraints>
                                                     </view>
                                                     <button opaque="NO" contentMode="scaleToFill" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L94-at-k2n">
@@ -260,7 +265,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGray6Color">
-            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

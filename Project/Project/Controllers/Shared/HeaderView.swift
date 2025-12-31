@@ -6,4 +6,11 @@ class HeaderView: UIView {
     @IBOutlet weak var takaffalLabel: UILabel!
     @IBOutlet weak var notiBtn: UIButton!
     @IBOutlet weak var search: UISearchBar!
-}
+    
+        var onNotificationTap: (() -> Void)?
+
+        @IBAction func notificationTapped(_ sender: UIButton) {
+            onNotificationTap?()
+        }
+    }
+

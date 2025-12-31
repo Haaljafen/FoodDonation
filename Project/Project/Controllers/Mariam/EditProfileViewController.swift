@@ -30,6 +30,7 @@ class EditProfileViewController: UIViewController {
     @IBOutlet weak var phoneNumberTextField: UITextField!
     @IBOutlet weak var addressTextField: UITextField!
     
+    private var currentUserRole: UserRole?
     private var headerView: HeaderView?
     private var bottomNav: BottomNavView?
     private var didSetupViews = false
@@ -493,11 +494,13 @@ class EditProfileViewController: UIViewController {
             nav.trailingAnchor.constraint(equalTo: navContainer.trailingAnchor)
         ])
 
-           nav.listBtn.addTarget(self, action: #selector(openHome), for: .touchUpInside)
-           nav.hisBtn.addTarget(self, action: #selector(openHistory), for: .touchUpInside)
-           nav.impBtn.addTarget(self, action: #selector(openImpact), for: .touchUpInside)
-           nav.proBtn.addTarget(self, action: #selector(openProfile), for: .touchUpInside)
-           nav.userBtn.addTarget(self, action: #selector(openUsers), for: .touchUpInside)
+        nav.listBtn.addTarget(self, action: #selector(openList), for: .touchUpInside)
+        nav.hisBtn.addTarget(self, action: #selector(openHistory), for: .touchUpInside)
+        nav.impBtn.addTarget(self, action: #selector(openImpact), for: .touchUpInside)
+        nav.proBtn.addTarget(self, action: #selector(openProfile), for: .touchUpInside)
+        nav.userBtn.addTarget(self, action: #selector(openUsers), for: .touchUpInside)
+        nav.heartBtn.addTarget(self, action: #selector(openDonations), for: .touchUpInside)
+        nav.formBtn.addTarget(self,action: #selector(openDonationForm),for: .touchUpInside)
 
            nav.backgroundColor = .clear
            bottomNav = nav
@@ -529,12 +532,34 @@ class EditProfileViewController: UIViewController {
                     print("Role missing or invalid")
                     return
                 }
-
+                
+                self.currentUserRole = role
                 self.configureNav(nav, for: role)
             }
     }
     
+    private func push(_ vc: UIViewController) {
+        if let nav = navigationController {
+            nav.pushViewController(vc, animated: true)
+        } else {
+            present(vc, animated: true)
+        }
+    }
+
+    
     private func configureNav(_ nav: BottomNavView, for role: UserRole) {
+        
+        let allButtons = [
+            nav.listBtn,
+            nav.hisBtn,
+            nav.impBtn,
+            nav.proBtn,
+            nav.userBtn,
+            nav.formBtn,
+            nav.heartBtn
+        ]
+
+        allButtons.forEach { $0?.isHidden = true }
 
         switch role {
 
@@ -580,14 +605,95 @@ class EditProfileViewController: UIViewController {
         }
     }
 
-
        // MARK: - Nav Actions
-       @objc private func openHome() { print("🏠 Home tapped") }
-       @objc private func openHistory() { print("📜 History tapped") }
-       @objc private func openImpact() { print("📈 Impact tapped") }
-       @objc private func openProfile() { print("👤 Profile tapped") }
-       @objc private func openUsers() { print("👥 Users tapped") }
-   }
+    
+    @objc private func openDonations() {
+        let sb = UIStoryboard(name: "History&statusNoora", bundle: nil)
+        let vc = sb.instantiateViewController(withIdentifier: "History&statusNoora")
+        push(vc)
+    }
+    
+    @objc private func openList() {
+
+        guard let role = currentUserRole else {
+            print("Role not loaded yet")
+            return
+        }
+
+        switch role {
+
+        case .donor:
+            let sb = UIStoryboard(name: "AbdullaStoryboard1", bundle: nil)
+            let vc = sb.instantiateViewController(
+                withIdentifier: "AbdullaViewController1"
+            )
+            push(vc)
+
+        case .ngo:
+            let sb = UIStoryboard(name: "HajarStoryboard", bundle: nil)
+            let vc = sb.instantiateViewController(
+                withIdentifier: "HajarHomeVC"
+            )
+            push(vc)
+            
+        default:
+            return
+            
+        }
+    }
+
+    @objc private func openHistory() {
+        let sb = UIStoryboard(name: "History&statusNoora", bundle: nil)
+        let vc = sb.instantiateViewController(withIdentifier: "History&statusNoora")
+        push(vc)
+    }
+    
+    @objc private func openImpact() {
+        let sb = UIStoryboard(name: "ImpactNoora", bundle: nil)
+        let vc = sb.instantiateViewController(withIdentifier: "impactNoora")
+        push(vc)
+    }
+    
+    @objc private func openProfile() {
+        let sb = UIStoryboard(name: "MariamStoryboard2", bundle: nil)
+        let vc = sb.instantiateViewController(withIdentifier: "ProfileViewController")
+        push(vc)
+    }
+    
+    @objc private func openUsers() {
+        let sb = UIStoryboard(name: "AdminStoryboard", bundle: nil)
+        let vc = sb.instantiateViewController(withIdentifier: "UsersVC")
+        push(vc)
+    }
+    
+    private func pushIfNeeded(_ vc: UIViewController) {
+        if let top = navigationController?.topViewController,
+           type(of: top) == type(of: vc) {
+            return
+        }
+        push(vc)
+    }
+    
+    @objc private func openDonationForm() {
+
+        guard let role = currentUserRole else {
+            print("Role not loaded yet")
+            return
+        }
+
+        guard role == .donor else {
+            print("Only donors can open donation form")
+            return
+        }
+
+        let sb = UIStoryboard(name: "HajarStoryboard2", bundle: nil)
+        let vc = sb.instantiateViewController(
+            withIdentifier: "CreateDonationViewController"
+        )
+
+        push(vc)
+    }
+}
 
 
 // MARK: - Image Picker Delegate

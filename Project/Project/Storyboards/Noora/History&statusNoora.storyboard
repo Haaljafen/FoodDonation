@@ -542,6 +542,10 @@
                                     <outlet property="delegate" destination="3zM-7I-4PW" id="yPt-Zr-lLc"/>
                                 </connections>
                             </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bNM-s1-btJ">
+                                <rect key="frame" x="0.0" y="155" width="393" height="128"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="usR-cf-Lt4"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -552,12 +556,16 @@
                             <constraint firstItem="RFX-EM-kvA" firstAttribute="trailing" secondItem="usR-cf-Lt4" secondAttribute="trailing" id="DV0-XJ-QeL"/>
                             <constraint firstItem="te1-el-am5" firstAttribute="trailing" secondItem="usR-cf-Lt4" secondAttribute="trailing" id="EjG-6j-Hwf"/>
                             <constraint firstItem="Z9O-t3-fcV" firstAttribute="top" secondItem="3zM-7I-4PW" secondAttribute="top" id="Esw-De-bSB"/>
+                            <constraint firstItem="usR-cf-Lt4" firstAttribute="trailing" secondItem="bNM-s1-btJ" secondAttribute="trailing" id="HYG-Gu-HGi"/>
+                            <constraint firstItem="te1-el-am5" firstAttribute="top" secondItem="bNM-s1-btJ" secondAttribute="bottom" constant="8" id="NM7-d0-HwV"/>
                             <constraint firstItem="RFX-EM-kvA" firstAttribute="top" secondItem="te1-el-am5" secondAttribute="bottom" constant="1" id="Vvj-FQ-Qsd"/>
                             <constraint firstItem="te1-el-am5" firstAttribute="trailing" secondItem="RFX-EM-kvA" secondAttribute="trailing" id="YTR-Vs-Q6S"/>
                             <constraint firstItem="te1-el-am5" firstAttribute="leading" secondItem="Z9O-t3-fcV" secondAttribute="leading" id="agZ-kz-Q5B"/>
                             <constraint firstItem="te1-el-am5" firstAttribute="leading" secondItem="usR-cf-Lt4" secondAttribute="leading" id="ak2-8R-cb5"/>
+                            <constraint firstItem="bNM-s1-btJ" firstAttribute="leading" secondItem="usR-cf-Lt4" secondAttribute="leading" id="chz-7E-Qvo"/>
                             <constraint firstItem="te1-el-am5" firstAttribute="top" secondItem="Z9O-t3-fcV" secondAttribute="bottom" constant="163" id="gIN-Lr-dua"/>
                             <constraint firstItem="te1-el-am5" firstAttribute="top" secondItem="Z9O-t3-fcV" secondAttribute="bottom" constant="163" id="iiD-hz-mIM"/>
+                            <constraint firstItem="bNM-s1-btJ" firstAttribute="top" secondItem="Z9O-t3-fcV" secondAttribute="bottom" constant="27" id="jfb-Za-a5b"/>
                             <constraint firstItem="RFX-EM-kvA" firstAttribute="leading" secondItem="usR-cf-Lt4" secondAttribute="leading" id="mxT-RR-heu"/>
                             <constraint firstItem="RFX-EM-kvA" firstAttribute="top" secondItem="te1-el-am5" secondAttribute="bottom" constant="1" id="tmd-FQ-JCt"/>
                         </constraints>

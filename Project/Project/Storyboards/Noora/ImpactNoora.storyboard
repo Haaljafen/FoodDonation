@@ -11,7 +11,7 @@
         <!--impactNoora-->
         <scene sceneID="s0d-6b-0kx">
             <objects>
-                <viewController storyboardIdentifier="impactNoora" title="impactNoora" id="Y6W-OH-hqX" customClass="DashboardViewController" customModule="Takaffal" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ImpactNoora" title="impactNoora" id="Y6W-OH-hqX" customClass="DashboardViewController" customModule="Takaffal" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -304,8 +304,8 @@
                     <connections>
                         <outlet property="AdminTotalDonations" destination="CA1-hh-kEW" id="4U5-je-kGS"/>
                         <outlet property="MotiveSentence" destination="PNv-PP-ZDO" id="fG4-LD-Q5u"/>
-                        <outlet property="headerContainer" destination="O5y-Ol-fDt" id="EYR-bU-zJS"/>
-                        <outlet property="navContainer" destination="rup-k4-J5K" id="hSd-L8-Lex"/>
+                        <outlet property="headerContainer" destination="O5y-Ol-fDt" id="zuG-O3-L2H"/>
+                        <outlet property="navContainer" destination="rup-k4-J5K" id="hkR-TK-agV"/>
                         <outlet property="pieChartView" destination="C5h-Pu-zW2" id="BcB-Cg-wzZ"/>
                         <outlet property="section1TitleLabe" destination="ih0-Ca-SnZ" id="1CD-eb-Git"/>
                         <outlet property="section2TitleLabe" destination="566-Cq-k2C" id="euY-OS-JFd"/>

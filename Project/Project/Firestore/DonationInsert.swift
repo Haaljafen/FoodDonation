@@ -10,47 +10,53 @@ import FirebaseFirestore
 
 final class DonationInsert {
 
-    static func insertTestDonation() {
+    static func insertMultipleDonationsIndividually() {
 
         let db = Firestore.firestore()
-        let donationId = UUID().uuidString
 
-        let data: [String: Any] = [
-            "id": donationId,
-            "donorId": "ij0OTAo2nASJ1Zk6lr9U8buRJ412",
-            "collectorId": "tmp3A5GbeFMQceAhcsS6j8MJlRI2",
+        let items = ["pizza", "sandwiches", "rice boxes"]
+        let methods = ["dropoff", "locationPickup", "dropoff"]
+        let impacts = ["Meals Provided", "Other", "Waste Prevented"]
 
-            "item": "pizza",
-            "quantity": 12,
-            "unit": "pcs",
+        // Safety check
+        guard items.count == methods.count,
+              items.count == impacts.count else {
+            print("❌ Arrays count mismatch")
+            return
+        }
 
-            "manufacturingDate": NSNull(),
-            "expiryDate": "18/04/2027",
+        for index in items.indices {
 
-            "category": "Cooked Meals",
-            "impactType": "Meals Provided",
+            let donationId = UUID().uuidString
 
-            "imageUrl": "https://res.cloudinary.com/dquu356xs/image/upload/v1766880277/xjd3de2fplwarcvx2ad7.jpg",
-            "donationMethod": "locationPickup",
+            let data: [String: Any] = [
+                "id": donationId,
+                "donorId": "pbMwtpX7pMXU7orppD1jNLRiL4C2",
+                "collectorId": "swM6gGUOCLbsnQ3puuL4oTjSaBn2",
 
-            "status": "accepted",
+                "item": items[index],
+                "quantity": 10,
+                "unit": "pcs",
+                "expiryDate": "18/04/2027",
+                "category": "Cooked Meals",
 
-            "pickupRequestId": "pickupTest123",
+                // ✅ Correct: single values
+                "impactType": impacts[index],
+                "donationMethod": methods[index],
 
-            "donorName": "Sarah",
-            "donorCity": "Manama",
+                "status": "accepted",
+                "createdAt": Timestamp(date: Date())
+            ]
 
-            "createdAt": Timestamp(date: Date())
-        ]
-
-        db.collection("Donations")
-            .document(donationId)
-            .setData(data) { error in
-                if let error = error {
-                    print("❌ Firestore insert error:", error.localizedDescription)
-                } else {
-                    print("✅ Donation inserted successfully")
+            db.collection("Donations")
+                .document(donationId)
+                .setData(data) { error in
+                    if let error = error {
+                        print("❌ Failed for \(items[index]):", error.localizedDescription)
+                    } else {
+                        print("✅ Inserted \(items[index])")
+                    }
                 }
-            }
+        }
     }
 }

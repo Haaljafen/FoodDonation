@@ -42,7 +42,7 @@ final class DonationDetailsViewController: UIViewController {
     // Passed from History
     var donation: DonationHistoryItem!
 
-    // ✅ PASSED ROLE from HistoryVC
+    // PASSED ROLE from HistoryVC
        var roleFromHistory: String?
     
     
@@ -65,7 +65,7 @@ final class DonationDetailsViewController: UIViewController {
 
     
     // MARK: - Status Helpers
-    // ✅ NGO-only: one tap moves to the next status in order
+    // NGO-only: one tap moves to the next status in order
     private func toggleToNextStatus() {
         guard currentRole == .ngo else { return }
 
@@ -122,7 +122,6 @@ final class DonationDetailsViewController: UIViewController {
         setupTableView()
 
         // Get role (collector vs donor/admin) then refresh section 1 UI
-//        fetchCurrentUserRole()
         if let r = roleFromHistory?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased(),
            let parsed = UserRole(rawValue: r) {
             currentRole = parsed
@@ -157,7 +156,6 @@ final class DonationDetailsViewController: UIViewController {
                                 .trimmingCharacters(in: .whitespacesAndNewlines)
                                 .lowercased()
 
-//                            print("🧩 details role =", roleStr)
 
                             self.currentRole = UserRole(rawValue: roleStr) ?? .donor
             }
@@ -185,64 +183,93 @@ final class DonationDetailsViewController: UIViewController {
             self.tableView.reloadData()
         }
     }
+    
+    
+    
+    private func normalizedMethod(_ raw: String) -> String {
+        let m = raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
 
+        if m == "pickup" || m == "locationpickup" {
+            return "pickup"
+        }
+
+        if m == "dropoff" || m == "drop-off" {
+            return "dropoff"
+        }
+
+        return m
+    }
+
+    
+    
     private func fetchPickupRequest() {
-        db.collection("pickupRequests")
+        db.collection("PickupRequests")
             .whereField("donationId", isEqualTo: donation.donationID)
             .limit(to: 1)
             .getDocuments { [weak self] snap, err in
                 guard let self = self else { return }
 
+                // Defaults
+                self.pickup = [:]
+                self.pickupAddress = "Address not available"
+                self.pickupDateTime = "—"
+
                 if let err = err {
                     print("❌ fetch pickup request error:", err)
-                    self.pickup = [:]
                     self.tableView.reloadData()
                     return
                 }
 
                 guard let doc = snap?.documents.first else {
-                    self.pickup = [:]
+                    // No pickup request yet
                     self.tableView.reloadData()
                     return
                 }
 
                 self.pickup = doc.data()
 
-                // MARK: - scheduledAt → dateTimeLabel
-                if let ts = self.pickup["scheduledAt"] as? Timestamp {
+             
+                if let ts = self.pickup["pickupDateTime"] as? Timestamp {
                     self.pickupDateTime = self.dateFormatter.string(from: ts.dateValue())
-                } else {
-                    self.pickupDateTime = "—"
                 }
 
-                // MARK: - method
-                let method = (self.pickup["method"] as? String)?.lowercased()
-                    ?? ((self.details["donationMethod"] as? String)?.lowercased()
-                    ?? self.donation.method.lowercased())
+                // Resolve method
+                let rawMethod =
+                    (self.details["donationMethod"] as? String) ??
+                    (self.pickup["method"] as? String) ??
+                    self.donation.method
 
-                // MARK: - Decide which user to fetch
-                let userId: String?
-                if method == "pickup" {
-                    userId = self.details["donorId"] as? String
-                } else {
-                    userId = self.pickup["collectorId"] as? String
-                }
+                let method = normalizedMethod(rawMethod)
 
-                guard let uid = userId else {
-                    self.pickupAddress = "Address not available"
+                // DROP-OFF → use facilityName
+                if method == "dropoff" {
+                    if let facility = self.pickup["facilityName"] as? String,
+                       !facility.isEmpty {
+                        self.pickupAddress = facility
+                    }
+
                     self.tableView.reloadData()
                     return
                 }
 
-                // MARK: - Fetch address from Users
-                self.db.collection("Users").document(uid).getDocument { userSnap, _ in
-                    self.pickupAddress =
-                        (userSnap?.data()?["address"] as? String) ?? "Address not available"
+                // PICKUP → fetch donor address
+                guard let donorId = self.details["donorId"] as? String else {
+                    self.tableView.reloadData()
+                    return
+                }
+
+                self.db.collection("Users").document(donorId).getDocument { userSnap, _ in
+                    if let address = userSnap?.data()?["address"] as? String,
+                       !address.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        self.pickupAddress = address
+                    }
 
                     self.tableView.reloadData()
                 }
             }
     }
+    
+
 
     // MARK: - Status Helpers
     private func currentStatusString() -> String {
@@ -251,7 +278,7 @@ final class DonationDetailsViewController: UIViewController {
 
     
     
-    // ✅ Collector-only (updates Firestore)
+    // Collector-only (updates Firestore)
     private func updateDonationStatus(to newStatus: String) {
         guard currentRole == .ngo else { return }
 
@@ -300,7 +327,6 @@ extension DonationDetailsViewController: UITableViewDelegate, UITableViewDataSou
     
     // MARK: - Image URL Helper
     private func imageUrlStringFromDetails() -> String? {
-        // Try the most common keys you might have in Firestore
         let possibleKeys = ["imageUrl", "imageURL", "image_url", "imgUrl", "imgURL"]
 
         for key in possibleKeys {
@@ -335,7 +361,7 @@ extension DonationDetailsViewController: UITableViewDelegate, UITableViewDataSou
 
             if currentRole == .ngo {
 
-                // ✅ compute next-title + enabled based on current status
+                // compute next-title + enabled based on current status
                 let config = buttonTitle(for: status) // (title: String, enabled: Bool)
 
                 let cell = tableView.dequeueReusableCell(
@@ -343,13 +369,13 @@ extension DonationDetailsViewController: UITableViewDelegate, UITableViewDataSou
                     for: indexPath
                 ) as! DonationStatusActionCell
 
-                // ✅ show current status
-                // ✅ button title shows NEXT status name (e.g., "Mark as Accepted")
+                // show current status
+                // button title shows NEXT status name (e.g., "Mark as Accepted")
                 cell.configure(currentStatus: status, buttonTitle: config.title) { [weak self] in
                     self?.toggleToNextStatus()
                 }
 
-                // ✅ enforce enabled/disabled + alpha every reload
+                // enforce enabled/disabled + alpha every reload
                 cell.setButton(title: config.title, enabled: config.enabled)
 
                 return cell
@@ -370,7 +396,6 @@ extension DonationDetailsViewController: UITableViewDelegate, UITableViewDataSou
             let cell = tableView.dequeueReusableCell(withIdentifier: "DonationDetailsCell", for: indexPath) as! DonationDetailsCell
 
             let item = (details["item"] as? String) ?? "—"
-//            let category = (details["category"] as? String) ?? "—"
             
             let expiryText: String = {
                 if let ts = details["expiryDate"] as? Timestamp {

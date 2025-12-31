@@ -29,9 +29,7 @@ final class DashboardViewController: BaseChromeViewController {
     // MARK: - Properties
     private let db = Firestore.firestore()
     private var listener: ListenerRegistration?
-    private let testUID: String? = "nvjfqWavDePSwn28xbHT4aUoEUC2" // set to nil after when done testing admin
-//    private let testUID: String? = "vFxkvcW50ENC7DufTWFNISF2fHi2" // ngo
-//    private let testUID: String? = "tmp3A5GbeFMQceAhcsS6j8MJlRI2" // donor
+    private let testUID: String? = nil // u can hardcode it for testing
     private var currentUID: String? {
         return testUID ?? Auth.auth().currentUser?.uid
     }
@@ -41,13 +39,6 @@ final class DashboardViewController: BaseChromeViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
-//        deleteDonations(by: [
-//            "1BD8E4C6-DC24-4C0E-88A1-7807EB933BD5",
-//            "233370AB-3B23-4D04-8332-F9ABF52F1C33",
-//            "278D774A-4CB7-40F5-9600-8C4D34068A54"
-//        ])
-
-//        DonationInsert.insertTestDonation()
         setupPieChart()
         loadDashboard()
     }
@@ -97,7 +88,7 @@ final class DashboardViewController: BaseChromeViewController {
                 let docs = snapshot?.documents ?? []
                 
                 let totalDonations = docs.count
-                let totalImpact = docs.reduce(0) { $0 + ($1["impactValue"] as? Int ?? 0) }
+                let totalImpact = docs.reduce(0) { $0 + ($1["impactValue"] as? Int ?? 0) } //might need to delet this part
                 let categories = Set(docs.compactMap { $0["category"] as? String })
                 
                 self.statValue1Label.text = "\(totalDonations)"
@@ -107,6 +98,7 @@ final class DashboardViewController: BaseChromeViewController {
                 self.updateImpactChart(docs)
             }
     }
+    
     
     // MARK: - NGO DASHBOARD
     private func loadNGODashboard(uid: String) {
@@ -135,10 +127,10 @@ final class DashboardViewController: BaseChromeViewController {
                 self.statValue2Label.text = "\(collected)"
                 self.statValue3Label.text = "\(delivered)"
                 
-//                let acceptedDocs = docs.filter { $0["status"] as? String == "accepted" }
                 self.updateImpactChart(docs)
             }
     }
+    
     
     // MARK: - ADMIN DASHBOARD
     private func loadAdminDashboard() {
@@ -166,7 +158,6 @@ final class DashboardViewController: BaseChromeViewController {
             .addSnapshotListener { snapshot, _ in
                 let docs = snapshot?.documents ?? []
                 self.AdminTotalDonations.text = "Total Donations: \(docs.count)"
-//                self.statValue3Label.text = "\(docs.count)"
                 self.updateImpactChart(docs)
             }
         
@@ -176,6 +167,7 @@ final class DashboardViewController: BaseChromeViewController {
             }
 
     }
+    
     
     // MARK: - Chart Setup
     

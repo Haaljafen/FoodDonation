@@ -9,8 +9,10 @@ final class NotificationViewController: UIViewController, UITableViewDataSource,
 
     private var headerView: HeaderView?
 
+    private var roleListener: ListenerRegistration?
+    private var userListener: ListenerRegistration?
+
     private let db = Firestore.firestore()
-    private var listener: ListenerRegistration?
 
     struct NotifItem {
         let id: String
@@ -29,15 +31,11 @@ final class NotificationViewController: UIViewController, UITableViewDataSource,
         fetchCurrentUserRoleAndListen()
     }
 
-    deinit {
-        listener?.remove()
-    }
-
     private func setupTable() {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorStyle = .none
-        tableView.rowHeight = 90
+        tableView.rowHeight = 85
     }
 
     // MARK: - Role → then listen notifications
@@ -60,44 +58,58 @@ final class NotificationViewController: UIViewController, UITableViewDataSource,
 
             let role = UserRole(rawValue: roleStr) ?? .donor
             self.listenNotifications(uid: uid, role: role)
+            print("✅ uid:", uid)
+            print("✅ roleStr:", roleStr, " -> roleEnum:", role.rawValue)
+            print("✅ user doc exists:", snap?.exists ?? false)
+            print("✅ user doc data:", snap?.data() ?? [:])
         }
     }
 
     private func listenNotifications(uid: String, role: UserRole) {
-        listener?.remove()
+        roleListener?.remove()
+        userListener?.remove()
 
-        // Query: role-based notifications
         let roleQuery = db.collection("Notifications")
             .whereField("audience", arrayContains: role.rawValue)
             .order(by: "createdAt", descending: true)
             .limit(to: 50)
 
-        // Query: user-specific notifications
         let userQuery = db.collection("Notifications")
             .whereField("toUserId", isEqualTo: uid)
             .order(by: "createdAt", descending: true)
             .limit(to: 50)
 
-        // ✅ Easiest: listen to BOTH and merge
-        // 1) role notifications
-        roleQuery.addSnapshotListener { [weak self] snap, error in
-            self?.handleSnapshot(snap, error)
+        roleListener = roleQuery.addSnapshotListener { [weak self] snap, error in
+            self?.handleSnapshot(source: "ROLE", snap, error)
         }
 
-        // 2) user notifications
-        userQuery.addSnapshotListener { [weak self] snap, error in
-            self?.handleSnapshot(snap, error)
+        userListener = userQuery.addSnapshotListener { [weak self] snap, error in
+            self?.handleSnapshot(source: "USER", snap, error)
         }
     }
 
-    private func handleSnapshot(_ snap: QuerySnapshot?, _ error: Error?) {
-        if let error = error {
-            print("❌ notifications listen error:", error.localizedDescription)
+    deinit {
+        roleListener?.remove()
+        userListener?.remove()
+    }
+
+
+    private func handleSnapshot(source: String, _ snap: QuerySnapshot?, _ error: Error?) {
+
+        if let error = error as NSError? {
+            print("❌ \(source) listen error:", error.localizedDescription,
+                  " | domain:", error.domain, " code:", error.code)
             return
         }
-        guard let docs = snap?.documents else { return }
 
-        var incoming: [NotifItem] = docs.map { d in
+        let docs = snap?.documents ?? []
+        print("✅ \(source) got docs:", docs.count)
+
+        if let first = docs.first {
+            print("✅ \(source) first doc:", first.documentID, first.data())
+        }
+
+        let incoming: [NotifItem] = docs.map { d in
             let data = d.data()
             return NotifItem(
                 id: d.documentID,
@@ -108,11 +120,9 @@ final class NotificationViewController: UIViewController, UITableViewDataSource,
             )
         }
 
-        // Merge (avoid duplicates by id)
         var dict = Dictionary(uniqueKeysWithValues: items.map { ($0.id, $0) })
         for n in incoming { dict[n.id] = n }
 
-        // Sort newest
         items = dict.values.sorted {
             ($0.createdAt?.dateValue() ?? .distantPast) > ($1.createdAt?.dateValue() ?? .distantPast)
         }

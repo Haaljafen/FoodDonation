@@ -55,7 +55,7 @@
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="dda-ue-Zdh" firstAttribute="bottom" secondItem="3qR-NT-6Ux" secondAttribute="bottom" constant="18" id="5gA-kN-5Rg"/>
+                                                <constraint firstItem="dda-ue-Zdh" firstAttribute="bottom" secondItem="3qR-NT-6Ux" secondAttribute="bottom" constant="12" id="5gA-kN-5Rg"/>
                                                 <constraint firstItem="dda-ue-Zdh" firstAttribute="leading" secondItem="wYg-e6-Ch6" secondAttribute="leading" id="9Wi-0b-2wj"/>
                                                 <constraint firstItem="dda-ue-Zdh" firstAttribute="top" secondItem="wYg-e6-Ch6" secondAttribute="bottom" constant="4" id="Bhs-5c-dfV"/>
                                                 <constraint firstItem="wYg-e6-Ch6" firstAttribute="leading" secondItem="1Cw-Ay-VKq" secondAttribute="trailing" constant="12" id="KMT-D9-dcI"/>
@@ -66,6 +66,11 @@
                                                 <constraint firstItem="1Cw-Ay-VKq" firstAttribute="centerY" secondItem="3qR-NT-6Ux" secondAttribute="centerY" id="wff-Cg-QHT"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="iconImageView" destination="1Cw-Ay-VKq" id="Z19-j7-tds"/>
+                                            <outlet property="subTitleLabel" destination="dda-ue-Zdh" id="iUO-lz-j1g"/>
+                                            <outlet property="titleLabel" destination="wYg-e6-Ch6" id="Bbh-cB-zIH"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>

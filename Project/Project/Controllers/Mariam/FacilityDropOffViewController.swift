@@ -341,13 +341,12 @@ class FacilityDropOffViewController: UIViewController, DonationDraftReceivable {
             method: DonationMethod.dropoff.rawValue,
 
             facilityName: facilityName,
-            dropoffDate: dropoffDateTime,
-            dropoffTime: timeFormatter.string(from: dropoffDateTime),
-
+            dropoffDate: nil,
+            dropoffTime: nil,
             pickupAddress: nil,
             pickupCity: nil,
             pickupCountry: nil,
-            pickupDateTime: nil,
+            pickupDateTime: dropoffDateTime,
 
             scheduledAt: Date()
         )
@@ -703,7 +702,7 @@ class FacilityDropOffViewController: UIViewController, DonationDraftReceivable {
             return
         }
 
-        let sb = UIStoryboard(name: "MariamStoryboard2", bundle: nil)
+        let sb = UIStoryboard(name: "HajarStoryboard2", bundle: nil)
         let vc = sb.instantiateViewController(
             withIdentifier: "CreateDonationViewController"
         )

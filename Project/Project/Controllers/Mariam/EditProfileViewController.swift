@@ -686,7 +686,7 @@ class EditProfileViewController: UIViewController {
             return
         }
 
-        let sb = UIStoryboard(name: "MariamStoryboard2", bundle: nil)
+        let sb = UIStoryboard(name: "HajarStoryboard2", bundle: nil)
         let vc = sb.instantiateViewController(
             withIdentifier: "CreateDonationViewController"
         )

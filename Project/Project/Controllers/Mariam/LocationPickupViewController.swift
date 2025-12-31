@@ -268,19 +268,22 @@ class LocationPickupViewController: UIViewController, DonationDraftReceivable {
                 return
             }
 
-            do {
-                try self.saveDonation(
-                    draft: draft,
-                    pickupRequestId: pickupRequest.id
-                )
-
-                self.showSuccessAndRedirect()
-
-            } catch {
-                self.showAlert(
-                    "Error",
-                    "Failed to save donation: \(error.localizedDescription)"
-                )
+            self.saveDonation(
+                draft: draft,
+                pickupRequestId: pickupRequest.id
+            ) { [weak self] result in
+                guard let self = self else { return }
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success:
+                        self.showSuccessAndRedirect()
+                    case .failure(let error):
+                        self.showAlert(
+                            "Error",
+                            "Failed to save donation: \(error.localizedDescription)"
+                        )
+                    }
+                }
             }
         }
     }
@@ -289,7 +292,8 @@ class LocationPickupViewController: UIViewController, DonationDraftReceivable {
     private func saveDonation(
         draft: DonationDraft,
         pickupRequestId: String
-    ) throws {
+        , completion: @escaping (Result<Void, Error>) -> Void
+    ) {
 
         let donation = Donation(
             id: draft.id,
@@ -318,10 +322,7 @@ class LocationPickupViewController: UIViewController, DonationDraftReceivable {
             createdAt: Date()
         )
 
-        try Firestore.firestore()
-            .collection("Donations")
-            .document(donation.id)
-            .setData(from: donation)
+        DonationService.shared.createDonation(donation, completion: completion)
     }
 
 

@@ -269,8 +269,17 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
 
     @objc private func openNotifications() {
         print("🔔 Notifications tapped")
-        // later: push notifications screen
+
+        let sb = UIStoryboard(name: "NotificationsStoryboard", bundle: nil)
+
+        guard let vc = sb.instantiateViewController(withIdentifier: "NotificationVC") as? NotificationViewController else {
+            print("❌ Could not instantiate NotificationViewController")
+            return
+        }
+
+        navigationController?.pushViewController(vc, animated: true)
     }
+
 
     // MARK: - Bottom Nav
     private func setupNav() {

@@ -362,20 +362,23 @@ class FacilityDropOffViewController: UIViewController, DonationDraftReceivable {
                 return
             }
 
-            do {
-                try self.saveDonation(
-                    draft: draft,
-                    pickupRequestId: pickupRequest.id,
-                    method: .dropoff
-                )
-
-                self.showSuccessAndRedirect()
-
-            } catch {
-                self.showAlert(
-                    title: "Error",
-                    message: "Failed to save donation: \(error.localizedDescription)"
-                )
+            self.saveDonation(
+                draft: draft,
+                pickupRequestId: pickupRequest.id,
+                method: .dropoff
+            ) { [weak self] result in
+                guard let self = self else { return }
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success:
+                        self.showSuccessAndRedirect()
+                    case .failure(let error):
+                        self.showAlert(
+                            title: "Error",
+                            message: "Failed to save donation: \(error.localizedDescription)"
+                        )
+                    }
+                }
             }
         }
     }
@@ -384,8 +387,9 @@ class FacilityDropOffViewController: UIViewController, DonationDraftReceivable {
     private func saveDonation(
         draft: DonationDraft,
         pickupRequestId: String,
-        method: DonationMethod
-    ) throws {
+        method: DonationMethod,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
 
         let donation = Donation(
             id: draft.id,
@@ -414,10 +418,7 @@ class FacilityDropOffViewController: UIViewController, DonationDraftReceivable {
             createdAt: Date()
         )
 
-        try Firestore.firestore()
-            .collection("Donations")
-            .document(donation.id)
-            .setData(from: donation)
+        DonationService.shared.createDonation(donation, completion: completion)
     }
     
     private func showSuccessAndRedirect() {

@@ -1,12 +1,28 @@
 import Foundation
 import FirebaseFirestore
 import FirebaseAuth
+import UserNotifications
 
 final class DonationService {
     static let shared = DonationService()
     private init() {}
 
     private let db = Firestore.firestore()
+    private var didRequestNotificationPermission = false
+
+    enum NotificationEventType: String {
+        case donationCreated
+        case newDonationAvailable
+    }
+
+    private func content(for type: NotificationEventType) -> (title: String, subtitle: String, iconName: String) {
+        switch type {
+        case .donationCreated:
+            return ("You have created a new donation", "Your donation is now submitted", "notif_user")
+        case .newDonationAvailable:
+            return ("New donation is now available", "A donor has created a new donation", "notif_user")
+        }
+    }
 
     // MARK: - Create Donation
     func createDonation(
@@ -32,12 +48,92 @@ final class DonationService {
                     if let error = error {
                         completion(.failure(error))
                     } else {
+                        self.createNotificationsForDonation(donation)
+                        self.scheduleLocalNotificationForDonationCreated(donation)
                         completion(.success(()))
                     }
                 }
 
         } catch {
             completion(.failure(error))
+        }
+    }
+
+    private func createNotificationsForDonation(_ donation: Donation) {
+        writeNotification(
+            type: .donationCreated,
+            relatedDonationId: donation.id,
+            toUserId: donation.donorId,
+            audience: nil
+        )
+
+        writeNotification(
+            type: .newDonationAvailable,
+            relatedDonationId: donation.id,
+            toUserId: nil,
+            audience: ["admin", "ngo"]
+        )
+    }
+
+    private func writeNotification(
+        type: NotificationEventType,
+        relatedDonationId: String,
+        toUserId: String?,
+        audience: [String]?
+    ) {
+        let createdAt = Timestamp(date: Date())
+        let c = content(for: type)
+
+        var data: [String: Any] = [
+            "type": type.rawValue,
+            "title": c.title,
+            "subtitle": c.subtitle,
+            "iconName": c.iconName,
+            "createdAt": createdAt,
+            "donationId": relatedDonationId
+        ]
+
+        if let toUserId {
+            data["toUserId"] = toUserId
+        }
+        if let audience {
+            data["audience"] = audience
+        }
+
+        let target = toUserId ?? "audience"
+        let docId = "\(type.rawValue)_\(relatedDonationId)_\(target)"
+
+        db.collection("Notifications").document(docId).setData(data, merge: true) { error in
+            if let error = error {
+                print("❌ Failed to write notification:", error.localizedDescription)
+            }
+        }
+    }
+
+    private func scheduleLocalNotificationForDonationCreated(_ donation: Donation) {
+        guard let currentUid = Auth.auth().currentUser?.uid, currentUid == donation.donorId else {
+            return
+        }
+
+        let center = UNUserNotificationCenter.current()
+
+        if !didRequestNotificationPermission {
+            didRequestNotificationPermission = true
+            center.requestAuthorization(options: [.alert, .badge, .sound]) { _, _ in }
+        }
+
+        let content = UNMutableNotificationContent()
+        content.title = "You have created a new donation"
+        content.body = "Your donation is now submitted"
+        content.sound = .default
+
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        let request = UNNotificationRequest(identifier: "donation_created_\(donation.id)", content: content, trigger: trigger)
+
+        center.add(request) { error in
+            if let error = error {
+                print("❌ Local notification schedule failed:", error.localizedDescription)
+            }
         }
     }
 

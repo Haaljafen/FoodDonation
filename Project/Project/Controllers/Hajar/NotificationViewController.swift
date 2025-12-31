@@ -10,6 +10,7 @@ final class NotificationViewController: UIViewController, UITableViewDataSource,
     private var headerView: HeaderView?
 
     private var roleListener: ListenerRegistration?
+    private var roleStringListener: ListenerRegistration?
     private var userListener: ListenerRegistration?
 
     private let db = Firestore.firestore()
@@ -29,6 +30,9 @@ final class NotificationViewController: UIViewController, UITableViewDataSource,
         setupHeader()
         setupTable()
         fetchCurrentUserRoleAndListen()
+        tableView.separatorStyle = .singleLine
+        tableView.separatorInset = UIEdgeInsets(top: 0, left: 72, bottom: 0, right: 16)
+        tableView.tableFooterView = UIView() // removes extra separators on empty space
     }
 
     private func setupTable() {
@@ -67,10 +71,16 @@ final class NotificationViewController: UIViewController, UITableViewDataSource,
 
     private func listenNotifications(uid: String, role: UserRole) {
         roleListener?.remove()
+        roleStringListener?.remove()
         userListener?.remove()
 
         let roleQuery = db.collection("Notifications")
             .whereField("audience", arrayContains: role.rawValue)
+            .order(by: "createdAt", descending: true)
+            .limit(to: 50)
+
+        let roleStringQuery = db.collection("Notifications")
+            .whereField("audience", isEqualTo: role.rawValue)
             .order(by: "createdAt", descending: true)
             .limit(to: 50)
 
@@ -83,6 +93,10 @@ final class NotificationViewController: UIViewController, UITableViewDataSource,
             self?.handleSnapshot(source: "ROLE", snap, error)
         }
 
+        roleStringListener = roleStringQuery.addSnapshotListener { [weak self] snap, error in
+            self?.handleSnapshot(source: "ROLE_STRING", snap, error)
+        }
+
         userListener = userQuery.addSnapshotListener { [weak self] snap, error in
             self?.handleSnapshot(source: "USER", snap, error)
         }
@@ -90,6 +104,7 @@ final class NotificationViewController: UIViewController, UITableViewDataSource,
 
     deinit {
         roleListener?.remove()
+        roleStringListener?.remove()
         userListener?.remove()
     }
 

@@ -201,8 +201,8 @@ final class CreateDonationViewController: UIViewController,
 
         switch method {
         case .dropoff:
-            pushDraft(toStoryboard: "ScheduleDropoff",
-                      vcIdentifier: "DropoffViewController",
+            pushDraft(toStoryboard: "ScheduleDropOffStoryboard",
+                      vcIdentifier: "FacilityDropOffViewController",
                       draft: draft)
 
         case .locationPickup:

@@ -17,18 +17,23 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="OgW-ov-SaP">
+                                <rect key="frame" x="20" y="396" width="353" height="59"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Cf4-Pp-PzB">
+                                <rect key="frame" x="148" y="409" width="97" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="INC-ei-JZf" userLabel="Header">
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="170"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="170" id="8r0-eY-F3y"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="E0Z-bZ-ao3" userLabel="Nav">
-                                <rect key="frame" x="0.0" y="702" width="393" height="150"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="150" id="Yq2-Xq-OUz"/>
                                 </constraints>
                             </view>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Z4v-Nu-853">
@@ -49,14 +54,17 @@
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qNO-tQ-4aS" userLabel="FacilityView">
                                                         <rect key="frame" x="0.0" y="127" width="353" height="60"/>
                                                         <subviews>
-                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UXX-iD-LPQ" userLabel="FacilityButton">
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UXX-iD-LPQ" userLabel="FacilityButton">
                                                                 <rect key="frame" x="0.0" y="0.0" width="353" height="60"/>
                                                                 <color key="tintColor" systemColor="secondaryLabelColor"/>
                                                                 <state key="normal" title="Button"/>
-                                                                <buttonConfiguration key="configuration" style="plain" imagePlacement="trailing" title="Facility" imagePadding="250">
+                                                                <buttonConfiguration key="configuration" style="plain" imagePlacement="trailing" title="Facility">
                                                                     <imageReference key="image" image="chevron.down" catalog="system" symbolScale="medium"/>
                                                                     <fontDescription key="titleFontDescription" type="system" pointSize="15"/>
                                                                 </buttonConfiguration>
+                                                                <connections>
+                                                                    <action selector="facilityTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="EAg-2j-QE2"/>
+                                                                </connections>
                                                             </button>
                                                         </subviews>
                                                         <color key="backgroundColor" systemColor="systemGray5Color"/>
@@ -80,14 +88,17 @@
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VRp-Kk-LS9" userLabel="DateView">
                                                         <rect key="frame" x="0.0" y="203" width="353" height="60"/>
                                                         <subviews>
-                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gFF-Yb-59T" userLabel="DateButton">
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gFF-Yb-59T" userLabel="DateButton">
                                                                 <rect key="frame" x="0.0" y="0.0" width="353" height="60"/>
                                                                 <color key="tintColor" systemColor="secondaryLabelColor"/>
                                                                 <state key="normal" title="Button"/>
-                                                                <buttonConfiguration key="configuration" style="plain" imagePlacement="trailing" title="Date" imagePadding="265">
+                                                                <buttonConfiguration key="configuration" style="plain" imagePlacement="trailing" title="Date">
                                                                     <imageReference key="image" image="chevron.down" catalog="system" symbolScale="medium"/>
                                                                     <fontDescription key="titleFontDescription" type="system" pointSize="15"/>
                                                                 </buttonConfiguration>
+                                                                <connections>
+                                                                    <action selector="dateTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="vVN-3p-Rnc"/>
+                                                                </connections>
                                                             </button>
                                                         </subviews>
                                                         <color key="backgroundColor" systemColor="systemGray5Color"/>
@@ -111,14 +122,17 @@
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bcV-Et-5BE" userLabel="TimeView">
                                                         <rect key="frame" x="0.0" y="279" width="353" height="60"/>
                                                         <subviews>
-                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="szH-gk-gxt" userLabel="TimeButton">
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="szH-gk-gxt" userLabel="TimeButton">
                                                                 <rect key="frame" x="0.0" y="0.0" width="353" height="60"/>
                                                                 <color key="tintColor" systemColor="secondaryLabelColor"/>
                                                                 <state key="normal" title="Button"/>
-                                                                <buttonConfiguration key="configuration" style="plain" imagePlacement="trailing" title="Time" imagePadding="265">
+                                                                <buttonConfiguration key="configuration" style="plain" imagePlacement="trailing" title="Time">
                                                                     <imageReference key="image" image="chevron.down" catalog="system" symbolScale="medium"/>
                                                                     <fontDescription key="titleFontDescription" type="system" pointSize="15"/>
                                                                 </buttonConfiguration>
+                                                                <connections>
+                                                                    <action selector="timeTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="zVh-V1-yy0"/>
+                                                                </connections>
                                                             </button>
                                                         </subviews>
                                                         <color key="backgroundColor" systemColor="systemGray5Color"/>
@@ -156,6 +170,9 @@
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                                         </userDefinedRuntimeAttributes>
+                                                        <connections>
+                                                            <action selector="saveTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="PaN-vP-mRR"/>
+                                                        </connections>
                                                     </button>
                                                 </subviews>
                                             </stackView>
@@ -180,6 +197,13 @@
                                 <viewLayoutGuide key="contentLayoutGuide" id="28Y-xd-Lz6"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="HjV-aH-jQq"/>
                             </scrollView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="E0Z-bZ-ao3" userLabel="Nav">
+                                <rect key="frame" x="0.0" y="702" width="393" height="150"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="150" id="Yq2-Xq-OUz"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -197,8 +221,13 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="dateButton" destination="gFF-Yb-59T" id="Sa5-pD-v0Q"/>
+                        <outlet property="facilityButton" destination="UXX-iD-LPQ" id="YBV-Uc-nch"/>
                         <outlet property="headerContainer" destination="INC-ei-JZf" id="tXf-a2-Ouq"/>
+                        <outlet property="hiddenDateTextField" destination="OgW-ov-SaP" id="ZBQ-aD-IUX"/>
+                        <outlet property="hiddenTimeTextField" destination="Cf4-Pp-PzB" id="BjG-tg-gO6"/>
                         <outlet property="navContainer" destination="E0Z-bZ-ao3" id="Tmf-Z2-nmq"/>
+                        <outlet property="timeButton" destination="szH-gk-gxt" id="2So-VE-mh5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

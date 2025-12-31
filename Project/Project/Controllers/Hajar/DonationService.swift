@@ -13,6 +13,14 @@ final class DonationService {
     enum NotificationEventType: String {
         case donationCreated
         case newDonationAvailable
+        case donationCollected
+        case donationExpired
+        case userRegistered
+        case profileUpdated
+        case ngoAssignedDonation
+        case ngoPickupScheduled
+        case pickupReminder
+        case itemExpiryWarning
     }
 
     private func content(for type: NotificationEventType) -> (title: String, subtitle: String, iconName: String) {
@@ -21,6 +29,22 @@ final class DonationService {
             return ("You have created a new donation", "Your donation is now submitted", "notif_user")
         case .newDonationAvailable:
             return ("New donation is now available", "A donor has created a new donation", "notif_user")
+        case .donationCollected:
+            return ("Donation collected", "Your donation has been collected successfully", "notif_user")
+        case .donationExpired:
+            return ("Donation expired", "A donation has expired and is no longer available", "notif_user")
+        case .userRegistered:
+            return ("Welcome to Takaffal", "Your account has been created successfully", "notif_user")
+        case .profileUpdated:
+            return ("Profile updated", "Your profile information has been updated", "notif_user")
+        case .ngoAssignedDonation:
+            return ("Donation assigned", "A donation has been assigned to your NGO", "notif_user")
+        case .ngoPickupScheduled:
+            return ("Pickup scheduled", "A pickup has been scheduled for a donation", "notif_user")
+        case .pickupReminder:
+            return ("Pickup reminder", "Reminder: you have a scheduled pickup", "notif_user")
+        case .itemExpiryWarning:
+            return ("Expiry warning", "An item is close to expiring", "notif_user")
         }
     }
 
@@ -75,9 +99,23 @@ final class DonationService {
         )
     }
 
+    func notify(
+        type: NotificationEventType,
+        relatedDonationId: String? = nil,
+        toUserId: String? = nil,
+        audience: [String]? = nil
+    ) {
+        writeNotification(
+            type: type,
+            relatedDonationId: relatedDonationId,
+            toUserId: toUserId,
+            audience: audience
+        )
+    }
+
     private func writeNotification(
         type: NotificationEventType,
-        relatedDonationId: String,
+        relatedDonationId: String?,
         toUserId: String?,
         audience: [String]?
     ) {
@@ -89,9 +127,12 @@ final class DonationService {
             "title": c.title,
             "subtitle": c.subtitle,
             "iconName": c.iconName,
-            "createdAt": createdAt,
-            "donationId": relatedDonationId
+            "createdAt": createdAt
         ]
+
+        if let relatedDonationId {
+            data["donationId"] = relatedDonationId
+        }
 
         if let toUserId {
             data["toUserId"] = toUserId
@@ -101,7 +142,8 @@ final class DonationService {
         }
 
         let target = toUserId ?? "audience"
-        let docId = "\(type.rawValue)_\(relatedDonationId)_\(target)"
+        let scope = relatedDonationId ?? "none"
+        let docId = "\(type.rawValue)_\(scope)_\(target)"
 
         db.collection("Notifications").document(docId).setData(data, merge: true) { error in
             if let error = error {

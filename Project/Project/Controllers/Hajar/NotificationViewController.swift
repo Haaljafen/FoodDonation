@@ -167,6 +167,14 @@ final class NotificationViewController: UIViewController, UITableViewDataSource,
         navigationController?.popViewController(animated: true)
     }
 
+    @objc private func didTapBack() {
+        if let nav = navigationController, nav.viewControllers.first != self {
+            nav.popViewController(animated: true)
+        } else {
+            dismiss(animated: true)
+        }
+    }
+
     private func setupHeader() {
         guard let header = Bundle.main.loadNibNamed("HeaderView", owner: nil, options: nil)?.first as? HeaderView else {
             print("❌ Failed to load HeaderView.xib")
@@ -178,6 +186,7 @@ final class NotificationViewController: UIViewController, UITableViewDataSource,
         header.takaffalLabel.text = "Takaffal"
         header.backBtn.isHidden = false
         header.search.isHidden = true
+        header.backBtn.addTarget(self, action: #selector(didTapBack), for: .touchUpInside)
         header.notiBtn.addTarget(self, action: #selector(openNotifications), for: .touchUpInside)
 
         headerContainer.addSubview(header)

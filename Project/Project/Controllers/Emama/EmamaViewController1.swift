@@ -1,24 +1,29 @@
 import UIKit
 
-class EmamaViewController: UIViewController {
+// The delegate allows whatever screen is using this filter to receive the updates
+protocol FilterDelegate: AnyObject {
+    func didChangeCategory(to category: String)
+}
 
-    @IBOutlet weak var filterView: FilterView! // Ensure this is connected in Storyboard
+class EmamaViewController1: UIViewController, FilterViewDelegate {
+
+    @IBOutlet weak var filterView: FilterView!
+    weak var delegate: FilterDelegate?
+    
+    // Default to admin, but can be changed to .donorHistory or .ngoBrowsing before loading
+    var activeFilterType: FilterType = .adminUserManagement
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Set the delegate so this class hears button clicks
+        // Setup the Filter UI based on the role
         filterView.delegate = self
-        
-        // Initialize the filter bar with food categories
-        filterView.setupFilter(for: .foodCategories)
+        filterView.setupFilter(for: activeFilterType)
     }
-}
 
-// MARK: - FilterViewDelegate
-extension EmamaViewController: FilterViewDelegate {
+    // Catches the tap from your FilterView.swift logic
     func didSelectCategory(_ category: String) {
-        print("Category selected: \(category)")
-        // This is where you will eventually trigger your table view to filter
+        // Send the result to the main screen
+        delegate?.didChangeCategory(to: category)
     }
 }

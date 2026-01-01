@@ -31,7 +31,7 @@
                                     <state key="normal" title="Button"/>
                                     <buttonConfiguration key="configuration" style="plain" title="Button">
                                         <backgroundConfiguration key="background" cornerRadius="15">
-                                            <color key="backgroundColor" red="0.0088499981569864321" green="0.19447859567416179" blue="0.51000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="backgroundColor" red="0.082352941176470587" green="0.31372549019607843" blue="0.51372549019607838" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </backgroundConfiguration>
                                         <fontDescription key="titleFontDescription" type="boldSystem" pointSize="12"/>
                                         <color key="baseForegroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

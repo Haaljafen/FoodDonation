@@ -8,25 +8,15 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SearchBarView" customModule="Takaffal" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EmamaViewController2" customModule="Takaffal" customModuleProvider="target">
             <connections>
+                <outlet property="backButton" destination="bXw-jD-zoW" id="yiL-Hx-Yl6"/>
+                <outlet property="clearAllButton" destination="MMi-J7-5rt" id="txa-El-ISu"/>
                 <outlet property="contentView" destination="eSm-En-T72" id="XhM-dv-rat"/>
                 <outlet property="searchBar" destination="LGL-H0-Kgw" id="7N4-aJ-ZIL"/>
-                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableView opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" bouncesZoom="NO" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="i5M-Pr-FkT">
-            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-            <viewLayoutGuide key="safeArea" id="vLr-E1-eTs"/>
-            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-            <connections>
-                <outlet property="dataSource" destination="-1" id="Tng-2m-Rnh"/>
-                <outlet property="delegate" destination="-1" id="9aC-8N-iBw"/>
-            </connections>
-            <point key="canvasLocation" x="140" y="21"/>
-        </tableView>
         <view contentMode="scaleToFill" id="EfV-lW-8dA">
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -34,13 +24,56 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eSm-En-T72">
                     <rect key="frame" x="0.0" y="0.0" width="393" height="784"/>
                     <subviews>
-                        <searchBar contentMode="redraw" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LGL-H0-Kgw">
-                            <rect key="frame" x="0.0" y="107" width="393" height="44"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                            <textInputTraits key="textInputTraits"/>
-                        </searchBar>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Hj4-Br-jEu">
+                            <rect key="frame" x="16" y="80" width="361" height="66"/>
+                            <subviews>
+                                <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Search here..." translatesAutoresizingMaskIntoConstraints="NO" id="LGL-H0-Kgw">
+                                    <rect key="frame" x="0.0" y="0.0" width="361" height="56"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="56" id="jZ0-2i-b0d"/>
+                                    </constraints>
+                                    <color key="barTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                    <connections>
+                                        <outlet property="delegate" destination="-1" id="fZY-9H-xAw"/>
+                                    </connections>
+                                </searchBar>
+                                <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="G17-mQ-Eqe">
+                                    <rect key="frame" x="180.66666666666666" y="66" width="0.0" height="0.0"/>
+                                    <subviews>
+                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MMi-J7-5rt">
+                                            <rect key="frame" x="0.0" y="0.0" width="0.0" height="31"/>
+                                            <state key="normal" title="Button"/>
+                                            <buttonConfiguration key="configuration" style="plain" title="clear all">
+                                                <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="14"/>
+                                                <color key="baseForegroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </buttonConfiguration>
+                                            <connections>
+                                                <action selector="clearAllTapped:" destination="-1" eventType="touchUpInside" id="vuY-mn-8fr"/>
+                                            </connections>
+                                        </button>
+                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bXw-jD-zoW">
+                                            <rect key="frame" x="0.0" y="0.0" width="0.0" height="31"/>
+                                            <state key="normal" title="Button"/>
+                                            <buttonConfiguration key="configuration" style="plain" title="Back">
+                                                <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="14"/>
+                                                <color key="baseForegroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </buttonConfiguration>
+                                            <connections>
+                                                <action selector="backTapped:" destination="-1" eventType="touchUpInside" id="7cc-iX-FzU"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                </stackView>
+                            </subviews>
+                        </stackView>
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="Hj4-Br-jEu" secondAttribute="trailing" constant="16" id="D5V-iI-iq7"/>
+                        <constraint firstItem="Hj4-Br-jEu" firstAttribute="leading" secondItem="eSm-En-T72" secondAttribute="leading" constant="16" id="MHO-n9-6x2"/>
+                        <constraint firstItem="Hj4-Br-jEu" firstAttribute="top" secondItem="eSm-En-T72" secondAttribute="top" constant="80" id="hl5-6k-oGB"/>
+                    </constraints>
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="kgf-rO-f9k"/>
@@ -52,13 +85,6 @@
                 <constraint firstItem="eSm-En-T72" firstAttribute="leading" secondItem="kgf-rO-f9k" secondAttribute="leading" id="uOE-ug-C51"/>
             </constraints>
             <point key="canvasLocation" x="202" y="-690"/>
-        </view>
-        <view contentMode="scaleToFill" id="HoZ-Sr-4gw">
-            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-            <viewLayoutGuide key="safeArea" id="PdU-Mv-FPq"/>
-            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-            <point key="canvasLocation" x="143" y="-1337"/>
         </view>
     </objects>
     <resources>

@@ -24,8 +24,6 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
     private var bottomNav: BottomNavView?
     
     private var listener: ListenerRegistration?
-    private let db = Firestore.firestore()
-
     // Make sure we only add them once
     private var didSetupViews = false
     private var items: [DonationItem] = []
@@ -37,6 +35,8 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
         df.dateFormat = "dd MMM yyyy"
         return df
     }()
+
+    private let db = Firestore.firestore()
 
 
     // MARK: - Lifecycle
@@ -95,12 +95,33 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
         tableView.showsVerticalScrollIndicator = false
         tableView.backgroundColor = .clear
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
-        tableView.allowsSelection = false
+        tableView.allowsSelection = true
 
         // Keep your current registration (but see note below if it crashes)
 
         listenForPendingDonations()
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let item = items[indexPath.row]
+
+        let sb = UIStoryboard(name: "HajarStoryboard", bundle: nil)
+        guard let vc = sb.instantiateViewController(withIdentifier: "DonationDetailVC")
+                as? DonationDetailViewController else {
+            print("❌ Storyboard ID not set for DonationDetailViewController")
+            return
+        }
+
+        // ✅ pass what detail needs
+        vc.donationId = item.id
+        vc.donorId = item.donorId
+
+        // ✅ optional: show instantly without waiting firestore
+        vc.passedItem = item
+
+        navigationController?.pushViewController(vc, animated: true)
+    }
+
     private func listenForPendingDonations() {
         listener?.remove()
 
@@ -120,13 +141,19 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
                     let d = doc.data()
 
                     return DonationItem(
+                        id: doc.documentID, // ✅ use Firestore doc id
+                        donorId: d["donorId"] as? String ?? "",
+
                         category: d["category"] as? String ?? "",
                         name: d["item"] as? String ?? "",
                         quantity: "\(d["quantity"] as? Int ?? 1) \(d["unit"] as? String ?? "")",
                         location: d["donorCity"] as? String ?? "Bahrain",
                         expiryDate: d["expiryDate"] as? String ?? "",
                         donorName: d["donorName"] as? String ?? "Donor",
-                        imageURL: d["imageUrl"] as? String ?? ""
+                        imageURL: d["imageUrl"] as? String ?? "",
+
+                        donationMethod: d["donationMethod"] as? String,
+                        impactType: d["impactType"] as? String
                     )
                 }
 
@@ -146,15 +173,22 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
                 case .success(let donations):
                     self?.items = donations.map { d in
                         DonationItem(
+                            id: d.id,                                  // ✅ add
+                            donorId: d.donorId,                        // ✅ add
+
                             category: d.category.rawValue,
                             name: d.item,
                             quantity: "\(d.quantity) \(d.unit)",
                             location: d.donorCity ?? "Bahrain",
                             expiryDate: d.expiryDate.map { self?.dateFormatter.string(from: $0) ?? "" } ?? "",
                             donorName: d.donorName ?? "Donor",
-                            imageURL: d.imageUrl
+                            imageURL: d.imageUrl,
+
+                            donationMethod: d.donationMethod.rawValue,
+                            impactType: d.impactType.rawValue
                         )
                     }
+
                     self?.tableView.reloadData()
 
                 case .failure(let e):
@@ -232,9 +266,81 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
 
         let item = items[indexPath.row]
-        cell.configure(with: item)   // ✅ THIS calls loadImage
+        cell.configure(with: item)
+
+        cell.acceptButton.tag = indexPath.row
+        cell.rejectButton.tag = indexPath.row
+
+        // important: table cells get reused, so clear and re-add handlers
+        cell.acceptButton.removeTarget(nil, action: nil, for: .allEvents)
+        cell.rejectButton.removeTarget(nil, action: nil, for: .allEvents)
+
+        cell.acceptButton.addTarget(self, action: #selector(didTapAccept(_:)), for: .touchUpInside)
+        cell.rejectButton.addTarget(self, action: #selector(didTapReject(_:)), for: .touchUpInside)
 
         return cell
+    }
+    
+
+    @objc private func didTapAccept(_ sender: UIButton) {
+        let row = sender.tag
+        guard row >= 0, row < items.count else { return }
+        updateDonationStatus(donationId: items[row].id, status: "accepted")
+    }
+
+    @objc private func didTapReject(_ sender: UIButton) {
+        let row = sender.tag
+        guard row >= 0, row < items.count else { return }
+        updateDonationStatus(donationId: items[row].id, status: "rejected")
+    }
+
+    private func updateDonationStatus(donationId: String, status: String) {
+        guard !donationId.isEmpty else { return }
+
+        if status == "accepted" {
+            db.collection("Donations").document(donationId).updateData([
+                "status": "accepted",
+                "acceptedAt": Timestamp(date: Date())
+            ]) { error in
+                if let error = error {
+                    print("❌ Error accepting donation:", error.localizedDescription)
+                }
+            }
+        } else if status == "rejected" {
+            db.collection("Donations").document(donationId).updateData([
+                "status": "rejected",
+                "rejectedAt": Timestamp(date: Date())
+            ]) { error in
+                if let error = error {
+                    print("❌ Error rejecting donation:", error.localizedDescription)
+                }
+            }
+        }
+    }
+
+    private func updateDonationStatus(_ item: DonationItem, status: String) {
+        let donationId = item.id
+        guard !donationId.isEmpty else { return }
+
+        var payload: [String: Any] = ["status": status]
+        if status == "accepted" {
+            payload["acceptedAt"] = Timestamp(date: Date())
+        } else if status == "rejected" {
+            payload["rejectedAt"] = Timestamp(date: Date())
+        }
+
+        db.collection("Donations").document(donationId).updateData(payload) { error in
+            if let error = error {
+                print("❌ Error updating donation status:", error.localizedDescription)
+                return
+            }
+
+            if status == "accepted" {
+                DonationService.shared.notify(type: .ngoAssignedDonation, relatedDonationId: donationId, toUserId: item.donorId)
+            } else {
+                DonationService.shared.notify(type: .donationExpired, relatedDonationId: donationId, toUserId: item.donorId)
+            }
+        }
     }
 
 

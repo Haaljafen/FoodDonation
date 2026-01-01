@@ -1,8 +1,9 @@
 import Foundation
 
-/// Lightweight UI model used by the NGO listing table (DonationCell).
-/// Keep this separate from the Firestore `Donation` model to make UI wiring easy.
 struct DonationItem {
+    let id: String
+    let donorId: String
+
     let category: String
     let name: String
     let quantity: String
@@ -10,4 +11,8 @@ struct DonationItem {
     let expiryDate: String
     let donorName: String
     let imageURL: String
+
+    // optional (useful for detail screen)
+    let donationMethod: String?
+    let impactType: String?
 }

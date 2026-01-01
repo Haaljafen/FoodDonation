@@ -267,7 +267,27 @@ final class CreateDonationViewController: UIViewController,
         header.backBtn.isHidden = false
         header.search.isHidden = true
 
+        header.notiBtn.isHidden = false
+        header.backBtn.addTarget(self, action: #selector(backTapped), for: .touchUpInside)
+        header.notiBtn.addTarget(self, action: #selector(openNotifications), for: .touchUpInside)
+
         headerContainer.addSubview(header)
         self.headerView = header
+    }
+
+    @objc private func backTapped() {
+        if let nav = navigationController, nav.viewControllers.first != self {
+            nav.popViewController(animated: true)
+        } else {
+            dismiss(animated: true)
+        }
+    }
+
+    @objc private func openNotifications() {
+        let sb = UIStoryboard(name: "NotificationsStoryboard", bundle: nil)
+        guard let vc = sb.instantiateViewController(withIdentifier: "NotificationVC") as? NotificationViewController else {
+            return
+        }
+        navigationController?.pushViewController(vc, animated: true)
     }
 }

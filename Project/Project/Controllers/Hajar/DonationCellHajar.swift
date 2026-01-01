@@ -35,6 +35,12 @@ class DonationCellHajar: UITableViewCell {
         donationImageView.contentMode = .scaleAspectFill
         donationImageView.clipsToBounds = true
 
+        donationImageView.isUserInteractionEnabled = false
+        acceptButton.isUserInteractionEnabled = true
+        rejectButton.isUserInteractionEnabled = true
+        cardView.bringSubviewToFront(acceptButton)
+        cardView.bringSubviewToFront(rejectButton)
+
 //        cardView.bringSubviewToFront(categoryChipView)
 //        contentView.bringSubviewToFront(cardView)
 

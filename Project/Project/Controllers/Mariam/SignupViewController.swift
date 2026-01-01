@@ -342,11 +342,10 @@ class SignupViewController: UIViewController, UIImagePickerControllerDelegate, U
     @IBAction func loginTappedloginTapped(_ sender: UIButton) {
         
         let vc = storyboard?.instantiateViewController(
-               withIdentifier: "LoginViewController"
-           ) as! LoginViewController
+                withIdentifier: "LoginViewController"
+            ) as! LoginViewController
 
-        navigationController?.popViewController(animated: true)
-        
+            navigationController?.pushViewController(vc, animated: true)
     }
     
 }

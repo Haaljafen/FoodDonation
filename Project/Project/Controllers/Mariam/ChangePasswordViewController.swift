@@ -149,7 +149,6 @@ class ChangePasswordViewController: UIViewController {
         header.frame = headerContainer.bounds
         header.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
-        // Customize header
         header.takaffalLabel.text = "Takaffal"
         header.search.isHidden = true
         header.backBtn.isHidden = false
@@ -175,10 +174,10 @@ class ChangePasswordViewController: UIViewController {
 
     @objc private func openNotifications() {
         print("Notifications tapped")
-        // later: push notifications screen
+
         let sb = UIStoryboard(name: "NotificationsStoryboard", bundle: nil)
         guard let vc = sb.instantiateViewController(withIdentifier: "NotificationVC") as? NotificationViewController else {
-            print("❌ Could not instantiate NotificationViewController")
+            print("Could not instantiate NotificationViewController")
             return
         }
         if let nav = navigationController {
@@ -364,7 +363,7 @@ class ChangePasswordViewController: UIViewController {
     
     @objc private func openImpact() {
         let sb = UIStoryboard(name: "ImpactNoora", bundle: nil)
-        let vc = sb.instantiateViewController(withIdentifier: "impactNoora")
+        let vc = sb.instantiateViewController(withIdentifier: "ImpactNoora")
         push(vc)
     }
     

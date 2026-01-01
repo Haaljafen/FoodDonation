@@ -34,7 +34,6 @@ class FacilityDropOffViewController: UIViewController, DonationDraftReceivable {
     private var selectedDate: Date?
     private var selectedTime: Date?
 
-    
     var selectedNGO: NGOOption?
     
     private let timeFormatter: DateFormatter = {
@@ -73,6 +72,8 @@ class FacilityDropOffViewController: UIViewController, DonationDraftReceivable {
         let name: String
     }
 
+    // MARK: - Fetch NGO's
+    
     func fetchNGOs(completion: @escaping ([NGOOption]) -> Void) {
         let db = Firestore.firestore()
 
@@ -164,7 +165,7 @@ class FacilityDropOffViewController: UIViewController, DonationDraftReceivable {
         button.titleLabel?.lineBreakMode = .byTruncatingTail
     }
 
-    
+    // MARK: - Alerts
     
     private func showAlert(title: String, message: String) {
         let alert = UIAlertController(
@@ -296,6 +297,8 @@ class FacilityDropOffViewController: UIViewController, DonationDraftReceivable {
 
         return calendar.date(from: merged)!
     }
+    
+    // MARK: - Save Flow
     
     @IBAction func saveTapped(_ sender: UIButton) {
         
@@ -503,10 +506,10 @@ class FacilityDropOffViewController: UIViewController, DonationDraftReceivable {
 
     @objc private func openNotifications() {
         print("Notifications tapped")
-        // later: push notifications screen
+
         let sb = UIStoryboard(name: "NotificationsStoryboard", bundle: nil)
         guard let vc = sb.instantiateViewController(withIdentifier: "NotificationVC") as? NotificationViewController else {
-            print("❌ Could not instantiate NotificationViewController")
+            print("Could not instantiate NotificationViewController")
             return
         }
         if let nav = navigationController {
@@ -693,7 +696,7 @@ class FacilityDropOffViewController: UIViewController, DonationDraftReceivable {
     
     @objc private func openImpact() {
         let sb = UIStoryboard(name: "ImpactNoora", bundle: nil)
-        let vc = sb.instantiateViewController(withIdentifier: "impactNoora")
+        let vc = sb.instantiateViewController(withIdentifier: "ImpactNoora")
         push(vc)
     }
     

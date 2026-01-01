@@ -74,35 +74,34 @@ class ProfileViewController: UIViewController {
     
 
     private func listenToRealtimeProfileUpdates() {
-
+        
         guard let uid = Auth.auth().currentUser?.uid else { return }
-
+        
         profileListenerHandle = rtdb
             .child("users_live")
             .child(uid)
             .observe(.value, with: { [weak self] snapshot in
-
+                
                 guard
                     let self = self,
                     let data = snapshot.value as? [String: Any],
                     let roleString = data["role"] as? String,
                     let role = UserRole(rawValue: roleString)
                 else { return }
-
+                
                 let displayName = data["displayName"] as? String ?? ""
                 let imageUrl = data["profileImageUrl"] as? String
-
+                
                 DispatchQueue.main.async {
-                    let displayName = data["displayName"] as? String ?? ""
-                    
+
                     self.didLoadInitialProfile = true
+
                     self.usernameLabel.text = displayName
-                    
+                    self.roleLabel.text = role.rawValue.capitalized
+
                     if role == .ngo {
                         self.organizationName = displayName
                     }
-
-                    self.roleLabel.text = role.rawValue.capitalized
 
                     self.configureSettings(for: role)
 
@@ -110,8 +109,8 @@ class ProfileViewController: UIViewController {
                         self.loadImage(from: imageUrl)
                     }
                 }
-            }
-    )}
+            })
+    }
     
     
     private func loadProfileFromFirestoreIfNeeded() {
@@ -276,12 +275,26 @@ class ProfileViewController: UIViewController {
         present(alert, animated: true)
     }
     
+    // MARK: - Achivements and Chatbot Redirection
     
-//    @IBAction func goToAchivTapped(_ sender: UIButton) {
-//        let storyboard = UIStoryboard(name: "HussainStoryboard1", bundle: nil)
-//        let vc = storyboard.instantiateViewController(withIdentifier: "HussainViewController1")
-//        navigationController?.pushViewController(vc, animated: true)
-//    }
+    @IBAction func goToAchivTapped(_ sender: UIButton) {
+        let storyboard = UIStoryboard(name: "HussainStoryboard1", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "HussainViewController1")
+        navigationController?.pushViewController(vc, animated: true)
+    }
+
+    @IBAction func chatbotTapped(_ sender: UIButton) {
+
+        let storyboard = UIStoryboard(name: "HussainStoryboard2", bundle: nil)
+
+        guard let vc = storyboard.instantiateViewController(
+            withIdentifier: "HussainStoryboard2"
+        ) as? HussainViewController2 else {
+            return
+        }
+
+        navigationController?.pushViewController(vc, animated: true)
+    }
 
     
 
@@ -508,7 +521,7 @@ class ProfileViewController: UIViewController {
     
     @objc private func openImpact() {
         let sb = UIStoryboard(name: "ImpactNoora", bundle: nil)
-        let vc = sb.instantiateViewController(withIdentifier: "impactNoora")
+        let vc = sb.instantiateViewController(withIdentifier: "ImpactNoora")
         push(vc)
     }
     

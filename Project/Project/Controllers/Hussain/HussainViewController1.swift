@@ -84,11 +84,18 @@ class HussainViewController1: UIViewController {
           ]
       }
       
-      override func viewWillAppear(_ animated: Bool) {
-          super.viewWillAppear(animated)
-          // 🔹 NEW: Refresh progress from real data
-          refreshAchievementsFromData()
-      }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        AchievementFirebaseService.shared.fetchAchievements { [weak self] success in
+            if success {
+                DispatchQueue.main.async {
+                    self?.refreshAchievementsFromData()
+                }
+            }
+        }
+    }
+
       
       // MARK: - Setup Badges
       private func setupBadges() {
@@ -105,15 +112,20 @@ class HussainViewController1: UIViewController {
               (badge10, viewsDate10)
           ]
           
-          for (badge, dateView) in badges {
+          for (index, pair) in badges.enumerated() {
+              let (badge, dateView) = pair
+
               if let badge = badge, let dateView = dateView {
+
+                  badge.tag = index + 1   // ⭐ ADD THIS LINE
+
                   badge.layer.cornerRadius = 18
                   badge.layer.masksToBounds = true
-                  
-                  //shadow
+
+                  // shadow
                   addSolidShadow(to: badge)
-                  
-                  //overlay
+
+                  // overlay
                   let overlay = UIView(frame: badge.bounds)
                   overlay.backgroundColor = UIColor.gray.withAlphaComponent(0.5)
                   overlay.layer.cornerRadius = badge.layer.cornerRadius
@@ -121,13 +133,14 @@ class HussainViewController1: UIViewController {
                   overlay.tag = 999
                   overlay.isHidden = true
                   badge.addSubview(overlay)
-                  
-                  //progress - date UIVIEW corner radius
+
+                  // progress - date UIView corner radius
                   dateView.layer.cornerRadius = 18
                   dateView.layer.masksToBounds = true
                   dateView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMaxYCorner]
               }
           }
+
           
           // Hide all unlock labels initially
           let unlockLabels = [unlockDate1, unlockDate2, unlockDate3, unlockDate4, unlockDate5,
@@ -179,13 +192,14 @@ class HussainViewController1: UIViewController {
           }
           
           if let label = unlockLabel {
-              if unlocked {
+              if unlocked,
+                 let date = AchievementManager.shared.unlockDate(for: badge.tag) {
                   let formatter = DateFormatter()
                   formatter.dateStyle = .medium
-                  let dateString = formatter.string(from: Date())
-                  label.text = "Unlocked on \(dateString)"
+                  label.text = "Unlocked on \(formatter.string(from: date))"
                   label.isHidden = false
-              } else {
+              }
+              else {
                   label.isHidden = true
               }
           }

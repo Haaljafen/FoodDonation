@@ -20,3 +20,4 @@ struct Achievement: Codable {
     let progress: Int?
     let goal: Int?
 }
+

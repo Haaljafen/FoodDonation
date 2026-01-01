@@ -1,8 +1,8 @@
 import UIKit
+import FirebaseFirestore  // ✅ ADD THIS
 
 class AbdullaViewController1: UIViewController {
 
-    // MARK: - Outlets
     @IBOutlet weak var headerContainer: UIView!
     @IBOutlet weak var navContainer: UIView!
     @IBOutlet weak var filterAllButton: UIButton!
@@ -15,24 +15,18 @@ class AbdullaViewController1: UIViewController {
     private var didSetupViews = false
     
     private var selectedFilter = 0
-    private var ngos: [String] = [
-        "Kaaf",
-        "Hope Kitchen",
-        "Food Rescue Alliance",
-        "Community Meals Inc",
-        "Care & Share",
-        "Food Rescue Alliance",
-        "Community Meals Inc",
-        "Care & Share"
-    ]
+    
+    // ✅ CHANGED: User objects instead of String
+    private var ngos: [User] = []
+    private var allNGOs: [User] = []
+    
+    private let db = Firestore.firestore()  // ✅ ADD THIS
 
-    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
         setupFilterButtons()
-        
-
+        fetchNGOs()  // ✅ ADD THIS
     }
 
     override func viewDidLayoutSubviews() {
@@ -45,13 +39,132 @@ class AbdullaViewController1: UIViewController {
         }
     }
     
-    // MARK: - Setup Table View
+    // ✅ ADD THIS ENTIRE FUNCTION
+    private func fetchNGOs() {
+        print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+        print("🔵 STEP 1: Starting Firebase fetch...")
+        print("   Collection: Users")
+        print("   Filter: role = 'ngo'")
+        print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+        
+        db.collection("Users")
+            .whereField("role", isEqualTo: "ngo")
+            .getDocuments { [weak self] snapshot, error in
+                guard let self = self else {
+                    print("❌ CRITICAL: self is nil")
+                    return
+                }
+                
+                print("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                print("🔵 STEP 2: Got response from Firebase")
+                print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                
+                // Check for errors
+                if let error = error {
+                    print("❌ ERROR DETECTED!")
+                    print("   Error Type:", type(of: error))
+                    print("   Error Message:", error.localizedDescription)
+                    print("   Error Domain:", (error as NSError).domain)
+                    print("   Error Code:", (error as NSError).code)
+                    return
+                }
+                print("✅ No errors detected")
+                
+                // Check snapshot
+                guard let snapshot = snapshot else {
+                    print("❌ CRITICAL: Snapshot is nil")
+                    return
+                }
+                print("✅ Snapshot exists")
+                
+                // Check documents
+                let documents = snapshot.documents
+                print("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                print("🔵 STEP 3: Checking documents")
+                print("   Total documents found:", documents.count)
+                print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                
+                if documents.isEmpty {
+                    print("⚠️ WARNING: No documents found!")
+                    print("   Possible reasons:")
+                    print("   1. No users with role='ngo' in Firebase")
+                    print("   2. Firestore rules blocking access")
+                    print("   3. Wrong collection name")
+                    return
+                }
+                
+                // Parse each document
+                print("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                print("🔵 STEP 4: Parsing documents...")
+                print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                
+                var successCount = 0
+                var failCount = 0
+                
+                self.allNGOs = documents.compactMap { doc in
+                    print("\n📄 Document ID:", doc.documentID)
+                    
+                    let data = doc.data()
+                    print("   Raw data keys:", data.keys.sorted())
+                    print("   Role value:", data["role"] ?? "MISSING")
+                    print("   Organization name:", data["organizationName"] ?? "MISSING")
+                    
+                    do {
+                        let user = try doc.data(as: User.self)
+                        print("   ✅ Successfully decoded!")
+                        print("   → Organization:", user.organizationName ?? "nil")
+                        print("   → Email:", user.email)
+                        successCount += 1
+                        return user
+                    } catch {
+                        print("   ❌ Decode FAILED!")
+                        print("   → Error:", error)
+                        failCount += 1
+                        return nil
+                    }
+                }
+                
+                print("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                print("📊 PARSING SUMMARY:")
+                print("   ✅ Successful:", successCount)
+                print("   ❌ Failed:", failCount)
+                print("   📦 Total NGOs loaded:", self.allNGOs.count)
+                print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                
+                self.ngos = self.allNGOs
+                
+                // Update UI
+                print("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                print("🔵 STEP 5: Updating UI...")
+                print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                
+                DispatchQueue.main.async {
+                    let beforeCount = self.tableView.numberOfRows(inSection: 0)
+                    print("   Table rows BEFORE reload:", beforeCount)
+                    
+                    self.tableView.reloadData()
+                    
+                    let afterCount = self.tableView.numberOfRows(inSection: 0)
+                    print("   Table rows AFTER reload:", afterCount)
+                    
+                    if afterCount == 0 {
+                        print("   ⚠️ WARNING: Table still shows 0 rows!")
+                    } else {
+                        print("   ✅ SUCCESS: Table updated!")
+                    }
+                    
+                    print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                    print("✅ FETCH COMPLETE!")
+                    print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n")
+                }
+            }
+    }
+    
     private func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
     }
     
-    // MARK: - Setup Filter Buttons
     private func setupFilterButtons() {
         filterAllButton.addTarget(self, action: #selector(filterTapped(_:)), for: .touchUpInside)
         filterAZButton.addTarget(self, action: #selector(filterTapped(_:)), for: .touchUpInside)
@@ -86,14 +199,16 @@ class AbdullaViewController1: UIViewController {
     
     private func sortNGOs() {
         switch selectedFilter {
-        case 1: ngos.sort { $0 < $1 }
-        case 2: ngos.sort { $0 > $1 }
-        default: ngos = ["Kaaf", "Hope Kitchen", "Food Rescue Alliance", "Community Meals Inc", "Care & Share"]
+        case 1:
+            ngos.sort { ($0.organizationName ?? "") < ($1.organizationName ?? "") }
+        case 2:
+            ngos.sort { ($0.organizationName ?? "") > ($1.organizationName ?? "") }
+        default:
+            ngos = allNGOs
         }
         tableView.reloadData()
     }
 
-    // MARK: - Setup Header
     private func setupHeader() {
         guard let header = Bundle.main
             .loadNibNamed("HeaderView", owner: nil, options: nil)?
@@ -115,12 +230,10 @@ class AbdullaViewController1: UIViewController {
         print("🔔 Notifications")
     }
 
-    // MARK: - Setup Nav
     private func setupNav() {
         guard let nav = Bundle.main
             .loadNibNamed("BottomNavView", owner: nil, options: nil)?
             .first as? BottomNavView else {
-            print("XXXXX")
             return
         }
 
@@ -149,44 +262,54 @@ class AbdullaViewController1: UIViewController {
     }
 }
 
-// MARK: - Table View Delegate & DataSource
 extension AbdullaViewController1: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print("📊 Table asking for row count: \(ngos.count)")
         return ngos.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        print("🔵 Creating cell for row \(indexPath.row)")
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: "NGOCell", for: indexPath) as! NGOCell
-        cell.configure(with: ngos[indexPath.row])
+        
+        let ngo = ngos[indexPath.row]
+        print("   → NGO name:", ngo.organizationName ?? "nil")
+        
+        cell.configure(with: ngo)
+        
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
         let selectedNGO = ngos[indexPath.row]
-            print("🔵 Selected: \(selectedNGO)")
+        
+        print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+        print("🔵 User tapped row:", indexPath.row)
+        print("🔵 Selected NGO:", selectedNGO.organizationName ?? "Unknown")
+        print("🔵 Selected NGO ID:", selectedNGO.id)
+        print("🔵 Selected NGO Email:", selectedNGO.email)
+        print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+        
+        let storyboard = UIStoryboard(name: "AbdullaStoryboard1", bundle: nil)
+        
+        if let detailVC = storyboard.instantiateViewController(withIdentifier: "NGODetailViewController") as? NGODetailViewController {
             
-            // Debug: Check storyboard
-            let storyboard = UIStoryboard(name: "AbdullaStoryboard1", bundle: nil)
-            print("🔵 Storyboard loaded:", storyboard)
+            print("✅ Detail VC created")
             
-            // Debug: Try to instantiate
-            if let detailVC = storyboard.instantiateViewController(withIdentifier: "NGODetailViewController") as? NGODetailViewController {
-                print("✅ Detail VC created successfully")
-                
-                // Debug: Check navigation controller
-                if let navController = navigationController {
-                    print("✅ Navigation controller exists:", navController)
-                    navController.pushViewController(detailVC, animated: true)
-                    print("✅ Push completed")
-                } else {
-                    print("❌ No navigation controller!")
-                }
-            } else {
-                print("❌ Failed to instantiate NGODetailViewController")
-                print("   Check: Is Storyboard ID set to 'NGODetailViewController'?")
-                print("   Check: Is Custom Class set to 'NGODetailViewController'?")
-            }
+            detailVC.selectedUser = selectedNGO
+            
+            print("✅ selectedUser set to:", detailVC.selectedUser?.organizationName ?? "nil")
+            
+            navigationController?.pushViewController(detailVC, animated: true)
+            
+            print("✅ Navigation pushed")
+        } else {
+            print("❌ Failed to create detail VC")
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

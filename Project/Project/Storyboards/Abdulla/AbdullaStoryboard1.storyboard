@@ -11,7 +11,7 @@
         <!--Abdulla View Controller1-->
         <scene sceneID="s0d-6b-0kx">
             <objects>
-                <viewController id="Y6W-OH-hqX" customClass="AbdullaViewController1" customModule="Takaffal" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AbdullaNGOViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Y6W-OH-hqX" customClass="AbdullaViewController1" customModule="Takaffal" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -115,6 +115,17 @@
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <color key="tintColor" systemColor="systemGray3Color"/>
                                                         </imageView>
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="building.2.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="MGL-Ez-uL3">
+                                                            <rect key="frame" x="8" y="14.333333333333314" width="26" height="26"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <color key="tintColor" systemColor="systemGrayColor"/>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                    <integer key="value" value="16"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                                <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                                            </userDefinedRuntimeAttributes>
+                                                        </imageView>
                                                     </subviews>
                                                     <color key="backgroundColor" systemColor="systemGray6Color"/>
                                                     <userDefinedRuntimeAttributes>
@@ -124,11 +135,6 @@
                                                         <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                                     </userDefinedRuntimeAttributes>
                                                 </view>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="building.2.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="MGL-Ez-uL3">
-                                                    <rect key="frame" x="20" y="15" width="26" height="26"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="tintColor" systemColor="systemGrayColor"/>
-                                                </imageView>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
@@ -203,8 +209,8 @@
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dUk-Rv-2Tk">
                                 <rect key="frame" x="0.0" y="200" width="393" height="532"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lu4-zJ-PTn" userLabel="Content View">
-                                        <rect key="frame" x="0.0" y="0.0" width="393" height="1000"/>
+                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lu4-zJ-PTn" userLabel="Content View">
+                                        <rect key="frame" x="-8" y="247" width="393" height="1000"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gnw-OL-z1c" userLabel="NGO Info Card">
                                                 <rect key="frame" x="20" y="30" width="353" height="120"/>
@@ -224,7 +230,7 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </imageView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Kaaf" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="okW-Py-VwQ" userLabel="Name Label">
-                                                        <rect key="frame" x="144" y="30" width="119" height="29"/>
+                                                        <rect key="frame" x="110" y="30" width="143" height="29"/>
                                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -247,7 +253,7 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NGO ID:1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZEG-gz-0ac" userLabel="ID Label">
-                                                        <rect key="frame" x="144" y="59" width="67" height="20"/>
+                                                        <rect key="frame" x="110" y="59" width="67" height="20"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                         <color key="textColor" red="0.01195266771" green="0.3668452291" blue="0.64671875000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <nil key="highlightedColor"/>
@@ -257,13 +263,13 @@
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="353" id="2aW-4J-5Px"/>
                                                     <constraint firstAttribute="height" constant="120" id="7a2-Hx-cF4"/>
-                                                    <constraint firstAttribute="trailing" secondItem="okW-Py-VwQ" secondAttribute="trailing" constant="90" id="8Ve-cj-wWv"/>
+                                                    <constraint firstAttribute="trailing" secondItem="okW-Py-VwQ" secondAttribute="trailing" constant="100" id="8Ve-cj-wWv"/>
                                                     <constraint firstItem="6bL-wC-JW0" firstAttribute="leading" secondItem="Gnw-OL-z1c" secondAttribute="leading" constant="20" id="H06-05-qdV"/>
                                                     <constraint firstItem="okW-Py-VwQ" firstAttribute="top" secondItem="Gnw-OL-z1c" secondAttribute="top" constant="30" id="K5n-iH-a91"/>
                                                     <constraint firstItem="ZEG-gz-0ac" firstAttribute="leading" secondItem="okW-Py-VwQ" secondAttribute="leading" id="UrF-6X-uhX"/>
                                                     <constraint firstItem="ItR-Z5-Jr5" firstAttribute="centerY" secondItem="okW-Py-VwQ" secondAttribute="centerY" id="aUi-tx-Y6S"/>
                                                     <constraint firstItem="ZEG-gz-0ac" firstAttribute="top" secondItem="okW-Py-VwQ" secondAttribute="bottom" id="b3j-NM-HDM"/>
-                                                    <constraint firstItem="okW-Py-VwQ" firstAttribute="leading" secondItem="6bL-wC-JW0" secondAttribute="trailing" constant="44" id="fSt-bH-EBn"/>
+                                                    <constraint firstItem="okW-Py-VwQ" firstAttribute="leading" secondItem="6bL-wC-JW0" secondAttribute="trailing" constant="10" id="fSt-bH-EBn"/>
                                                     <constraint firstAttribute="trailing" secondItem="ItR-Z5-Jr5" secondAttribute="trailing" constant="30" id="kYw-Aj-F9u"/>
                                                     <constraint firstItem="6bL-wC-JW0" firstAttribute="top" secondItem="Gnw-OL-z1c" secondAttribute="top" constant="20" id="lA1-7u-T2k"/>
                                                 </constraints>
@@ -506,7 +512,7 @@
                                             <constraint firstAttribute="trailing" secondItem="83O-VY-03j" secondAttribute="trailing" constant="20" id="2Ft-7T-XbI"/>
                                             <constraint firstItem="Gnw-OL-z1c" firstAttribute="top" secondItem="lu4-zJ-PTn" secondAttribute="top" constant="30" id="A4B-oF-hsR"/>
                                             <constraint firstItem="Gnw-OL-z1c" firstAttribute="leading" secondItem="lu4-zJ-PTn" secondAttribute="leading" constant="20" id="ASn-Gz-rSQ"/>
-                                            <constraint firstAttribute="height" constant="1000" id="DlC-Kc-nej"/>
+                                            <constraint firstAttribute="height" constant="1200" id="DlC-Kc-nej"/>
                                             <constraint firstAttribute="trailing" secondItem="KcI-KI-mWx" secondAttribute="trailing" constant="20" id="MZu-Q7-h6d"/>
                                             <constraint firstItem="KcI-KI-mWx" firstAttribute="leading" secondItem="lu4-zJ-PTn" secondAttribute="leading" constant="20" id="N85-gk-UOc"/>
                                             <constraint firstItem="KcI-KI-mWx" firstAttribute="top" secondItem="Jxx-Ml-03E" secondAttribute="bottom" constant="20" id="OoC-iq-hCd"/>
@@ -551,9 +557,19 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="aboutTextView" destination="Ucb-Jn-Mfr" id="J21-qf-VBo"/>
+                        <outlet property="cityLabel" destination="hqz-NK-yhh" id="QQp-Bv-cKI"/>
+                        <outlet property="createdAtLabel" destination="Wea-nw-J8M" id="Xc8-rD-e3w"/>
+                        <outlet property="emailLabel" destination="xjb-Co-DvM" id="mRe-pv-Jbj"/>
                         <outlet property="headerContainer" destination="jDb-Hh-viz" id="PH1-OO-b0a"/>
+                        <outlet property="missionTextView" destination="MnV-ck-7WE" id="sTr-Sm-joK"/>
                         <outlet property="navContainer" destination="Zeo-lM-xTN" id="FTn-Lp-iVi"/>
+                        <outlet property="ngoIDLabel" destination="ZEG-gz-0ac" id="3Wi-Kh-jK4"/>
+                        <outlet property="organizationNameLabel" destination="okW-Py-VwQ" id="w9W-8f-eYA"/>
+                        <outlet property="phoneLabel" destination="zZa-Lf-Ch0" id="mWJ-Cg-nfZ"/>
+                        <outlet property="profileImageView" destination="6bL-wC-JW0" id="ThD-09-UeT"/>
                         <outlet property="scrollView" destination="dUk-Rv-2Tk" id="Wk9-mB-1Yu"/>
+                        <outlet property="statusLabel" destination="ItR-Z5-Jr5" id="7Bh-cu-GOt"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xh1-HL-6Of" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

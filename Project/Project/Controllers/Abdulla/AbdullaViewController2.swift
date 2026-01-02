@@ -24,13 +24,17 @@ class AbdullaViewController2: UIViewController {
     // ✅ Data
     private var allUsers: [User] = []
     private var filteredUsers: [User] = []
+    
+    private var donationCounts: [String: Int] = [:]  // [userId: count]
+
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupTableView()
+        setupTableView()	
         setupSegmentedControl()
         fetchUsers()
+        addStatusToAllDonors()
     }
     
     private func updateStats() {
@@ -52,7 +56,17 @@ class AbdullaViewController2: UIViewController {
             setupNav()
         }
     }
-    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+        print("👀 VIEW WILL APPEAR - Refreshing list!")
+        print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+        
+        // ✅ Always refresh when returning to this screen
+        addStatusToAllDonors()
+        fetchUsers()
+    }
     // MARK: - Fetch Users from Firebase
     private func fetchUsers() {
         print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
@@ -128,6 +142,115 @@ class AbdullaViewController2: UIViewController {
                     self?.tableView.reloadData()
                     print("✅ Table reloaded - Showing \(self?.filteredUsers.count ?? 0) users")
                     print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                    
+                    // ✅ NOW FETCH DONATION COUNTS
+                    self?.fetchAllDonationCounts()
+                }
+            }
+    }
+    
+    // ✅ SAFE: Only adds status to NEW donors without any status
+    // Will NOT change suspended/active donors
+    private func addStatusToAllDonors() {
+        print("🔧 Adding status field to donors without status...")
+        
+        db.collection("Users")
+            .whereField("role", isEqualTo: "donor")
+            .getDocuments { snapshot, error in
+                
+                if let error = error {
+                    print("❌ Error:", error.localizedDescription)
+                    return
+                }
+                
+                guard let documents = snapshot?.documents else {
+                    print("⚠️ No donors found")
+                    return
+                }
+                
+                print("📦 Found \(documents.count) total donors")
+                
+                var addedCount = 0
+                var skippedCount = 0
+                
+                for doc in documents {
+                    let data = doc.data()
+                    
+                    // ✅ CHECK: Skip if status field already exists (including suspended!)
+                    if let existingStatus = data["status"] as? String {
+                        print("⏭️ Skipping \(data["username"] ?? doc.documentID)")
+                        print("   Reason: Already has status '\(existingStatus)'")
+                        skippedCount += 1
+                        continue
+                    }
+                    
+                    // ✅ ONLY add status if it doesn't exist
+                    print("➕ Adding status to new donor: \(data["username"] ?? doc.documentID)")
+                    
+                    doc.reference.updateData([
+                        "status": "active"
+                    ]) { error in
+                        if let error = error {
+                            print("❌ Failed to update \(doc.documentID):", error)
+                        } else {
+                            print("✅ Added 'active' status to \(doc.documentID)")
+                            addedCount += 1
+                        }
+                    }
+                }
+                
+                print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                print("📊 SUMMARY:")
+                print("   ✅ Added status: \(addedCount)")
+                print("   ⏭️ Skipped (already have status): \(skippedCount)")
+                print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+            }
+    }
+    
+    // MARK: - Fetch Donation Counts
+    private func fetchAllDonationCounts() {
+        print("📊 Fetching all donation counts...")
+        
+        db.collection("Donations")
+            .getDocuments { [weak self] snapshot, error in
+                
+                if let error = error {
+                    print("❌ Error fetching donations:", error.localizedDescription)
+                    return
+                }
+                
+                guard let documents = snapshot?.documents else {
+                    print("⚠️ No donations found")
+                    return
+                }
+                
+                print("📦 Found \(documents.count) total donations")
+                
+                // Decode donations
+                let donations = documents.compactMap { doc -> Donation? in
+                    try? doc.data(as: Donation.self)
+                }
+                
+                // Group by donorId and collectorId
+                var counts: [String: Int] = [:]
+                
+                for donation in donations {
+                    // Count for donor
+                    counts[donation.donorId, default: 0] += 1
+                    
+                    // Count for collector (NGO) if exists
+                    if let collectorId = donation.collectorId {
+                        counts[collectorId, default: 0] += 1
+                    }
+                }
+                
+                print("✅ Calculated donation counts for \(counts.count) users")
+                
+                // Update the dictionary
+                DispatchQueue.main.async {
+                    self?.donationCounts = counts
+                    self?.tableView.reloadData()
+                    print("🔄 Table reloaded with donation counts")
                 }
             }
     }
@@ -452,13 +575,15 @@ extension AbdullaViewController2: UITableViewDelegate, UITableViewDataSource {
         
         let user = filteredUsers[indexPath.row]
         
+        // ✅ GET REAL DONATION COUNT
+        let donationCount = donationCounts[user.id] ?? 0
+        
         print("🔵 Creating cell for row \(indexPath.row):")
         print("   Name: \(user.organizationName ?? user.username ?? "Unknown")")
         print("   Status: \(user.status?.rawValue ?? "N/A")")
+        print("   Donations: \(donationCount)")
         
-        let donationCount = 0
-        
-        // ✅ USE NEW METHOD
+        // ✅ USE NEW METHOD WITH REAL COUNT
         cell.configure(with: user, donationCount: donationCount)
         
         cell.selectionStyle = .default
@@ -477,7 +602,7 @@ extension AbdullaViewController2: UITableViewDelegate, UITableViewDataSource {
         print("🎯 CELL TAPPED!!!")
         print("   Row: \(indexPath.row)")
         print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-        
+        addStatusToAllDonors()
         tableView.deselectRow(at: indexPath, animated: true)
         
         let selectedUser = filteredUsers[indexPath.row]

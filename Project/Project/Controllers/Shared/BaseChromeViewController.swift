@@ -37,6 +37,7 @@ class BaseChromeViewController: UIViewController {
         header.frame = headerContainer.bounds
         header.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         header.takaffalLabel.text = "Takaffal"
+        header.search.isHidden = true
         header.backBtn.isHidden = true
         header.notiBtn.addTarget(self, action: #selector(openNotifications), for: .touchUpInside)
 

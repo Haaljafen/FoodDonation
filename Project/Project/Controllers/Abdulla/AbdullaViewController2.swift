@@ -332,6 +332,15 @@ class AbdullaViewController2: UIViewController {
 
     @objc private func openNotifications() {
         print("🔔 Notifications tapped")
+
+        let sb = UIStoryboard(name: "NotificationsStoryboard", bundle: nil)
+
+        guard let vc = sb.instantiateViewController(withIdentifier: "NotificationVC") as? NotificationViewController else {
+            print("❌ Could not instantiate NotificationViewController")
+            return
+        }
+
+        navigationController?.pushViewController(vc, animated: true)
     }
 
   

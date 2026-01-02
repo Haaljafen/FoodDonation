@@ -79,7 +79,11 @@ class FacilityDropOffViewController: UIViewController, DonationDraftReceivable {
     struct NGOOption {
         let id: String
         let name: String
+        let address: String?
+        let city: String?
+        let country: String?
     }
+
 
     // MARK: - Fetch NGO's
     
@@ -105,7 +109,13 @@ class FacilityDropOffViewController: UIViewController, DonationDraftReceivable {
                         return nil
                     }
 
-                    return NGOOption(id: doc.documentID, name: name)
+                    return NGOOption(
+                        id: doc.documentID,
+                        name: name,
+                        address: data["address"] as? String,
+                        city: data["city"] as? String,
+                        country: data["country"] as? String
+                    )
                 }
 
                 print("NGOs found:", ngos.count)
@@ -355,15 +365,18 @@ class FacilityDropOffViewController: UIViewController, DonationDraftReceivable {
             method: DonationMethod.dropoff.rawValue,
 
             facilityName: facilityName,
+
             dropoffDate: nil,
             dropoffTime: nil,
-            pickupAddress: nil,
-            pickupCity: nil,
-            pickupCountry: nil,
-            pickupDateTime: dropoffDateTime,
 
+            pickupAddress: selectedNGO?.address,
+            pickupCity: selectedNGO?.city,
+            pickupCountry: selectedNGO?.country,
+
+            pickupDateTime: dropoffDateTime,
             scheduledAt: Date()
         )
+
 
         pickupRef.setData(pickupRequest.toDict()) { [weak self] error in
             guard let self = self else { return }
@@ -645,7 +658,7 @@ class FacilityDropOffViewController: UIViewController, DonationDraftReceivable {
         switch role {
 
         case .donor:
-            nav.formBtn.isHidden = false
+            nav.formBtn.isHidden = true
             nav.listBtn.isHidden = false
             nav.proBtn.isHidden = false
             nav.impBtn.isHidden = false

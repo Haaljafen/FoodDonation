@@ -32,7 +32,7 @@ final class DonationCell: UITableViewCell {
         donationIDLabel.textColor = .label
         methodLabel.textColor = .label
         dateLabel.textColor = .secondaryLabel
-        statusLabel.textColor = .label
+//        statusLabel.textColor = .label
 
         donationIDLabel.font = .systemFont(ofSize: 15, weight: .semibold)
         methodLabel.font = .systemFont(ofSize: 14, weight: .regular)

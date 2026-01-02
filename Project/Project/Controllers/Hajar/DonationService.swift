@@ -49,20 +49,20 @@ final class DonationService {
     private func content(for type: NotificationEventType) -> (title: String, subtitle: String, iconName: String) {
         switch type {
         case .donationCreated:
-            return ("Donation Created", "Your donation has been successfully created and is now available for NGOs.", "notif_user")
+            return ("Donation Created", "Your donation has been successfully created.", "notif_user")
         case .donationAccepted:
-            return ("Donation Accepted", "An NGO has accepted your donation and will arrange the pickup.", "notif_user")
+            return ("Donation Accepted", "An NGO has accepted your donation.", "notif_user")
         case .donationRejected:
             return ("Donation Not Accepted", "Your donation was not accepted by the NGO.", "notif_user")
         case .donationPickupScheduled:
             return ("Pickup Scheduled", "Your donation pickup has been scheduled.", "notif_user")
         case .donationPickedUp:
-            return ("Donation Collected", "Your donation has been successfully collected. Thank you for your support!", "notif_user")
+            return ("Donation Collected", "Your donation has been successfully collected.", "notif_user")
         case .donationExpired:
             return ("Donation Expired", "Your donation expired before it could be accepted.", "notif_user")
 
         case .newDonationAvailable:
-            return ("New Donation Available", "A new donation has been posted and is available for pickup.", "notif_user")
+            return ("New Donation Available", "A new donation has been posted", "notif_user")
         case .donationAcceptedByYou:
             return ("Donation Accepted", "You have successfully accepted the donation.", "notif_user")
         case .donationRejectedByYou:
@@ -88,7 +88,7 @@ final class DonationService {
             return ("System Alert", "An important system action requires attention.", "notif_user")
 
         case .donationCollected:
-            return ("Donation Collected", "Your donation has been successfully collected. Thank you for your support!", "notif_user")
+            return ("Donation Collected", "Your donation has been successfully collected.", "notif_user")
 
         case .userRegistered:
             return ("Welcome to Takaffal", "Your account has been created successfully", "notif_user")

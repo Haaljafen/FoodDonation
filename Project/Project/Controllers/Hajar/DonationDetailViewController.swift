@@ -1,5 +1,6 @@
 import UIKit
 import FirebaseFirestore
+import FirebaseAuth
 
 final class DonationDetailViewController: UIViewController {
 
@@ -380,8 +381,10 @@ Thank you for your continued efforts in supporting the community.
 
     @objc private func acceptDonationTapped() {
         guard let donationId = donationId else { return }
+        guard let ngoId = Auth.auth().currentUser?.uid else { return }
         db.collection("Donations").document(donationId).updateData([
             "status": "accepted",
+            "collectorId": ngoId,
             "acceptedAt": Timestamp(date: Date())
         ]) { error in
             if let error = error {
@@ -390,12 +393,26 @@ Thank you for your continued efforts in supporting the community.
             } else {
                 if let donorId = self.donorId {
                     DonationService.shared.notify(
-                        type: .donationCollected,
+                        type: .donationAccepted,
                         relatedDonationId: donationId,
                         toUserId: donorId,
                         audience: nil
                     )
                 }
+
+                DonationService.shared.notify(
+                    type: .donationAcceptedByYou,
+                    relatedDonationId: donationId,
+                    toUserId: ngoId,
+                    audience: nil
+                )
+
+                DonationService.shared.notify(
+                    type: .donationAcceptedAdmin,
+                    relatedDonationId: donationId,
+                    toUserId: nil,
+                    audience: ["admin"]
+                )
                 DispatchQueue.main.async {
                     self.presentAcceptanceReceiptPopup()
                 }
@@ -405,16 +422,23 @@ Thank you for your continued efforts in supporting the community.
 
     @objc private func rejectDonationTapped() {
         guard let donationId = donationId else { return }
+        guard let ngoId = Auth.auth().currentUser?.uid else { return }
         db.collection("Donations").document(donationId).updateData([
-            "status": "rejected",
+            "rejectedBy": FieldValue.arrayUnion([ngoId]),
             "rejectedAt": Timestamp(date: Date())
         ]) { error in
             if let error = error {
                 print("❌ Error rejecting donation:", error.localizedDescription)
                 self.showError(message: "Failed to reject donation")
             } else {
+                DonationService.shared.notify(
+                    type: .donationRejectedByYou,
+                    relatedDonationId: donationId,
+                    toUserId: ngoId,
+                    audience: nil
+                )
                 DispatchQueue.main.async {
-                    let alert = UIAlertController(title: "Success", message: "Donation rejected", preferredStyle: .alert)
+                    let alert = UIAlertController(title: "Success", message: "Donation removed from your list", preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
                         self.navigationController?.popViewController(animated: true)
                     })

@@ -265,6 +265,7 @@ final class CreateDonationViewController: UIViewController,
         header.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         header.takaffalLabel.text = "Takaffal"
         header.backBtn.isHidden = false
+        header.clear.isHidden = true
         header.search.isHidden = true
 
         header.notiBtn.isHidden = false

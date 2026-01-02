@@ -11,10 +11,32 @@ final class DonationService {
     private var didRequestNotificationPermission = false
 
     enum NotificationEventType: String {
-        case donationCreated
-        case newDonationAvailable
+        // MARK: - Donor Notification Cases
+        case donationCreated = "DONATION_CREATED"
+        case donationAccepted = "DONATION_ACCEPTED"
+        case donationRejected = "DONATION_REJECTED"
+        case donationPickupScheduled = "DONATION_PICKUP_SCHEDULED"
+        case donationPickedUp = "DONATION_PICKED_UP"
+        case donationExpired = "DONATION_EXPIRED"
+
+        // MARK: - NGO Notification Cases
+        case newDonationAvailable = "NEW_DONATION_AVAILABLE"
+        case donationAcceptedByYou = "DONATION_ACCEPTED_BY_YOU"
+        case donationRejectedByYou = "DONATION_REJECTED_BY_YOU"
+        case donationCancelledByDonor = "DONATION_CANCELLED_BY_DONOR"
+        case pickupConfirmed = "PICKUP_CONFIRMED"
+        case donationCompleted = "DONATION_COMPLETED"
+
+        // MARK: - Admin Notification Cases
+        case newDonationCreated = "NEW_DONATION_CREATED"
+        case donationAcceptedAdmin = "ADMIN_DONATION_ACCEPTED"
+        case donationRejectedAdmin = "ADMIN_DONATION_REJECTED"
+        case donationCancelledAdmin = "DONATION_CANCELLED"
+        case donationCompletedAdmin = "ADMIN_DONATION_COMPLETED"
+        case systemAlert = "SYSTEM_ALERT"
+
+        // MARK: - Existing (legacy) cases used elsewhere in the app
         case donationCollected
-        case donationExpired
         case userRegistered
         case userApproved
         case profileUpdated
@@ -27,13 +49,47 @@ final class DonationService {
     private func content(for type: NotificationEventType) -> (title: String, subtitle: String, iconName: String) {
         switch type {
         case .donationCreated:
-            return ("You have created a new donation", "Your donation is now submitted", "notif_user")
-        case .newDonationAvailable:
-            return ("New donation is now available", "A donor has created a new donation", "notif_user")
-        case .donationCollected:
-            return ("Donation collected", "Your donation has been collected successfully", "notif_user")
+            return ("Donation Created", "Your donation has been successfully created and is now available for NGOs.", "notif_user")
+        case .donationAccepted:
+            return ("Donation Accepted", "An NGO has accepted your donation and will arrange the pickup.", "notif_user")
+        case .donationRejected:
+            return ("Donation Not Accepted", "Your donation was not accepted by the NGO.", "notif_user")
+        case .donationPickupScheduled:
+            return ("Pickup Scheduled", "Your donation pickup has been scheduled.", "notif_user")
+        case .donationPickedUp:
+            return ("Donation Collected", "Your donation has been successfully collected. Thank you for your support!", "notif_user")
         case .donationExpired:
-            return ("Donation expired", "A donation has expired and is no longer available", "notif_user")
+            return ("Donation Expired", "Your donation expired before it could be accepted.", "notif_user")
+
+        case .newDonationAvailable:
+            return ("New Donation Available", "A new donation has been posted and is available for pickup.", "notif_user")
+        case .donationAcceptedByYou:
+            return ("Donation Accepted", "You have successfully accepted the donation.", "notif_user")
+        case .donationRejectedByYou:
+            return ("Donation Rejected", "You rejected the donation.", "notif_user")
+        case .donationCancelledByDonor:
+            return ("Donation Cancelled", "The donor has cancelled this donation.", "notif_user")
+        case .pickupConfirmed:
+            return ("Pickup Confirmed", "The pickup has been confirmed and is ready to proceed.", "notif_user")
+        case .donationCompleted:
+            return ("Donation Completed", "The donation process has been successfully completed.", "notif_user")
+
+        case .newDonationCreated:
+            return ("New Donation Created", "A new donation has been added to the system.", "notif_user")
+        case .donationAcceptedAdmin:
+            return ("Donation Accepted", "An NGO has accepted a donation.", "notif_user")
+        case .donationRejectedAdmin:
+            return ("Donation Rejected", "A donation was rejected by an NGO.", "notif_user")
+        case .donationCancelledAdmin:
+            return ("Donation Cancelled", "A donation has been cancelled by the donor.", "notif_user")
+        case .donationCompletedAdmin:
+            return ("Donation Completed", "A donation has been successfully completed.", "notif_user")
+        case .systemAlert:
+            return ("System Alert", "An important system action requires attention.", "notif_user")
+
+        case .donationCollected:
+            return ("Donation Collected", "Your donation has been successfully collected. Thank you for your support!", "notif_user")
+
         case .userRegistered:
             return ("Welcome to Takaffal", "Your account has been created successfully", "notif_user")
         case .userApproved:
@@ -99,6 +155,13 @@ final class DonationService {
             relatedDonationId: donation.id,
             toUserId: nil,
             audience: ["admin", "ngo"]
+        )
+
+        writeNotification(
+            type: .newDonationCreated,
+            relatedDonationId: donation.id,
+            toUserId: nil,
+            audience: ["admin"]
         )
     }
 
@@ -183,6 +246,9 @@ final class DonationService {
     }
 
     private func scheduleLocalNotificationForDonationCreated(_ donation: Donation) {
+        let notificationsEnabled = UserDefaults.standard.bool(forKey: "notificationsEnabled")
+        guard notificationsEnabled else { return }
+
         guard let currentUid = Auth.auth().currentUser?.uid, currentUid == donation.donorId else {
             return
         }

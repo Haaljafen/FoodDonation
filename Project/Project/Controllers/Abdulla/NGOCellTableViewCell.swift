@@ -9,14 +9,23 @@ class NGOCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Apply corner radius
         cardView.layer.cornerRadius = 12
         cardView.layer.masksToBounds = true
     }
     
-    func configure(with ngoName: String) {
-        nameLabel.text = ngoName
+    // ✅ CHANGE THIS FUNCTION
+    func configure(with user: User) {
+        nameLabel.text = user.organizationName ?? "Unknown NGO"
+        
+        // Load image from URL if available
+        if let urlString = user.profileImageUrl, let url = URL(string: urlString) {
+            URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
+                if let data = data, let image = UIImage(data: data) {
+                    DispatchQueue.main.async {
+                        self?.iconImageView.image = image
+                    }
+                }
+            }.resume()
+        }
     }
-    
-    
 }

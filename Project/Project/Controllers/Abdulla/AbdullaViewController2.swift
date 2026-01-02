@@ -31,9 +31,10 @@ class AbdullaViewController2: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupTableView()
+        setupTableView()	
         setupSegmentedControl()
         fetchUsers()
+        addStatusToAllDonors()
     }
     
     private func updateStats() {
@@ -55,7 +56,17 @@ class AbdullaViewController2: UIViewController {
             setupNav()
         }
     }
-    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+        print("👀 VIEW WILL APPEAR - Refreshing list!")
+        print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+        
+        // ✅ Always refresh when returning to this screen
+        addStatusToAllDonors()
+        fetchUsers()
+    }
     // MARK: - Fetch Users from Firebase
     private func fetchUsers() {
         print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
@@ -135,6 +146,64 @@ class AbdullaViewController2: UIViewController {
                     // ✅ NOW FETCH DONATION COUNTS
                     self?.fetchAllDonationCounts()
                 }
+            }
+    }
+    
+    // ✅ SAFE: Only adds status to NEW donors without any status
+    // Will NOT change suspended/active donors
+    private func addStatusToAllDonors() {
+        print("🔧 Adding status field to donors without status...")
+        
+        db.collection("Users")
+            .whereField("role", isEqualTo: "donor")
+            .getDocuments { snapshot, error in
+                
+                if let error = error {
+                    print("❌ Error:", error.localizedDescription)
+                    return
+                }
+                
+                guard let documents = snapshot?.documents else {
+                    print("⚠️ No donors found")
+                    return
+                }
+                
+                print("📦 Found \(documents.count) total donors")
+                
+                var addedCount = 0
+                var skippedCount = 0
+                
+                for doc in documents {
+                    let data = doc.data()
+                    
+                    // ✅ CHECK: Skip if status field already exists (including suspended!)
+                    if let existingStatus = data["status"] as? String {
+                        print("⏭️ Skipping \(data["username"] ?? doc.documentID)")
+                        print("   Reason: Already has status '\(existingStatus)'")
+                        skippedCount += 1
+                        continue
+                    }
+                    
+                    // ✅ ONLY add status if it doesn't exist
+                    print("➕ Adding status to new donor: \(data["username"] ?? doc.documentID)")
+                    
+                    doc.reference.updateData([
+                        "status": "active"
+                    ]) { error in
+                        if let error = error {
+                            print("❌ Failed to update \(doc.documentID):", error)
+                        } else {
+                            print("✅ Added 'active' status to \(doc.documentID)")
+                            addedCount += 1
+                        }
+                    }
+                }
+                
+                print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                print("📊 SUMMARY:")
+                print("   ✅ Added status: \(addedCount)")
+                print("   ⏭️ Skipped (already have status): \(skippedCount)")
+                print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
             }
     }
     
@@ -533,7 +602,7 @@ extension AbdullaViewController2: UITableViewDelegate, UITableViewDataSource {
         print("🎯 CELL TAPPED!!!")
         print("   Row: \(indexPath.row)")
         print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-        
+        addStatusToAllDonors()
         tableView.deselectRow(at: indexPath, animated: true)
         
         let selectedUser = filteredUsers[indexPath.row]

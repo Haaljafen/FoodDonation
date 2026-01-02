@@ -82,12 +82,11 @@ class UserDetailViewController: UIViewController {
         if let status = user.status {
             configureStatusBadge(status: status)
         } else {
-            // Default status for users without status field (donors)
             configureDefaultStatusBadge(for: user.role)
         }
         
-        // ✅ Show/Hide Stats - also show for active donors
-        if user.status == .verified || user.status == .suspended || user.role == .donor {
+        // ✅ Show/Hide Stats
+        if user.status == .verified || user.status == .suspended || user.status == .active || user.role == .donor {
             statsContainer.isHidden = false
             donationsNumberLabel.text = "..."
             mealsNumberLabel.text = "..."
@@ -106,12 +105,9 @@ class UserDetailViewController: UIViewController {
         formatter.dateFormat = "MMM yyyy"
         joinedLabel.text = "Joined \(formatter.string(from: user.createdAt))"
         
-        // ✅ Configure Action Buttons - hide for donors
-        if user.role == .donor {
-            hideAllButtons()
-            print("👤 Donor profile - no action buttons needed")
-        } else if let status = user.status {
-            configureActionButtons(for: status)
+        // ✅ Configure Action Buttons
+        if let status = user.status {
+            configureActionButtons(for: status, role: user.role)
         } else {
             hideAllButtons()
         }
@@ -157,12 +153,11 @@ class UserDetailViewController: UIViewController {
     private func fetchDonationStats(for userId: String) {
         print("📊 Fetching donation stats for user: \(userId)")
         
-        // Determine query field based on user role
         let queryField: String
         if user?.role == .ngo {
-            queryField = "collectorId"  // NGOs collect donations
+            queryField = "collectorId"
         } else {
-            queryField = "donorId"      // Donors give donations
+            queryField = "donorId"
         }
         
         db.collection("Donations")
@@ -189,12 +184,10 @@ class UserDetailViewController: UIViewController {
                 
                 print("📦 Found \(documents.count) donations")
                 
-                // Decode donations
                 let donations = documents.compactMap { doc -> Donation? in
                     try? doc.data(as: Donation.self)
                 }
                 
-                // Calculate stats
                 let donationCount = donations.count
                 let totalMeals = donations.reduce(0) { $0 + $1.quantity }
                 
@@ -202,7 +195,6 @@ class UserDetailViewController: UIViewController {
                 print("   Donations: \(donationCount)")
                 print("   Total Meals: \(totalMeals)")
                 
-                // Update UI
                 DispatchQueue.main.async {
                     self?.donationsNumberLabel.text = "\(donationCount)"
                     self?.mealsNumberLabel.text = "\(totalMeals)"
@@ -210,7 +202,7 @@ class UserDetailViewController: UIViewController {
             }
     }
     
-    // ✅ Configure status badge for explicit status
+    // MARK: - Status Badge Configuration
     private func configureStatusBadge(status: UserStatus) {
         statusBadge.text = status.rawValue.capitalized
         statusBadge.textColor = .white
@@ -230,7 +222,6 @@ class UserDetailViewController: UIViewController {
         }
     }
     
-    // ✅ Configure default status badge when status field is missing
     private func configureDefaultStatusBadge(for role: UserRole) {
         statusBadge.textColor = .white
         statusBadge.layer.cornerRadius = 14
@@ -250,7 +241,7 @@ class UserDetailViewController: UIViewController {
         }
     }
     
-    // ✅ Hide all action buttons
+    // MARK: - Button Configuration
     private func hideAllButtons() {
         suspendButton.isHidden = true
         resumeButton.isHidden = true
@@ -258,12 +249,27 @@ class UserDetailViewController: UIViewController {
         rejectButton.isHidden = true
     }
     
-    // ✅ Configure action buttons based on status (for NGOs only)
-    private func configureActionButtons(for status: UserStatus) {
-        // Hide all buttons first
+    private func configureActionButtons(for status: UserStatus, role: UserRole) {
         hideAllButtons()
         
-        // Show relevant buttons based on status
+        // ✅ For DONORS - only suspend/resume
+        if role == .donor {
+            switch status {
+            case .active, .verified:
+                suspendButton.isHidden = false
+                print("👤 Donor is active - showing suspend button")
+                
+            case .suspended:
+                resumeButton.isHidden = false
+                print("👤 Donor is suspended - showing resume button")
+                
+            default:
+                print("👤 Donor status: \(status.rawValue) - no buttons")
+            }
+            return
+        }
+        
+        // ✅ For NGOs - full workflow
         switch status {
         case .verified:
             suspendButton.isHidden = false
@@ -276,7 +282,6 @@ class UserDetailViewController: UIViewController {
             rejectButton.isHidden = false
             
         case .rejected:
-            // No buttons for rejected
             break
             
         case .active:
@@ -285,40 +290,41 @@ class UserDetailViewController: UIViewController {
     }
     
     private func styleButtons() {
-        // Suspend button (red)
         suspendButton.backgroundColor = UIColor.systemRed
         suspendButton.setTitleColor(.white, for: .normal)
         suspendButton.layer.cornerRadius = 12
         
-        // Resume button (blue/dark)
         resumeButton.backgroundColor = UIColor(red: 0.05, green: 0.05, blue: 0.15, alpha: 1.0)
         resumeButton.setTitleColor(.white, for: .normal)
         resumeButton.layer.cornerRadius = 12
         
-        // Verify button (blue/dark)
         verifyButton.backgroundColor = UIColor(red: 0.05, green: 0.05, blue: 0.15, alpha: 1.0)
         verifyButton.setTitleColor(.white, for: .normal)
         verifyButton.layer.cornerRadius = 12
         
-        // Reject button (red)
         rejectButton.backgroundColor = UIColor.systemRed
         rejectButton.setTitleColor(.white, for: .normal)
         rejectButton.layer.cornerRadius = 12
     }
     
-    // MARK: - Actions
+    // MARK: - Button Actions
     @IBAction func suspendButtonTapped(_ sender: UIButton) {
         guard let user = user else { return }
         
+        let userType = user.role == .donor ? "donor" : "NGO"
+        let userName = user.role == .donor
+            ? (user.username ?? "this user")
+            : (user.organizationName ?? "this user")
+        
         let alert = UIAlertController(
-            title: "Suspend User",
-            message: "Are you sure you want to suspend \(user.organizationName ?? user.username ?? "this user")?",
+            title: "Suspend \(userType.capitalized)",
+            message: "Are you sure you want to suspend \(userName)?",
             preferredStyle: .alert
         )
         
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         alert.addAction(UIAlertAction(title: "Suspend", style: .destructive) { [weak self] _ in
-            self?.updateUserStatus(userId: user.id, newStatus: .suspended)
+            self?.updateUserStatus(userId: user.id, newStatus: .suspended, role: user.role)
         })
         
         present(alert, animated: true)
@@ -327,15 +333,22 @@ class UserDetailViewController: UIViewController {
     @IBAction func resumeButtonTapped(_ sender: UIButton) {
         guard let user = user else { return }
         
+        let userType = user.role == .donor ? "donor" : "NGO"
+        let userName = user.role == .donor
+            ? (user.username ?? "this user")
+            : (user.organizationName ?? "this user")
+        
+        let newStatus: UserStatus = user.role == .donor ? .active : .verified
+        
         let alert = UIAlertController(
-            title: "Resume User",
-            message: "Resume \(user.organizationName ?? user.username ?? "this user") to verified status?",
+            title: "Resume \(userType.capitalized)",
+            message: "Resume \(userName)?",
             preferredStyle: .alert
         )
         
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         alert.addAction(UIAlertAction(title: "Resume", style: .default) { [weak self] _ in
-            self?.updateUserStatus(userId: user.id, newStatus: .verified)
+            self?.updateUserStatus(userId: user.id, newStatus: newStatus, role: user.role)
         })
         
         present(alert, animated: true)
@@ -352,7 +365,7 @@ class UserDetailViewController: UIViewController {
         
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         alert.addAction(UIAlertAction(title: "Verify", style: .default) { [weak self] _ in
-            self?.updateUserStatus(userId: user.id, newStatus: .verified)
+            self?.updateUserStatus(userId: user.id, newStatus: .verified, role: user.role)
         })
         
         present(alert, animated: true)
@@ -369,22 +382,21 @@ class UserDetailViewController: UIViewController {
         
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         alert.addAction(UIAlertAction(title: "Reject", style: .destructive) { [weak self] _ in
-            self?.updateUserStatus(userId: user.id, newStatus: .rejected)
+            self?.updateUserStatus(userId: user.id, newStatus: .rejected, role: user.role)
         })
         
         present(alert, animated: true)
     }
     
-    // MARK: - Update User Status in Firebase
-    // MARK: - Update User Status in Firebase
-    private func updateUserStatus(userId: String, newStatus: UserStatus) {
+    // MARK: - Update User Status
+    private func updateUserStatus(userId: String, newStatus: UserStatus, role: UserRole) {
         print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
         print("🔄 Updating user status...")
         print("   User ID: \(userId)")
+        print("   Role: \(role.rawValue)")
         print("   New Status: \(newStatus.rawValue)")
         print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
         
-        // Show loading indicator
         let loadingAlert = UIAlertController(title: nil, message: "Updating...", preferredStyle: .alert)
         let loadingIndicator = UIActivityIndicatorView(style: .medium)
         loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
@@ -396,12 +408,10 @@ class UserDetailViewController: UIViewController {
         ])
         present(loadingAlert, animated: true)
         
-        // Update in Firebase
         db.collection("Users").document(userId).updateData([
             "status": newStatus.rawValue
         ]) { [weak self] error in
             
-            // Dismiss loading
             loadingAlert.dismiss(animated: true) {
                 
                 if let error = error {
@@ -412,29 +422,27 @@ class UserDetailViewController: UIViewController {
                 
                 print("✅ SUCCESS: Status updated to \(newStatus.rawValue)")
                 
-                // ✅ UPDATE LOCAL USER OBJECT IMMEDIATELY
+                // ✅ REFRESH UI IMMEDIATELY
+                self?.refreshUIAfterStatusChange(newStatus: newStatus, role: role)
                 
-                // ✅ REFRESH THE UI IMMEDIATELY
-                self?.refreshUIAfterStatusChange(newStatus: newStatus)
-                
-                // Show success message
-                self?.showSuccessAlert(newStatus: newStatus)
+                // Show success
+                self?.showSuccessAlert(newStatus: newStatus, role: role)
             }
         }
     }
     
-    // ✅ NEW: Refresh UI immediately after status change
-    private func refreshUIAfterStatusChange(newStatus: UserStatus) {
+    // ✅ REAL-TIME UI UPDATE
+    private func refreshUIAfterStatusChange(newStatus: UserStatus, role: UserRole) {
         print("🔄 Refreshing UI with new status: \(newStatus.rawValue)")
         
-        // Update status badge
+        // 1. Update badge immediately
         configureStatusBadge(status: newStatus)
         
-        // Update action buttons
-        configureActionButtons(for: newStatus)
+        // 2. Update buttons immediately
+        configureActionButtons(for: newStatus, role: role)
         
-        // Update stats visibility
-        if newStatus == .verified || newStatus == .suspended {
+        // 3. Update stats visibility
+        if newStatus == .verified || newStatus == .suspended || newStatus == .active {
             if statsContainer.isHidden {
                 statsContainer.isHidden = false
                 donationsNumberLabel.text = "..."
@@ -448,17 +456,24 @@ class UserDetailViewController: UIViewController {
         }
         
         print("✅ UI refreshed successfully")
+        print("   Badge: \(statusBadge.text ?? "nil") - \(statusBadge.backgroundColor?.description ?? "nil")")
+        print("   Suspend hidden: \(suspendButton.isHidden)")
+        print("   Resume hidden: \(resumeButton.isHidden)")
     }
     
-    private func showSuccessAlert(newStatus: UserStatus) {
+    private func showSuccessAlert(newStatus: UserStatus, role: UserRole) {
         let message: String
+        let userType = role == .donor ? "Donor" : "NGO"
+        
         switch newStatus {
         case .verified:
-            message = "User has been verified!"
+            message = "\(userType) has been verified!"
         case .suspended:
-            message = "User has been suspended."
+            message = "\(userType) has been suspended."
         case .rejected:
-            message = "User has been rejected."
+            message = "\(userType) has been rejected."
+        case .active:
+            message = "\(userType) has been resumed to active."
         default:
             message = "Status updated successfully."
         }
@@ -525,7 +540,6 @@ class UserDetailViewController: UIViewController {
         nav.frame = navContainer.bounds
         nav.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
-        // Admin view
         nav.listBtn.isHidden = true
         nav.listLab.isHidden = true
         nav.ngoLab.isHidden = true
@@ -558,3 +572,4 @@ class UserDetailViewController: UIViewController {
         navigationController?.setNavigationBarHidden(true, animated: true)
     }
 }
+

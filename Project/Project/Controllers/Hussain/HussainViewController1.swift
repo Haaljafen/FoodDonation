@@ -213,8 +213,22 @@ class HussainViewController1: UIViewController {
           let total = validProgressBars.count
           countUnlocked.text = "\(unlockedCount) of \(total) unlocked"
       }
+    
+    
+    
+    
+    
+    
+    @IBAction func backButtonTapped(_ sender: UIButton) {
+        if navigationController != nil {
+            navigationController?.popViewController(animated: true)
+        } else {
+            dismiss(animated: true)
+        }
+    }
+    
       
-      // MARK: - 🔹 NEW FUNCTIONS: ACHIEVEMENT DATA BINDING
+      // MARK: - NEW FUNCTIONS: ACHIEVEMENT DATA BINDING
       
       private func refreshAchievementsFromData() {
           let m = AchievementManager.shared

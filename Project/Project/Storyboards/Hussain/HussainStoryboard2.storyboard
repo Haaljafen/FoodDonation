@@ -41,6 +41,9 @@
                                         <buttonConfiguration key="configuration" style="plain" image="chevron.left" catalog="system">
                                             <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="BackButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="C3c-uh-9V1"/>
+                                        </connections>
                                     </button>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" image="AI Essentials Icon Set-2" translatesAutoresizingMaskIntoConstraints="NO" id="35m-vc-K9r">
                                         <rect key="frame" x="48" y="11" width="45" height="51"/>

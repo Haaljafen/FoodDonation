@@ -290,7 +290,7 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
         // Customize header
         header.takaffalLabel.text = "Takaffal"
         header.backBtn.isHidden = true
-
+        header.clear.isHidden = true
         header.notiBtn.addTarget(self,
                                  action: #selector(openNotifications),
                                  for: .touchUpInside)

@@ -365,11 +365,14 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
 //        cell.statusLabel.text = donation.status.displayText
         if let status = DonationStatus(rawValue: donation.status.lowercased()) {
             cell.statusLabel.text = donation.status.displayText
-            cell.statusLabel.textColor = status.color
+            cell.statusLabel.textColor = .white                // ✅ FIX
+            cell.statusLabel.backgroundColor = status.color    // ✅ FIX
         } else {
             cell.statusLabel.text = donation.status.displayText
-            cell.statusLabel.textColor = .secondaryLabel
+            cell.statusLabel.textColor = .white
+            cell.statusLabel.backgroundColor = .secondaryLabel
         }
+
 
 
         // ✅ Show redonate button ONLY if completed

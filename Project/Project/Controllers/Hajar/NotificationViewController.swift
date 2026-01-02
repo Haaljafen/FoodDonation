@@ -30,17 +30,23 @@ final class NotificationViewController: UIViewController, UITableViewDataSource,
         setupHeader()
         setupTable()
         fetchCurrentUserRoleAndListen()
-        tableView.separatorStyle = .singleLine
-        tableView.separatorInset = UIEdgeInsets(top: 0, left: 72, bottom: 0, right: 16)
         tableView.tableFooterView = UIView() // removes extra separators on empty space
     }
 
     private func setupTable() {
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.separatorStyle = .none
-        tableView.rowHeight = 85
+
+        tableView.separatorStyle = .singleLine
+        tableView.separatorInsetReference = .fromCellEdges
+        tableView.separatorInset = .zero
+        tableView.layoutMargins = .zero
+        tableView.cellLayoutMarginsFollowReadableWidth = false
+
+        tableView.rowHeight = 87
     }
+
+
 
     // MARK: - Role → then listen notifications
     private func fetchCurrentUserRoleAndListen() {
@@ -81,8 +87,6 @@ final class NotificationViewController: UIViewController, UITableViewDataSource,
 
         let roleStringQuery = db.collection("Notifications")
             .whereField("audience", isEqualTo: role.rawValue)
-            .order(by: "createdAt", descending: true)
-            .limit(to: 50)
 
         let userQuery = db.collection("Notifications")
             .whereField("toUserId", isEqualTo: uid)
@@ -157,8 +161,13 @@ final class NotificationViewController: UIViewController, UITableViewDataSource,
             return UITableViewCell()
         }
         let item = items[indexPath.row]
-        cell.configure(title: item.title, subtitle: item.subtitle, iconName: item.iconName)
+        cell.configure(title: item.title, subtitle: item.subtitle, iconName: item.iconName, createdAt: item.createdAt)
+
         cell.selectionStyle = .none
+        cell.separatorInset = .zero
+        cell.layoutMargins = .zero
+        cell.preservesSuperviewLayoutMargins = false
+
         return cell
     }
 
@@ -183,9 +192,10 @@ final class NotificationViewController: UIViewController, UITableViewDataSource,
 
         header.frame = headerContainer.bounds
         header.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        header.takaffalLabel.text = "Takaffal"
+        header.takaffalLabel.text = "Notification"
         header.backBtn.isHidden = false
         header.search.isHidden = true
+        header.notiBtn.isHidden = true
         header.backBtn.addTarget(self, action: #selector(didTapBack), for: .touchUpInside)
         header.notiBtn.addTarget(self, action: #selector(openNotifications), for: .touchUpInside)
 

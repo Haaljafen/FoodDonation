@@ -24,8 +24,6 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
     private var bottomNav: BottomNavView?
     
     private var listener: ListenerRegistration?
-    private let db = Firestore.firestore()
-
     // Make sure we only add them once
     private var didSetupViews = false
     private var items: [DonationItem] = []
@@ -37,6 +35,8 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
         df.dateFormat = "dd MMM yyyy"
         return df
     }()
+
+    private let db = Firestore.firestore()
 
 
     // MARK: - Lifecycle
@@ -95,12 +95,33 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
         tableView.showsVerticalScrollIndicator = false
         tableView.backgroundColor = .clear
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
-        tableView.allowsSelection = false
+        tableView.allowsSelection = true
 
         // Keep your current registration (but see note below if it crashes)
 
         listenForPendingDonations()
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let item = items[indexPath.row]
+
+        let sb = UIStoryboard(name: "HajarStoryboard", bundle: nil)
+        guard let vc = sb.instantiateViewController(withIdentifier: "DonationDetailVC")
+                as? DonationDetailViewController else {
+            print("❌ Storyboard ID not set for DonationDetailViewController")
+            return
+        }
+
+        // ✅ pass what detail needs
+        vc.donationId = item.id
+        vc.donorId = item.donorId
+
+        // ✅ optional: show instantly without waiting firestore
+        vc.passedItem = item
+
+        navigationController?.pushViewController(vc, animated: true)
+    }
+
     private func listenForPendingDonations() {
         listener?.remove()
 
@@ -120,13 +141,19 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
                     let d = doc.data()
 
                     return DonationItem(
+                        id: doc.documentID, // ✅ use Firestore doc id
+                        donorId: d["donorId"] as? String ?? "",
+
                         category: d["category"] as? String ?? "",
                         name: d["item"] as? String ?? "",
                         quantity: "\(d["quantity"] as? Int ?? 1) \(d["unit"] as? String ?? "")",
                         location: d["donorCity"] as? String ?? "Bahrain",
                         expiryDate: d["expiryDate"] as? String ?? "",
                         donorName: d["donorName"] as? String ?? "Donor",
-                        imageURL: d["imageUrl"] as? String ?? ""
+                        imageURL: d["imageUrl"] as? String ?? "",
+
+                        donationMethod: d["donationMethod"] as? String,
+                        impactType: d["impactType"] as? String
                     )
                 }
 
@@ -146,15 +173,22 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
                 case .success(let donations):
                     self?.items = donations.map { d in
                         DonationItem(
+                            id: d.id,                                  // ✅ add
+                            donorId: d.donorId,                        // ✅ add
+
                             category: d.category.rawValue,
                             name: d.item,
                             quantity: "\(d.quantity) \(d.unit)",
                             location: d.donorCity ?? "Bahrain",
                             expiryDate: d.expiryDate.map { self?.dateFormatter.string(from: $0) ?? "" } ?? "",
                             donorName: d.donorName ?? "Donor",
-                            imageURL: d.imageUrl
+                            imageURL: d.imageUrl,
+
+                            donationMethod: d.donationMethod.rawValue,
+                            impactType: d.impactType.rawValue
                         )
                     }
+
                     self?.tableView.reloadData()
 
                 case .failure(let e):
@@ -232,7 +266,7 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
 
         let item = items[indexPath.row]
-        cell.configure(with: item)   // ✅ THIS calls loadImage
+        cell.configure(with: item)
 
         return cell
     }

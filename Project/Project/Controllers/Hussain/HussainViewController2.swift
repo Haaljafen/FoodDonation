@@ -211,6 +211,18 @@ class HussainViewController2: UIViewController, UITableViewDataSource, UITableVi
         scrollToBottom()
     }
     
+    
+    
+    
+    @IBAction func BackButtonTapped(_ sender: UIButton) {
+        if navigationController != nil {
+        navigationController?.popViewController(animated: true)
+    } else {
+        dismiss(animated: true)
+    }
+    }
+    
+    
     //MARK: - table logic
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

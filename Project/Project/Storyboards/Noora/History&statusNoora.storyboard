@@ -458,12 +458,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Z9O-t3-fcV" userLabel="header">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Z9O-t3-fcV" userLabel="header">
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="200"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="393" id="ZWQ-eE-8Vc"/>
-                                    <constraint firstAttribute="height" constant="128" id="lGF-bk-7oY"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RFX-EM-kvA" userLabel="nav">
@@ -554,7 +553,7 @@
                                     <outlet property="delegate" destination="3zM-7I-4PW" id="yPt-Zr-lLc"/>
                                 </connections>
                             </tableView>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bNM-s1-btJ">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bNM-s1-btJ">
                                 <rect key="frame" x="0.0" y="208" width="393" height="90"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
@@ -562,14 +561,12 @@
                         <viewLayoutGuide key="safeArea" id="usR-cf-Lt4"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="bNM-s1-btJ" firstAttribute="top" secondItem="Z9O-t3-fcV" secondAttribute="bottom" constant="8" symbolic="YES" id="4Yj-3Y-lIG"/>
                             <constraint firstItem="te1-el-am5" firstAttribute="trailing" secondItem="RFX-EM-kvA" secondAttribute="trailing" id="ATc-Pg-I9H"/>
-                            <constraint firstItem="Z9O-t3-fcV" firstAttribute="top" secondItem="3zM-7I-4PW" secondAttribute="top" id="Esw-De-bSB"/>
                             <constraint firstItem="Z9O-t3-fcV" firstAttribute="leading" secondItem="3zM-7I-4PW" secondAttribute="leading" id="KyE-Mq-n0R"/>
-                            <constraint firstItem="Z9O-t3-fcV" firstAttribute="top" secondItem="3zM-7I-4PW" secondAttribute="top" id="M45-yX-pHb"/>
                             <constraint firstAttribute="bottomMargin" secondItem="RFX-EM-kvA" secondAttribute="bottom" constant="-68" id="P8c-Hm-TpG"/>
+                            <constraint firstAttribute="bottom" secondItem="Z9O-t3-fcV" secondAttribute="bottom" constant="652" id="RK8-wi-0rL"/>
                             <constraint firstAttribute="bottom" secondItem="bNM-s1-btJ" secondAttribute="bottom" constant="554" id="VRF-Xj-hKt"/>
-                            <constraint firstItem="bNM-s1-btJ" firstAttribute="top" secondItem="3zM-7I-4PW" secondAttribute="top" constant="208" id="aoT-c0-MyA"/>
+                            <constraint firstItem="bNM-s1-btJ" firstAttribute="top" secondItem="Z9O-t3-fcV" secondAttribute="bottom" constant="8" id="YDH-Ni-YbI"/>
                             <constraint firstItem="te1-el-am5" firstAttribute="top" secondItem="bNM-s1-btJ" secondAttribute="bottom" constant="8" symbolic="YES" id="ktT-g8-h2z"/>
                             <constraint firstAttribute="trailing" secondItem="Z9O-t3-fcV" secondAttribute="trailing" id="lMM-B1-44n"/>
                             <constraint firstItem="te1-el-am5" firstAttribute="trailing" secondItem="bNM-s1-btJ" secondAttribute="trailing" id="lsg-Fw-7xr"/>
@@ -578,6 +575,7 @@
                             <constraint firstItem="te1-el-am5" firstAttribute="leading" secondItem="bNM-s1-btJ" secondAttribute="leading" id="sup-fK-0DF"/>
                             <constraint firstItem="RFX-EM-kvA" firstAttribute="top" secondItem="te1-el-am5" secondAttribute="bottom" constant="8" symbolic="YES" id="uYa-td-LiF"/>
                             <constraint firstItem="RFX-EM-kvA" firstAttribute="top" secondItem="3zM-7I-4PW" secondAttribute="top" constant="732" id="uh1-7J-jJF"/>
+                            <constraint firstItem="Z9O-t3-fcV" firstAttribute="top" secondItem="3zM-7I-4PW" secondAttribute="top" id="vk6-8S-18j"/>
                             <constraint firstItem="bNM-s1-btJ" firstAttribute="trailing" secondItem="Z9O-t3-fcV" secondAttribute="trailing" id="vt8-GM-go7"/>
                         </constraints>
                     </view>

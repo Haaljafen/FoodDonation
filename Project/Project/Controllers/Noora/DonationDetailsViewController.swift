@@ -211,8 +211,8 @@ final class DonationDetailsViewController: UIViewController {
 
                 // Defaults
                 self.pickup = [:]
-                self.pickupAddress = "Address not available"
-                self.pickupDateTime = "—"
+                self.pickupAddress = "Not Set yet"
+                self.pickupDateTime = "Not Scheduled yet"
 
                 if let err = err {
                     print("❌ fetch pickup request error:", err)
@@ -243,9 +243,9 @@ final class DonationDetailsViewController: UIViewController {
 
                 // DROP-OFF → use facilityName
                 if method == "dropoff" {
-                    if let facility = self.pickup["facilityName"] as? String,
-                       !facility.isEmpty {
-                        self.pickupAddress = facility
+                    if let facilityAddress = self.pickup["pickupAddress"] as? String,
+                       !facilityAddress.isEmpty {
+                        self.pickupAddress = facilityAddress
                     }
 
                     self.tableView.reloadData()

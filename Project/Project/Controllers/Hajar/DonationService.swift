@@ -31,7 +31,7 @@ final class DonationService {
         case newDonationCreated = "NEW_DONATION_CREATED"
         case donationAcceptedAdmin = "ADMIN_DONATION_ACCEPTED"
         case donationRejectedAdmin = "ADMIN_DONATION_REJECTED"
-        case donationCancelledAdmin = "DONATION_CANCELLED"
+        case donationCancelledAdmin = "ADMIN_DONATION_CANCELLED"
         case donationCompletedAdmin = "ADMIN_DONATION_COMPLETED"
         case systemAlert = "SYSTEM_ALERT"
 
@@ -44,6 +44,23 @@ final class DonationService {
         case ngoPickupScheduled
         case pickupReminder
         case itemExpiryWarning
+
+        // Swift enums can't share the same rawValue, but Firestore event keys must match the spec.
+        // Use this computed property when writing notification docs.
+        var eventKey: String {
+            switch self {
+            case .donationAcceptedAdmin:
+                return "DONATION_ACCEPTED"
+            case .donationRejectedAdmin:
+                return "DONATION_REJECTED"
+            case .donationCancelledAdmin:
+                return "DONATION_CANCELLED"
+            case .donationCompletedAdmin:
+                return "DONATION_COMPLETED"
+            default:
+                return rawValue
+            }
+        }
     }
 
     private func content(for type: NotificationEventType) -> (title: String, subtitle: String, iconName: String) {
@@ -189,7 +206,7 @@ final class DonationService {
         let c = content(for: type)
 
         var data: [String: Any] = [
-            "type": type.rawValue,
+            "type": type.eventKey,
             "title": c.title,
             "subtitle": c.subtitle,
             "iconName": c.iconName,
@@ -209,7 +226,7 @@ final class DonationService {
 
         let target = toUserId ?? "audience"
         let scope = relatedDonationId ?? "none"
-        let docId = "\(type.rawValue)_\(scope)_\(target)"
+        let docId = "\(type.eventKey)_\(scope)_\(target)"
 
         let ref = db.collection("Notifications").document(docId)
         ref.getDocument { snap, err in

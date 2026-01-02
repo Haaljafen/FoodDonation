@@ -268,79 +268,7 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
         let item = items[indexPath.row]
         cell.configure(with: item)
 
-        cell.acceptButton.tag = indexPath.row
-        cell.rejectButton.tag = indexPath.row
-
-        // important: table cells get reused, so clear and re-add handlers
-        cell.acceptButton.removeTarget(nil, action: nil, for: .allEvents)
-        cell.rejectButton.removeTarget(nil, action: nil, for: .allEvents)
-
-        cell.acceptButton.addTarget(self, action: #selector(didTapAccept(_:)), for: .touchUpInside)
-        cell.rejectButton.addTarget(self, action: #selector(didTapReject(_:)), for: .touchUpInside)
-
         return cell
-    }
-    
-
-    @objc private func didTapAccept(_ sender: UIButton) {
-        let row = sender.tag
-        guard row >= 0, row < items.count else { return }
-        updateDonationStatus(donationId: items[row].id, status: "accepted")
-    }
-
-    @objc private func didTapReject(_ sender: UIButton) {
-        let row = sender.tag
-        guard row >= 0, row < items.count else { return }
-        updateDonationStatus(donationId: items[row].id, status: "rejected")
-    }
-
-    private func updateDonationStatus(donationId: String, status: String) {
-        guard !donationId.isEmpty else { return }
-
-        if status == "accepted" {
-            db.collection("Donations").document(donationId).updateData([
-                "status": "accepted",
-                "acceptedAt": Timestamp(date: Date())
-            ]) { error in
-                if let error = error {
-                    print("❌ Error accepting donation:", error.localizedDescription)
-                }
-            }
-        } else if status == "rejected" {
-            db.collection("Donations").document(donationId).updateData([
-                "status": "rejected",
-                "rejectedAt": Timestamp(date: Date())
-            ]) { error in
-                if let error = error {
-                    print("❌ Error rejecting donation:", error.localizedDescription)
-                }
-            }
-        }
-    }
-
-    private func updateDonationStatus(_ item: DonationItem, status: String) {
-        let donationId = item.id
-        guard !donationId.isEmpty else { return }
-
-        var payload: [String: Any] = ["status": status]
-        if status == "accepted" {
-            payload["acceptedAt"] = Timestamp(date: Date())
-        } else if status == "rejected" {
-            payload["rejectedAt"] = Timestamp(date: Date())
-        }
-
-        db.collection("Donations").document(donationId).updateData(payload) { error in
-            if let error = error {
-                print("❌ Error updating donation status:", error.localizedDescription)
-                return
-            }
-
-            if status == "accepted" {
-                DonationService.shared.notify(type: .ngoAssignedDonation, relatedDonationId: donationId, toUserId: item.donorId)
-            } else {
-                DonationService.shared.notify(type: .donationExpired, relatedDonationId: donationId, toUserId: item.donorId)
-            }
-        }
     }
 
 

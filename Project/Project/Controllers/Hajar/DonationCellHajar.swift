@@ -36,10 +36,10 @@ class DonationCellHajar: UITableViewCell {
         donationImageView.clipsToBounds = true
 
         donationImageView.isUserInteractionEnabled = false
-        acceptButton.isUserInteractionEnabled = true
-        rejectButton.isUserInteractionEnabled = true
-        cardView.bringSubviewToFront(acceptButton)
-        cardView.bringSubviewToFront(rejectButton)
+        acceptButton.isHidden = true
+        rejectButton.isHidden = true
+        acceptButton.isEnabled = false
+        rejectButton.isEnabled = false
 
 //        cardView.bringSubviewToFront(categoryChipView)
 //        contentView.bringSubviewToFront(cardView)
@@ -49,6 +49,7 @@ class DonationCellHajar: UITableViewCell {
         // MARK: - Setup UI
 
         private func setupCard() {
+            
             cardView.layer.cornerRadius = 18
             cardView.layer.masksToBounds = false
             cardView.backgroundColor = UIColor(white: 0.92, alpha: 1.0)

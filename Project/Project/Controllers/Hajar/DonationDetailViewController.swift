@@ -46,6 +46,45 @@ final class DonationDetailViewController: UIViewController {
         return f
     }()
 
+    private func presentAcceptanceReceiptPopup() {
+        let donationIdSafe = donationId ?? ""
+
+        let itemName = itemNameLabel.text ?? "—"
+        let category = categoryLabel.text ?? "—"
+        let quantity = quantityLabel.text ?? "—"
+        let donorName = donorNameLabel.text ?? "—"
+        let pickupMethod = pickupMethodLabel.text ?? "—"
+        let scheduledDate = pickupDateLabel.text ?? "—"
+        let location = donorAddressLabel.text ?? "—"
+
+        let body = """
+🧾 Receipt 2: Donation Accepted (NGO)
+Title: Donation Acceptance Receipt
+This receipt confirms that your organization has successfully accepted a donation.
+Donation Details:
+• Item Name: \(itemName)
+• Category: \(category)
+• Quantity: \(quantity)
+• Donor Name: \(donorName)
+• Pickup Method: \(pickupMethod)
+• Scheduled Date: \(scheduledDate)
+• Location: \(location)
+Please ensure the donation is collected according to the agreed schedule.
+Thank you for your continued efforts in supporting the community.
+"""
+
+        let qrPayload = ReceiptPopupViewController.makeGithubPagesReceiptUrl(from: body)
+        let popup = ReceiptPopupViewController(
+            receiptTitle: "Donation Acceptance Receipt",
+            receiptBody: body,
+            qrPayload: qrPayload
+        )
+        popup.onDismiss = { [weak self] in
+            self?.navigationController?.popViewController(animated: true)
+        }
+        present(popup, animated: true)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -340,11 +379,7 @@ final class DonationDetailViewController: UIViewController {
                 self.showError(message: "Failed to accept donation")
             } else {
                 DispatchQueue.main.async {
-                    let alert = UIAlertController(title: "Success", message: "Donation accepted successfully", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
-                        self.navigationController?.popViewController(animated: true)
-                    })
-                    self.present(alert, animated: true)
+                    self.presentAcceptanceReceiptPopup()
                 }
             }
         }

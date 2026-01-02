@@ -1,4 +1,7 @@
 import Foundation
+import FirebaseFirestore
+import FirebaseAuth
+
 
 class AchievementManager {
 
@@ -56,7 +59,26 @@ class AchievementManager {
         uniqueNGOs.insert(ngoID)
         recordWeeklyDonation()
         recordMonthlyDonation()
+
+        syncToFirebase()
     }
+
+    private func syncToFirebase() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+
+        Firestore.firestore()
+            .collection("users")
+            .document(uid)
+            .setData([
+                "donationCount": donationCount,
+                "mealsProvided": mealsProvided,
+                "collectionsCompleted": collectionsCompleted,
+                "uniqueNGOs": Array(uniqueNGOs),
+                "weeklyDonationDates": weeklyDonationDates.map { Timestamp(date: $0) },
+                "monthlyDonationDates": monthlyDonationDates.map { Timestamp(date: $0) }
+            ], merge: true)
+    }
+
 
     // MARK: - Weekly/Monthly helpers
     private func recordWeeklyDonation() {
@@ -87,8 +109,44 @@ class AchievementManager {
 
     func saveUnlockDateIfNeeded(id: Int) {
         let key = "ach_unlock_\(id)"
-        if UserDefaults.standard.object(forKey: key) == nil {
-            UserDefaults.standard.set(Date(), forKey: key)
+        guard UserDefaults.standard.object(forKey: key) == nil,
+              let uid = Auth.auth().currentUser?.uid else { return }
+
+        let date = Date()
+        UserDefaults.standard.set(date, forKey: key)
+
+        Firestore.firestore()
+            .collection("users")
+            .document(uid)
+            .setData([
+                "achievementsUnlocked.\(id)": Timestamp(date: date)
+            ], merge: true)
+    }
+
+    
+    func applyRemoteData(_ data: [String: Any]) {
+        donationCount = data["donationCount"] as? Int ?? 0
+        mealsProvided = data["mealsProvided"] as? Int ?? 0
+        collectionsCompleted = data["collectionsCompleted"] as? Int ?? 0
+
+        if let ngos = data["uniqueNGOs"] as? [String] {
+            uniqueNGOs = Set(ngos)
+        }
+
+        if let weekly = data["weeklyDonationDates"] as? [Timestamp] {
+            weeklyDonationDates = weekly.map { $0.dateValue() }
+        }
+
+        if let monthly = data["monthlyDonationDates"] as? [Timestamp] {
+            monthlyDonationDates = monthly.map { $0.dateValue() }
+        }
+
+        if let unlocks = data["achievementsUnlocked"] as? [String: Timestamp] {
+            for (key, value) in unlocks {
+                UserDefaults.standard.set(value.dateValue(), forKey: "ach_unlock_\(key)")
+            }
         }
     }
+
 }
+

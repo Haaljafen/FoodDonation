@@ -352,10 +352,10 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Verified " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y8L-zu-KHE">
-                                                        <rect key="frame" x="263" y="32.333333333333343" width="70" height="24"/>
+                                                        <rect key="frame" x="248" y="32.333333333333343" width="85" height="24"/>
                                                         <color key="backgroundColor" red="0.01195266771" green="0.3668452291" blue="0.64671875000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" constant="70" id="9Kh-wW-kdk"/>
+                                                            <constraint firstAttribute="width" constant="85" id="9Kh-wW-kdk"/>
                                                             <constraint firstAttribute="height" constant="24" id="hHN-X3-hzh"/>
                                                         </constraints>
                                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="13"/>
@@ -649,7 +649,7 @@
                                     <constraint firstItem="xMW-gj-UeL" firstAttribute="leading" secondItem="x6z-7d-rkO" secondAttribute="leading" id="GBe-cX-Tqv"/>
                                     <constraint firstItem="xMW-gj-UeL" firstAttribute="width" secondItem="x6z-7d-rkO" secondAttribute="width" multiplier="0.979644" id="ngE-Qa-Np2"/>
                                     <constraint firstAttribute="trailing" secondItem="xMW-gj-UeL" secondAttribute="trailing" id="wyU-5S-61c"/>
-                                    <constraint firstAttribute="bottom" secondItem="xMW-gj-UeL" secondAttribute="bottom" constant="668" id="yOO-sV-Xjs"/>
+                                    <constraint firstAttribute="bottom" secondItem="xMW-gj-UeL" secondAttribute="bottom" constant="100" id="yOO-sV-Xjs"/>
                                 </constraints>
                                 <viewLayoutGuide key="contentLayoutGuide" id="2SV-Z9-W6v"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="WyB-IS-TS9"/>

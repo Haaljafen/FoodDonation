@@ -512,7 +512,7 @@
                                             <constraint firstAttribute="trailing" secondItem="83O-VY-03j" secondAttribute="trailing" constant="20" id="2Ft-7T-XbI"/>
                                             <constraint firstItem="Gnw-OL-z1c" firstAttribute="top" secondItem="lu4-zJ-PTn" secondAttribute="top" constant="30" id="A4B-oF-hsR"/>
                                             <constraint firstItem="Gnw-OL-z1c" firstAttribute="leading" secondItem="lu4-zJ-PTn" secondAttribute="leading" constant="20" id="ASn-Gz-rSQ"/>
-                                            <constraint firstAttribute="height" constant="1200" id="DlC-Kc-nej"/>
+                                            <constraint firstAttribute="height" constant="1000" id="DlC-Kc-nej"/>
                                             <constraint firstAttribute="trailing" secondItem="KcI-KI-mWx" secondAttribute="trailing" constant="20" id="MZu-Q7-h6d"/>
                                             <constraint firstItem="KcI-KI-mWx" firstAttribute="leading" secondItem="lu4-zJ-PTn" secondAttribute="leading" constant="20" id="N85-gk-UOc"/>
                                             <constraint firstItem="KcI-KI-mWx" firstAttribute="top" secondItem="Jxx-Ml-03E" secondAttribute="bottom" constant="20" id="OoC-iq-hCd"/>
@@ -560,6 +560,7 @@
                         <outlet property="aboutTextView" destination="Ucb-Jn-Mfr" id="J21-qf-VBo"/>
                         <outlet property="cityLabel" destination="hqz-NK-yhh" id="QQp-Bv-cKI"/>
                         <outlet property="createdAtLabel" destination="Wea-nw-J8M" id="Xc8-rD-e3w"/>
+                        <outlet property="donationsCountLabel" destination="4SH-eC-Q40" id="5Pg-Dw-nnK"/>
                         <outlet property="emailLabel" destination="xjb-Co-DvM" id="mRe-pv-Jbj"/>
                         <outlet property="headerContainer" destination="jDb-Hh-viz" id="PH1-OO-b0a"/>
                         <outlet property="missionTextView" destination="MnV-ck-7WE" id="sTr-Sm-joK"/>
@@ -570,6 +571,7 @@
                         <outlet property="profileImageView" destination="6bL-wC-JW0" id="ThD-09-UeT"/>
                         <outlet property="scrollView" destination="dUk-Rv-2Tk" id="Wk9-mB-1Yu"/>
                         <outlet property="statusLabel" destination="ItR-Z5-Jr5" id="7Bh-cu-GOt"/>
+                        <outlet property="totalMealsLabel" destination="nun-nA-IYC" id="fKc-Mv-a3p"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xh1-HL-6Of" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

@@ -24,6 +24,9 @@ class AbdullaViewController2: UIViewController {
     // ✅ Data
     private var allUsers: [User] = []
     private var filteredUsers: [User] = []
+    
+    private var donationCounts: [String: Int] = [:]  // [userId: count]
+
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -128,6 +131,57 @@ class AbdullaViewController2: UIViewController {
                     self?.tableView.reloadData()
                     print("✅ Table reloaded - Showing \(self?.filteredUsers.count ?? 0) users")
                     print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                    
+                    // ✅ NOW FETCH DONATION COUNTS
+                    self?.fetchAllDonationCounts()
+                }
+            }
+    }
+    
+    // MARK: - Fetch Donation Counts
+    private func fetchAllDonationCounts() {
+        print("📊 Fetching all donation counts...")
+        
+        db.collection("Donations")
+            .getDocuments { [weak self] snapshot, error in
+                
+                if let error = error {
+                    print("❌ Error fetching donations:", error.localizedDescription)
+                    return
+                }
+                
+                guard let documents = snapshot?.documents else {
+                    print("⚠️ No donations found")
+                    return
+                }
+                
+                print("📦 Found \(documents.count) total donations")
+                
+                // Decode donations
+                let donations = documents.compactMap { doc -> Donation? in
+                    try? doc.data(as: Donation.self)
+                }
+                
+                // Group by donorId and collectorId
+                var counts: [String: Int] = [:]
+                
+                for donation in donations {
+                    // Count for donor
+                    counts[donation.donorId, default: 0] += 1
+                    
+                    // Count for collector (NGO) if exists
+                    if let collectorId = donation.collectorId {
+                        counts[collectorId, default: 0] += 1
+                    }
+                }
+                
+                print("✅ Calculated donation counts for \(counts.count) users")
+                
+                // Update the dictionary
+                DispatchQueue.main.async {
+                    self?.donationCounts = counts
+                    self?.tableView.reloadData()
+                    print("🔄 Table reloaded with donation counts")
                 }
             }
     }
@@ -452,13 +506,15 @@ extension AbdullaViewController2: UITableViewDelegate, UITableViewDataSource {
         
         let user = filteredUsers[indexPath.row]
         
+        // ✅ GET REAL DONATION COUNT
+        let donationCount = donationCounts[user.id] ?? 0
+        
         print("🔵 Creating cell for row \(indexPath.row):")
         print("   Name: \(user.organizationName ?? user.username ?? "Unknown")")
         print("   Status: \(user.status?.rawValue ?? "N/A")")
+        print("   Donations: \(donationCount)")
         
-        let donationCount = 0
-        
-        // ✅ USE NEW METHOD
+        // ✅ USE NEW METHOD WITH REAL COUNT
         cell.configure(with: user, donationCount: donationCount)
         
         cell.selectionStyle = .default

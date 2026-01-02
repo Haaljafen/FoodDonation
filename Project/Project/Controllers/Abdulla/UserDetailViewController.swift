@@ -1,7 +1,5 @@
 import UIKit
-import FirebaseFirestore  // ✅ ADD THIS
-
-// Uses DonationService for Notifications
+import FirebaseFirestore
 
 class UserDetailViewController: UIViewController {
 
@@ -38,7 +36,6 @@ class UserDetailViewController: UIViewController {
     private var bottomNav: BottomNavView?
     private var didSetupViews = false
     
-    // ✅ ADD FIREBASE
     private let db = Firestore.firestore()
     
     var user: User?
@@ -81,16 +78,20 @@ class UserDetailViewController: UIViewController {
         nameLabel.text = user.organizationName ?? user.username ?? "Unknown"
         idLabel.text = "ID: \(String(user.id.prefix(8)))"
         
-        // Status Badge
+        // ✅ Status Badge - handle nil status for donors
         if let status = user.status {
             configureStatusBadge(status: status)
+        } else {
+            // Default status for users without status field (donors)
+            configureDefaultStatusBadge(for: user.role)
         }
         
-        // Show/Hide Stats based on status
-        if user.status == .verified || user.status == .suspended {
+        // ✅ Show/Hide Stats - also show for active donors
+        if user.status == .verified || user.status == .suspended || user.role == .donor {
             statsContainer.isHidden = false
-            donationsNumberLabel.text = "0"
-            mealsNumberLabel.text = "0"
+            donationsNumberLabel.text = "..."
+            mealsNumberLabel.text = "..."
+            fetchDonationStats(for: user.id)
         } else {
             statsContainer.isHidden = true
         }
@@ -105,9 +106,14 @@ class UserDetailViewController: UIViewController {
         formatter.dateFormat = "MMM yyyy"
         joinedLabel.text = "Joined \(formatter.string(from: user.createdAt))"
         
-        // Configure Action Buttons
-        if let status = user.status {
+        // ✅ Configure Action Buttons - hide for donors
+        if user.role == .donor {
+            hideAllButtons()
+            print("👤 Donor profile - no action buttons needed")
+        } else if let status = user.status {
             configureActionButtons(for: status)
+        } else {
+            hideAllButtons()
         }
         
         // Style buttons
@@ -123,7 +129,6 @@ class UserDetailViewController: UIViewController {
             if let error = error {
                 print("❌ Error loading image:", error.localizedDescription)
                 DispatchQueue.main.async {
-                    // Show placeholder on error
                     self?.logoImageView.backgroundColor = .systemPurple
                     self?.logoImageView.image = UIImage(systemName: "person.circle.fill")
                     self?.logoImageView.tintColor = .white
@@ -140,7 +145,6 @@ class UserDetailViewController: UIViewController {
             } else {
                 print("⚠️ Failed to convert data to image")
                 DispatchQueue.main.async {
-                    // Show placeholder
                     self?.logoImageView.backgroundColor = .systemPurple
                     self?.logoImageView.image = UIImage(systemName: "person.circle.fill")
                     self?.logoImageView.tintColor = .white
@@ -148,6 +152,65 @@ class UserDetailViewController: UIViewController {
             }
         }.resume()
     }
+    
+    // MARK: - Fetch Donation Stats
+    private func fetchDonationStats(for userId: String) {
+        print("📊 Fetching donation stats for user: \(userId)")
+        
+        // Determine query field based on user role
+        let queryField: String
+        if user?.role == .ngo {
+            queryField = "collectorId"  // NGOs collect donations
+        } else {
+            queryField = "donorId"      // Donors give donations
+        }
+        
+        db.collection("Donations")
+            .whereField(queryField, isEqualTo: userId)
+            .getDocuments { [weak self] snapshot, error in
+                
+                if let error = error {
+                    print("❌ Error fetching donations:", error.localizedDescription)
+                    DispatchQueue.main.async {
+                        self?.donationsNumberLabel.text = "0"
+                        self?.mealsNumberLabel.text = "0"
+                    }
+                    return
+                }
+                
+                guard let documents = snapshot?.documents else {
+                    print("⚠️ No donations found")
+                    DispatchQueue.main.async {
+                        self?.donationsNumberLabel.text = "0"
+                        self?.mealsNumberLabel.text = "0"
+                    }
+                    return
+                }
+                
+                print("📦 Found \(documents.count) donations")
+                
+                // Decode donations
+                let donations = documents.compactMap { doc -> Donation? in
+                    try? doc.data(as: Donation.self)
+                }
+                
+                // Calculate stats
+                let donationCount = donations.count
+                let totalMeals = donations.reduce(0) { $0 + $1.quantity }
+                
+                print("✅ Stats calculated:")
+                print("   Donations: \(donationCount)")
+                print("   Total Meals: \(totalMeals)")
+                
+                // Update UI
+                DispatchQueue.main.async {
+                    self?.donationsNumberLabel.text = "\(donationCount)"
+                    self?.mealsNumberLabel.text = "\(totalMeals)"
+                }
+            }
+    }
+    
+    // ✅ Configure status badge for explicit status
     private func configureStatusBadge(status: UserStatus) {
         statusBadge.text = status.rawValue.capitalized
         statusBadge.textColor = .white
@@ -167,12 +230,38 @@ class UserDetailViewController: UIViewController {
         }
     }
     
-    private func configureActionButtons(for status: UserStatus) {
-        // Hide all buttons first
+    // ✅ Configure default status badge when status field is missing
+    private func configureDefaultStatusBadge(for role: UserRole) {
+        statusBadge.textColor = .white
+        statusBadge.layer.cornerRadius = 14
+        statusBadge.layer.masksToBounds = true
+        statusBadge.textAlignment = .center
+        
+        switch role {
+        case .donor:
+            statusBadge.text = "Active"
+            statusBadge.backgroundColor = .systemBlue
+        case .ngo:
+            statusBadge.text = "Pending"
+            statusBadge.backgroundColor = .systemOrange
+        case .admin:
+            statusBadge.text = "Active"
+            statusBadge.backgroundColor = .systemGreen
+        }
+    }
+    
+    // ✅ Hide all action buttons
+    private func hideAllButtons() {
         suspendButton.isHidden = true
         resumeButton.isHidden = true
         verifyButton.isHidden = true
         rejectButton.isHidden = true
+    }
+    
+    // ✅ Configure action buttons based on status (for NGOs only)
+    private func configureActionButtons(for status: UserStatus) {
+        // Hide all buttons first
+        hideAllButtons()
         
         // Show relevant buttons based on status
         switch status {
@@ -187,7 +276,7 @@ class UserDetailViewController: UIViewController {
             rejectButton.isHidden = false
             
         case .rejected:
-            // Could add "Review" button here if needed
+            // No buttons for rejected
             break
             
         case .active:
@@ -253,33 +342,19 @@ class UserDetailViewController: UIViewController {
     }
     
     @IBAction func verifyButtonTapped(_ sender: UIButton) {
-        print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-        print("✅ VERIFY BUTTON TAPPED!")
-        print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-        
-        guard let user = user else {
-            print("❌ ERROR: user is nil!")
-            return
-        }
-        
-        print("🔵 User to verify: \(user.organizationName ?? "Unknown")")
+        guard let user = user else { return }
         
         let alert = UIAlertController(
-            title: "Verify User",
-            message: "Approve \(user.organizationName ?? user.username ?? "this user")?",
+            title: "Verify NGO",
+            message: "Approve \(user.organizationName ?? "this NGO")?",
             preferredStyle: .alert
         )
         
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
-            print("❌ User cancelled verification")
-        })
-        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         alert.addAction(UIAlertAction(title: "Verify", style: .default) { [weak self] _ in
-            print("✅ User confirmed verification")
             self?.updateUserStatus(userId: user.id, newStatus: .verified)
         })
         
-        print("📱 Presenting alert...")
         present(alert, animated: true)
     }
     
@@ -287,8 +362,8 @@ class UserDetailViewController: UIViewController {
         guard let user = user else { return }
         
         let alert = UIAlertController(
-            title: "Reject User",
-            message: "Reject \(user.organizationName ?? user.username ?? "this user")?",
+            title: "Reject NGO",
+            message: "Reject \(user.organizationName ?? "this NGO")?",
             preferredStyle: .alert
         )
         
@@ -300,7 +375,8 @@ class UserDetailViewController: UIViewController {
         present(alert, animated: true)
     }
     
-    // ✅ NEW: Update user status in Firebase
+    // MARK: - Update User Status in Firebase
+    // MARK: - Update User Status in Firebase
     private func updateUserStatus(userId: String, newStatus: UserStatus) {
         print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
         print("🔄 Updating user status...")
@@ -335,20 +411,43 @@ class UserDetailViewController: UIViewController {
                 }
                 
                 print("✅ SUCCESS: Status updated to \(newStatus.rawValue)")
-
-                if newStatus == .verified {
-                    DonationService.shared.notify(
-                        type: .userApproved,
-                        relatedDonationId: nil,
-                        toUserId: userId,
-                        audience: nil
-                    )
-                }
+                
+                // ✅ UPDATE LOCAL USER OBJECT IMMEDIATELY
+                
+                // ✅ REFRESH THE UI IMMEDIATELY
+                self?.refreshUIAfterStatusChange(newStatus: newStatus)
                 
                 // Show success message
                 self?.showSuccessAlert(newStatus: newStatus)
             }
         }
+    }
+    
+    // ✅ NEW: Refresh UI immediately after status change
+    private func refreshUIAfterStatusChange(newStatus: UserStatus) {
+        print("🔄 Refreshing UI with new status: \(newStatus.rawValue)")
+        
+        // Update status badge
+        configureStatusBadge(status: newStatus)
+        
+        // Update action buttons
+        configureActionButtons(for: newStatus)
+        
+        // Update stats visibility
+        if newStatus == .verified || newStatus == .suspended {
+            if statsContainer.isHidden {
+                statsContainer.isHidden = false
+                donationsNumberLabel.text = "..."
+                mealsNumberLabel.text = "..."
+                if let userId = user?.id {
+                    fetchDonationStats(for: userId)
+                }
+            }
+        } else {
+            statsContainer.isHidden = true
+        }
+        
+        print("✅ UI refreshed successfully")
     }
     
     private func showSuccessAlert(newStatus: UserStatus) {
@@ -371,7 +470,6 @@ class UserDetailViewController: UIViewController {
         )
         
         alert.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
-            // Go back to list
             self?.navigationController?.popViewController(animated: true)
         })
         
@@ -397,7 +495,6 @@ class UserDetailViewController: UIViewController {
             return
         }
         
-        header.clear.isHidden = true
         header.frame = headerContainer.bounds
         header.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         header.takaffalLabel.text = "Takaffal"
@@ -428,7 +525,7 @@ class UserDetailViewController: UIViewController {
         nav.frame = navContainer.bounds
         nav.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
-        // Admin view - show users button
+        // Admin view
         nav.listBtn.isHidden = true
         nav.listLab.isHidden = true
         nav.ngoLab.isHidden = true
@@ -450,16 +547,14 @@ class UserDetailViewController: UIViewController {
         navContainer.addSubview(nav)
         self.bottomNav = nav
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        // ✅ Hide navigation bar - use custom header instead
         navigationController?.setNavigationBarHidden(true, animated: true)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        // Keep it hidden for consistency
         navigationController?.setNavigationBarHidden(true, animated: true)
     }
-    
 }

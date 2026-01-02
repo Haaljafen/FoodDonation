@@ -170,12 +170,19 @@ final class NotificationViewController: UIViewController, UITableViewDataSource,
 
         return cell
     }
-
-    // MARK: - Header
     @objc private func openNotifications() {
-        navigationController?.popViewController(animated: true)
-    }
+        print("🔔 Notifications tapped")
 
+        let sb = UIStoryboard(name: "NotificationsStoryboard", bundle: nil)
+
+        guard let vc = sb.instantiateViewController(withIdentifier: "NotificationVC") as? NotificationViewController else {
+            print("❌ Could not instantiate NotificationViewController")
+            return
+        }
+
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
     @objc private func didTapBack() {
         if let nav = navigationController, nav.viewControllers.first != self {
             nav.popViewController(animated: true)

@@ -581,7 +581,7 @@ class EditProfileViewController: UIViewController {
         switch role {
 
         case .donor:
-            nav.formBtn.isHidden = true
+            nav.formBtn.isHidden = false
             nav.listBtn.isHidden = false
             nav.proBtn.isHidden = false
             nav.impBtn.isHidden = false
@@ -621,6 +621,7 @@ class EditProfileViewController: UIViewController {
     
         }
     }
+
 
        // MARK: - Nav Actions
     
@@ -678,8 +679,8 @@ class EditProfileViewController: UIViewController {
     }
     
     @objc private func openUsers() {
-        let sb = UIStoryboard(name: "AdminStoryboard", bundle: nil)
-        let vc = sb.instantiateViewController(withIdentifier: "UsersVC")
+        let sb = UIStoryboard(name: "AbdullaStoryboard2", bundle: nil)
+        let vc = sb.instantiateViewController(withIdentifier: "AbdullaViewController2")
         push(vc)
     }
     
@@ -711,7 +712,6 @@ class EditProfileViewController: UIViewController {
         push(vc)
     }
 }
-
 
 // MARK: - Image Picker Delegate
 

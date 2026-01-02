@@ -557,7 +557,7 @@ class LocationPickupViewController: UIViewController, DonationDraftReceivable {
         switch role {
 
         case .donor:
-            nav.formBtn.isHidden = true
+            nav.formBtn.isHidden = false
             nav.listBtn.isHidden = false
             nav.proBtn.isHidden = false
             nav.impBtn.isHidden = false
@@ -655,8 +655,8 @@ class LocationPickupViewController: UIViewController, DonationDraftReceivable {
     }
     
     @objc private func openUsers() {
-        let sb = UIStoryboard(name: "AdminStoryboard", bundle: nil)
-        let vc = sb.instantiateViewController(withIdentifier: "UsersVC")
+        let sb = UIStoryboard(name: "AbdullaStoryboard2", bundle: nil)
+        let vc = sb.instantiateViewController(withIdentifier: "AbdullaViewController2")
         push(vc)
     }
     

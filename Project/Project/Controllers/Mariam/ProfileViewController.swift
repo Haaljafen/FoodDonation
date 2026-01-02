@@ -566,8 +566,8 @@ class ProfileViewController: UIViewController {
     }
     
     @objc private func openUsers() {
-        let sb = UIStoryboard(name: "AdminStoryboard", bundle: nil)
-        let vc = sb.instantiateViewController(withIdentifier: "UsersVC")
+        let sb = UIStoryboard(name: "AbdullaStoryboard2", bundle: nil)
+        let vc = sb.instantiateViewController(withIdentifier: "AbdullaViewController2")
         push(vc)
     }
     

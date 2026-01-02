@@ -155,7 +155,7 @@
                     </view>
                     <connections>
                         <outlet property="acceptButton" destination="rnS-D4-bmK" id="527-Lj-VEG"/>
-                        <outlet property="backNot" destination="asj-kS-lgN" id="Ade-Od-Z2h"/>
+                        <outlet property="backNot" destination="asj-kS-lgN" id="cxo-la-Cgz"/>
                         <outlet property="categoryLabel" destination="N8j-Ug-2E7" id="aIR-WM-ccW"/>
                         <outlet property="categoryPillView" destination="7bg-1w-mcX" id="LOC-dO-8Dx"/>
                         <outlet property="donorAddressLabel" destination="8ht-o1-xvc" id="4qP-ZU-WKY"/>

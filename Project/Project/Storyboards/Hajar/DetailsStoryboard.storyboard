@@ -16,6 +16,21 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eqd-xc-KNc">
+                                <rect key="frame" x="0.0" y="0.0" width="430" height="170"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="asj-kS-lgN">
+                                        <rect key="frame" x="20" y="87" width="78" height="39"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="chevron.left" catalog="system" title="Back"/>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.030337337410000002" green="0.030725426300000001" blue="0.1612304688" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="tintColor" red="0.030337337410000002" green="0.030725426300000001" blue="0.1612304688" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            </view>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6lT-Ic-uS5">
                                 <rect key="frame" x="0.0" y="178" width="393" height="574"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -143,19 +158,13 @@
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="asj-kS-lgN">
-                                <rect key="frame" x="44" y="71" width="62" height="39"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Back"/>
-                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="U15-Es-aCE"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <connections>
                         <outlet property="acceptButton" destination="rnS-D4-bmK" id="527-Lj-VEG"/>
-                        <outlet property="backNot" destination="asj-kS-lgN" id="Ade-Od-Z2h"/>
+                        <outlet property="backNot" destination="asj-kS-lgN" id="cxo-la-Cgz"/>
                         <outlet property="categoryLabel" destination="N8j-Ug-2E7" id="aIR-WM-ccW"/>
                         <outlet property="categoryPillView" destination="7bg-1w-mcX" id="LOC-dO-8Dx"/>
                         <outlet property="donorAddressLabel" destination="8ht-o1-xvc" id="4qP-ZU-WKY"/>
@@ -176,6 +185,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="chevron.left" catalog="system" width="97" height="128"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

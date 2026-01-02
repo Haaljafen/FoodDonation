@@ -107,7 +107,7 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let item = items[indexPath.row]
 
-        let sb = UIStoryboard(name: "HajarStoryboard", bundle: nil)
+        let sb = UIStoryboard(name: "DetailsStoryboard", bundle: nil)
         guard let vc = sb.instantiateViewController(withIdentifier: "DonationDetailVC")
                 as? DonationDetailViewController else {
             print("❌ Storyboard ID not set for DonationDetailViewController")
@@ -290,7 +290,7 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
         // Customize header
         header.takaffalLabel.text = "Takaffal"
         header.backBtn.isHidden = true
-
+        header.clear.isHidden = true
         header.notiBtn.addTarget(self,
                                  action: #selector(openNotifications),
                                  for: .touchUpInside)

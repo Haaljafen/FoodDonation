@@ -3,8 +3,10 @@ import FirebaseFirestore
 
 final class DonationDetailViewController: UIViewController {
 
-    @IBOutlet weak var headerContainer: UIView!
+    @IBOutlet weak var headerContainer: UIView?
     private var headerView: HeaderView?
+
+    @IBOutlet weak var backNot: UIButton?
 
     // Donor
     @IBOutlet weak var donorNameLabel: UILabel!
@@ -91,6 +93,10 @@ Thank you for your continued efforts in supporting the community.
         setupHeader()
         applyStaticUIStyle()
 
+        backNot?.addTarget(self, action: #selector(backNotTapped), for: .touchUpInside)
+        acceptButton.addTarget(self, action: #selector(acceptDonationTapped), for: .touchUpInside)
+        rejectButton.addTarget(self, action: #selector(rejectDonationTapped), for: .touchUpInside)
+
         print("✅ detail opened donationId:", donationId ?? "nil", "donorId:", donorId ?? "nil")
 
         guard donationId != nil || passedItem != nil else {
@@ -118,9 +124,11 @@ Thank you for your continued efforts in supporting the community.
         super.viewDidLayoutSubviews()
 
             donorImageView.layoutIfNeeded()
-            headerContainer.isUserInteractionEnabled = true
+            headerContainer?.isUserInteractionEnabled = true
             headerView?.isUserInteractionEnabled = true
-            view.bringSubviewToFront(headerContainer)
+            if let headerContainer {
+                view.bringSubviewToFront(headerContainer)
+            }
             donorImageView.layer.cornerRadius = donorImageView.bounds.width / 2
             categoryPillView.layer.cornerRadius = categoryPillView.bounds.height / 2
             categoryPillView.clipsToBounds = true
@@ -331,6 +339,7 @@ Thank you for your continued efforts in supporting the community.
     }
 
     private func setupHeader() {
+        guard let headerContainer else { return }
         guard let header = Bundle.main.loadNibNamed("HeaderView", owner: nil)?.first as? HeaderView else { return }
         header.frame = headerContainer.bounds
         header.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -347,9 +356,6 @@ Thank you for your continued efforts in supporting the community.
         header.notiBtn.addTarget(self, action: #selector(openNotifications), for: .touchUpInside)
         headerContainer.addSubview(header)
         self.headerView = header
-
-        acceptButton.addTarget(self, action: #selector(acceptDonationTapped), for: .touchUpInside)
-        rejectButton.addTarget(self, action: #selector(rejectDonationTapped), for: .touchUpInside)
     }
 
     @objc private func backButtonTapped() {
@@ -358,6 +364,10 @@ Thank you for your continued efforts in supporting the community.
         } else {
             dismiss(animated: true)
         }
+    }
+
+    @objc private func backNotTapped() {
+        backButtonTapped()
     }
 
     @objc private func openNotifications() {

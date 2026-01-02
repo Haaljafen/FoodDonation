@@ -43,6 +43,7 @@ class HajarViewController1: UIViewController {
 
         header.takaffalLabel.text = "Takaffal"
         header.search.isHidden = true
+        header.clear.isHidden = true
         header.backBtn.isHidden = false
         header.notiBtn.addTarget(self,
                                  action: #selector(openNotifications),

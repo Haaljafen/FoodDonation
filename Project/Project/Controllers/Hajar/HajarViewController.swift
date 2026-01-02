@@ -127,6 +127,11 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
     private func listenForPendingDonations() {
         listener?.remove()
 
+        guard let ngoId = Auth.auth().currentUser?.uid else {
+            print("❌ No logged in user")
+            return
+        }
+
         listener = db.collection("Donations")
             .whereField("status", isEqualTo: "pending")
             .order(by: "createdAt", descending: true)
@@ -139,7 +144,13 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
 
                 let docs = snap?.documents ?? []
 
-                self?.items = docs.compactMap { doc in
+                let visibleDocs = docs.filter { doc in
+                    let data = doc.data()
+                    let rejectedBy = data["rejectedBy"] as? [String] ?? []
+                    return !rejectedBy.contains(ngoId)
+                }
+
+                self?.items = visibleDocs.compactMap { doc in
                     let d = doc.data()
 
                     return DonationItem(

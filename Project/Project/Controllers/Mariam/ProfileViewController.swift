@@ -68,6 +68,31 @@ class ProfileViewController: UIViewController {
                 .removeObserver(withHandle: handle)
         }
     }
+
+    private func roleTopics(for role: UserRole) -> [String] {
+        // Keep topics aligned with Firestore audience values used by NotificationViewController
+        return [role.rawValue]
+    }
+
+    private func subscribeToNotificationTopics(for role: UserRole) {
+        roleTopics(for: role).forEach { topic in
+            Messaging.messaging().subscribe(toTopic: topic) { error in
+                if let error {
+                    print("❌ Failed to subscribe to topic \(topic):", error.localizedDescription)
+                }
+            }
+        }
+    }
+
+    private func unsubscribeFromNotificationTopics(for role: UserRole) {
+        roleTopics(for: role).forEach { topic in
+            Messaging.messaging().unsubscribe(fromTopic: topic) { error in
+                if let error {
+                    print("❌ Failed to unsubscribe from topic \(topic):", error.localizedDescription)
+                }
+            }
+        }
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -219,6 +244,10 @@ class ProfileViewController: UIViewController {
                     DispatchQueue.main.async {
                         UIApplication.shared.registerForRemoteNotifications()
                     }
+
+                    if let role = self.currentUserRole {
+                        self.subscribeToNotificationTopics(for: role)
+                    }
                 } else {
                     DispatchQueue.main.async {
                         sender.setOn(false, animated: true)
@@ -227,6 +256,10 @@ class ProfileViewController: UIViewController {
                 }
             }
         } else {
+            if let role = currentUserRole {
+                unsubscribeFromNotificationTopics(for: role)
+            }
+
             UIApplication.shared.unregisterForRemoteNotifications()
 
             Messaging.messaging().deleteToken { error in
@@ -257,6 +290,10 @@ class ProfileViewController: UIViewController {
 
         let enabled = UserDefaults.standard.bool(forKey: "notificationsEnabled")
         notificationSwitch.isOn = enabled
+
+        if enabled, let role = currentUserRole {
+            subscribeToNotificationTopics(for: role)
+        }
     }
 
 

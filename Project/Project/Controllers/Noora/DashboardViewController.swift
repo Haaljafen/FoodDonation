@@ -163,7 +163,8 @@ final class DashboardViewController: BaseChromeViewController {
         
         db.collection("Users")
             .addSnapshotListener { snapshot, _ in
-                self.statValue3Label.text = "\(snapshot?.documents.count ?? 0)"
+                let totalUsers = snapshot?.documents.count ?? 0
+                self.statValue3Label.text = "\(max(totalUsers - 1, 0))"
             }
 
     }

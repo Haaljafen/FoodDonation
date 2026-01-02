@@ -37,7 +37,7 @@ final class DonationTrackerCell: UITableViewCell {
         // reset all
         circles.forEach {
             $0?.image = UIImage(systemName: "circle")
-            $0?.tintColor = .systemGray3
+            $0?.tintColor = navyBlue
         }
 
         let s = currentStatus.lowercased()

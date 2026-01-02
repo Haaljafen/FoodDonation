@@ -132,13 +132,22 @@ class HussainViewController2: UIViewController, UITableViewDataSource, UITableVi
         return nil
     }
     //MARK: - API CALL
+        
+        private var chatAPIKey: String {
+            guard let key = ProcessInfo.processInfo.environment["CHAT_API_KEY"],
+                  !key.isEmpty else {
+                fatalError("CHAT_API_KEY not found in Environment Variables")
+            }
+            return key
+        }
+        
         func sendMessageToAPI(userText: String) {
 
             let url = URL(string: "https://api.openai.com/v1/chat/completions")!
-
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
-            request.setValue("Bearer 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", forHTTPHeaderField: "Authorization")
+
+            request.setValue("Bearer \(chatAPIKey)", forHTTPHeaderField: "Authorization")
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
             let body: [String: Any] = [
@@ -158,7 +167,9 @@ class HussainViewController2: UIViewController, UITableViewDataSource, UITableVi
 
                 DispatchQueue.main.async {
                     self.hideTypingIndicator()
-                    self.messages.append(Message(text: reply, isUser: false, isTyping: false))
+                    self.messages.append(
+                        Message(text: reply, isUser: false, isTyping: false)
+                    )
                     self.tableView.reloadData()
                     self.scrollToBottom()
                 }

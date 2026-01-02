@@ -34,6 +34,15 @@ class FacilityDropOffViewController: UIViewController, DonationDraftReceivable {
     private var selectedDate: Date?
     private var selectedTime: Date?
 
+    
+    private lazy var receiptDateFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateStyle = .medium
+        f.timeStyle = .short
+        return f
+    }()
+    
+
     var selectedNGO: NGOOption?
     
     private let timeFormatter: DateFormatter = {
@@ -442,26 +451,45 @@ class FacilityDropOffViewController: UIViewController, DonationDraftReceivable {
     
     private func showSuccessAndRedirect() {
 
-        let alert = UIAlertController(
-            title: "Success ",
-            message: "Your donation has been created successfully.",
-            preferredStyle: .alert
-        )
+            let itemName = donationDraft?.item ?? "—"
+            let category = donationDraft?.category.rawValue ?? "—"
+            let quantity = donationDraft?.quantity.description ?? "—"
+            let pickupMethod = "Drop-off"
+            let pickupDate = selectedDate != nil && selectedTime != nil ? receiptDateFormatter.string(from: merge(date: selectedDate!, time: selectedTime!)) : "—"
+            let location = selectedNGO?.name ?? "—"
 
-        alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
-            let sb = UIStoryboard(name: "History&statusNoora", bundle: nil)
-            let historyVC = sb.instantiateViewController(
-                withIdentifier: "History&statusNoora"
+            let body = """
+    🧾 Receipt 1: Donation Created (DONOR)
+    Title: Donation Creation Receipt
+    Thank you for your generosity.
+    This receipt confirms that your donation has been successfully created in our system.
+    Donation Details:
+    • Item Name: \(itemName)
+    • Category: \(category)
+    • Quantity: \(quantity)
+    • Pickup Method: \(pickupMethod)
+    • Pickup Date: \(pickupDate)
+    • Location: \(location)
+    Your donation is now visible to eligible NGOs.
+    We sincerely appreciate your contribution in supporting those in need.
+    """
+
+            let qrPayload = ReceiptPopupViewController.makeGithubPagesReceiptUrl(from: body)
+
+            let popup = ReceiptPopupViewController(
+                receiptTitle: "Donation Creation Receipt",
+                receiptBody: body,
+                qrPayload: qrPayload
             )
+            popup.onDismiss = { [weak self] in
+                guard let self = self else { return }
+                let sb = UIStoryboard(name: "History&statusNoora", bundle: nil)
+                let historyVC = sb.instantiateViewController(withIdentifier: "History&statusNoora")
+                self.navigationController?.setViewControllers([historyVC], animated: true)
+            }
+            present(popup, animated: true)
+        }
 
-            self.navigationController?.setViewControllers(
-                [historyVC],
-                animated: true
-            )
-        })
-
-        present(alert, animated: true)
-    }
 
 
 

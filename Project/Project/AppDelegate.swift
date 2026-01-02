@@ -23,16 +23,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         UNUserNotificationCenter.current().delegate = self
         Messaging.messaging().delegate = self
 
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
-            if let error {
-                print("❌ Notification permission error:", error.localizedDescription)
-                return
-            }
-            if granted {
-                DispatchQueue.main.async {
-                    application.registerForRemoteNotifications()
+        if UserDefaults.standard.object(forKey: "notificationsEnabled") == nil {
+            UserDefaults.standard.set(true, forKey: "notificationsEnabled")
+        }
+
+        let notificationsEnabled = UserDefaults.standard.bool(forKey: "notificationsEnabled")
+        if notificationsEnabled {
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
+                if let error {
+                    print("❌ Notification permission error:", error.localizedDescription)
+                    return
+                }
+                if granted {
+                    DispatchQueue.main.async {
+                        application.registerForRemoteNotifications()
+                    }
                 }
             }
+        } else {
+            application.unregisterForRemoteNotifications()
         }
 
         return true
@@ -49,6 +58,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         guard let fcmToken, !fcmToken.isEmpty else { return }
         print("✅ FCM token:", fcmToken)
+
+        let notificationsEnabled = UserDefaults.standard.bool(forKey: "notificationsEnabled")
+        guard notificationsEnabled else {
+            print("ℹ️ Notifications disabled; skipping FCM token save")
+            return
+        }
+
         saveFcmTokenToFirestore(fcmToken)
     }
 

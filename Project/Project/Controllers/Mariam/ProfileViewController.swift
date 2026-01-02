@@ -9,6 +9,8 @@ import UIKit
 import FirebaseAuth
 import FirebaseFirestore
 import FirebaseDatabase
+import FirebaseMessaging
+import UserNotifications
 
 class ProfileViewController: UIViewController {
     
@@ -207,21 +209,53 @@ class ProfileViewController: UIViewController {
         let enabled = sender.isOn
         UserDefaults.standard.set(enabled, forKey: "notificationsEnabled")
 
+        if enabled {
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
+                if let error {
+                    print("❌ Notification permission error:", error.localizedDescription)
+                    return
+                }
+                if granted {
+                    DispatchQueue.main.async {
+                        UIApplication.shared.registerForRemoteNotifications()
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        sender.setOn(false, animated: true)
+                        UserDefaults.standard.set(false, forKey: "notificationsEnabled")
+                    }
+                }
+            }
+        } else {
+            UIApplication.shared.unregisterForRemoteNotifications()
+
+            Messaging.messaging().deleteToken { error in
+                if let error {
+                    print("❌ Failed to delete FCM token:", error.localizedDescription)
+                }
+            }
+        }
+
         guard let uid = Auth.auth().currentUser?.uid else { return }
 
-        Firestore.firestore()
-            .collection("Users")
-            .document(uid)
-            .updateData([
-                "notificationsEnabled": enabled
-            ])
+        var update: [String: Any] = [
+            "notificationsEnabled": enabled
+        ]
+
+        if !enabled {
+            update["fcmToken"] = FieldValue.delete()
+        }
+
+        Firestore.firestore().collection("Users").document(uid).updateData(update)
     }
     
     private func loadNotificationSetting() {
 
-        let enabled = UserDefaults.standard.bool(
-            forKey: "notificationsEnabled"
-        )
+        if UserDefaults.standard.object(forKey: "notificationsEnabled") == nil {
+            UserDefaults.standard.set(true, forKey: "notificationsEnabled")
+        }
+
+        let enabled = UserDefaults.standard.bool(forKey: "notificationsEnabled")
         notificationSwitch.isOn = enabled
     }
 

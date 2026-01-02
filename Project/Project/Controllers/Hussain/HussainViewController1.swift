@@ -234,7 +234,7 @@ class HussainViewController1: UIViewController {
           let m = AchievementManager.shared
           
           let progresses: [Float] = [
-              m.collectionsCompleted >= 1 ? 1.0 : 0.0,          // 1: First Step
+              m.donationCount >= 1 ? 1.0 : 0.0,          // 1: First Step
               min(Float(m.donationCount) / 10.0, 1.0),          // 2: Food Warrior
               min(Float(m.mealsProvided) / 30.0, 1.0),          // 3: Impact Maker
               min(Float(m.uniqueNGOs.count) / 3.0, 1.0),        // 4: Variety Giver

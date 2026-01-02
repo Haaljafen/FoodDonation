@@ -24,7 +24,7 @@ final class HistoryViewController: BaseChromeViewController {
     // MARK: - Outlets (from storyboard)
     @IBOutlet weak var table: UITableView!
 
-
+    
     // MARK: - Firestore
     private let db = Firestore.firestore()
     private var donations: [DonationHistoryItem] = []
@@ -51,7 +51,8 @@ final class HistoryViewController: BaseChromeViewController {
         
         super.viewDidLoad()
 
-
+        
+        
         guard Auth.auth().currentUser != nil || TEST_USER_ID != nil else {
             donations.removeAll()
             showEmptyPlaceholder(message: "Please log in.")
@@ -102,6 +103,7 @@ final class HistoryViewController: BaseChromeViewController {
         
     }
 
+    
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -127,6 +129,34 @@ final class HistoryViewController: BaseChromeViewController {
 
     }
 
+    private func redonateDonation(donationID: String) {
+            Firestore.firestore()
+                .collection("Donations")
+                .whereField("id", isEqualTo: donationID)
+                .getDocuments { snapshot, error in
+                    guard let donationData = snapshot?.documents.first?.data() else {
+                        print("❌ Original donation not found")
+                        return
+                    }
+
+                    DonationRedonate.redonate(from: donationData) { success in
+                        DispatchQueue.main.async {
+                            if success {
+                                let alert = UIAlertController(
+                                    title: "Success",
+                                    message: "Donation re-created with status pending",
+                                    preferredStyle: .alert
+                                )
+                                alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+                                    // ✅ refresh history list
+                                    self.loadDonationsForCurrentRole()
+                                })
+                                self.present(alert, animated: true)
+                            }
+                        }
+                    }
+                }
+        }
     
     private func resolvedUserIdForTestingOrAuth() -> String? {
            return TEST_USER_ID ?? Auth.auth().currentUser?.uid
@@ -327,6 +357,48 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
         cell.dateLabel.text = dateString
         cell.statusLabel.text = donation.status.displayText
 
+        // ✅ Show redonate button ONLY if completed
+            cell.redonateButton.isHidden = donation.status != "delivered"
+
+            // ✅ Handle redonate button tap
+            cell.onRedonateTapped = { [weak self] in
+                guard let self = self else { return }
+
+                let alert = UIAlertController(
+                    title: "Confirmation",
+                    message: "Are you sure you want to re-donate?",
+                    preferredStyle: .alert
+                )
+
+                alert.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
+                    Firestore.firestore()
+                        .collection("Donations")
+                        .whereField("id", isEqualTo: donation.donationID)
+                        .getDocuments { snapshot, _ in
+                            guard let donationData = snapshot?.documents.first?.data() else { return }
+
+                            DonationRedonate.redonate(from: donationData) { success in
+                                if success {
+                                    DispatchQueue.main.async {
+                                        let successAlert = UIAlertController(
+                                            title: "Success",
+                                            message: "Re-donated successfully",
+                                            preferredStyle: .alert
+                                        )
+                                        successAlert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+                                            self.loadDonationsForCurrentRole()
+                                        })
+                                        self.present(successAlert, animated: true)
+                                    }
+                                }
+                            }
+                        }
+                })
+
+                alert.addAction(UIAlertAction(title: "No", style: .cancel))
+                self.present(alert, animated: true)
+            }
+        
         return cell
     }
 
@@ -336,11 +408,12 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
 
         if currentRole == .ngo {
-                    performSegue(withIdentifier: "showNGODonationDetails", sender: indexPath)
-                } else {
-                    performSegue(withIdentifier: "showDonationDetails", sender: indexPath)
-                }
+            performSegue(withIdentifier: "showNGODonationDetails", sender: indexPath)
+        } else {
+            performSegue(withIdentifier: "showDonationDetails", sender: indexPath)
+        }
     }
+
 
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -353,6 +426,9 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
 
            }
        }
+
+
+    // MARK: - Redonate Button
     
     
 }

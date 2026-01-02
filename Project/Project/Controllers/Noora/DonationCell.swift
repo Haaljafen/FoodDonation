@@ -13,6 +13,12 @@ final class DonationCell: UITableViewCell {
     @IBOutlet weak var methodLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var statusLabel: UILabel!
+    @IBOutlet weak var redonateButton: UIButton!
+       var onRedonateTapped: (() -> Void)?
+
+       @IBAction func redonateButtonTapped(_ sender: UIButton) {
+           onRedonateTapped?()
+       }
 
 
     override func awakeFromNib() {

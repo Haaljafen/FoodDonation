@@ -97,7 +97,8 @@ final class CreateDonationViewController: UIViewController,
         // ✅ No DonationType.allCases needed (use your real app labels)
         let types: [String] = [
             "Waste Prevented",
-            "Meals Provided"
+            "Meals Provided",
+            "Other"  
         ]
 
         button.menu = UIMenu(

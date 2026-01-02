@@ -47,9 +47,8 @@ class ProfileViewController: UIViewController {
         setupActions()
         setupHeader()
         setupNav()
-        listenToRealtimeProfileUpdates()
         loadNotificationSetting()
-        loadProfileFromFirestoreIfNeeded()
+        loadProfileFromFirestoreIfNeeded(force: false)
     }
     
     override func viewDidLayoutSubviews() {
@@ -66,6 +65,7 @@ class ProfileViewController: UIViewController {
             rtdb.child("users_live")
                 .child(uid)
                 .removeObserver(withHandle: handle)
+            profileListenerHandle = nil
         }
     }
 
@@ -97,24 +97,39 @@ class ProfileViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: false)
+
+        listenToRealtimeProfileUpdates()
+
+        loadProfileFromFirestoreIfNeeded(force: true)
     }
     
 
     private func listenToRealtimeProfileUpdates() {
-        
+
         guard let uid = Auth.auth().currentUser?.uid else { return }
+
+        if let handle = profileListenerHandle {
+            rtdb.child("users_live")
+                .child(uid)
+                .removeObserver(withHandle: handle)
+            profileListenerHandle = nil
+        }
         
         profileListenerHandle = rtdb
             .child("users_live")
             .child(uid)
             .observe(.value, with: { [weak self] snapshot in
                 
+                guard let self = self else { return }
+
                 guard
-                    let self = self,
                     let data = snapshot.value as? [String: Any],
                     let roleString = data["role"] as? String,
                     let role = UserRole(rawValue: roleString)
-                else { return }
+                else {
+                    self.loadProfileFromFirestoreIfNeeded(force: true)
+                    return
+                }
                 
                 let displayName = data["displayName"] as? String ?? ""
                 let imageUrl = data["profileImageUrl"] as? String
@@ -140,7 +155,7 @@ class ProfileViewController: UIViewController {
     }
     
     
-    private func loadProfileFromFirestoreIfNeeded() {
+    private func loadProfileFromFirestoreIfNeeded(force: Bool) {
 
         guard let uid = Auth.auth().currentUser?.uid else { return }
 
@@ -156,7 +171,7 @@ class ProfileViewController: UIViewController {
                     let role = UserRole(rawValue: roleString)
                 else { return }
 
-                if self.didLoadInitialProfile {
+                if self.didLoadInitialProfile && !force {
                     return
                 }
 

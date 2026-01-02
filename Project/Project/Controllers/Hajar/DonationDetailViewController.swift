@@ -378,6 +378,14 @@ Thank you for your continued efforts in supporting the community.
                 print("❌ Error accepting donation:", error.localizedDescription)
                 self.showError(message: "Failed to accept donation")
             } else {
+                if let donorId = self.donorId {
+                    DonationService.shared.notify(
+                        type: .donationCollected,
+                        relatedDonationId: donationId,
+                        toUserId: donorId,
+                        audience: nil
+                    )
+                }
                 DispatchQueue.main.async {
                     self.presentAcceptanceReceiptPopup()
                 }

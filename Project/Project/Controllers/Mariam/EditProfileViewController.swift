@@ -454,6 +454,7 @@ class EditProfileViewController: UIViewController {
         // Customize header
         header.takaffalLabel.text = "Takaffal"
         header.search.isHidden = true
+        header.clear.isHidden = true
         header.backBtn.isHidden = false
         
         header.backBtn.addTarget(self,

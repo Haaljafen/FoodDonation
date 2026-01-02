@@ -7,7 +7,9 @@ class HeaderView: UIView {
     @IBOutlet weak var notiBtn: UIButton!
     @IBOutlet weak var search: UISearchBar!
     
-        var onNotificationTap: (() -> Void)?
+    @IBOutlet weak var clear: UILabel!
+    
+    var onNotificationTap: (() -> Void)?
 
         @IBAction func notificationTapped(_ sender: UIButton) {
             onNotificationTap?()

@@ -3,6 +3,7 @@
     <device id="retina6_3" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -47,6 +48,13 @@
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Clear" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="05T-wL-IYe">
+                            <rect key="frame" x="345" y="90" width="40" height="21"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" name="size_red"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                     </subviews>
                     <color key="backgroundColor" red="0.030337337410000002" green="0.030725426300000001" blue="0.1612304688" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                 </view>
@@ -55,6 +63,7 @@
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <connections>
                 <outlet property="backBtn" destination="uZ2-D9-c2f" id="5rx-hh-fHB"/>
+                <outlet property="clear" destination="05T-wL-IYe" id="OAk-fY-ccw"/>
                 <outlet property="notiBtn" destination="vCh-rk-0R0" id="r6K-jE-eb5"/>
                 <outlet property="search" destination="k9n-yT-sJt" id="f9d-5Z-SRu"/>
                 <outlet property="takaffalLabel" destination="tNO-TE-7Fe" id="wpI-6r-Whv"/>
@@ -65,6 +74,9 @@
     <resources>
         <image name="bell.fill" catalog="system" width="123" height="128"/>
         <image name="chevron.left" catalog="system" width="97" height="128"/>
+        <namedColor name="size_red">
+            <color red="1" green="0.34901960784313724" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

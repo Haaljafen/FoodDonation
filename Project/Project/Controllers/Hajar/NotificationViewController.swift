@@ -15,6 +15,9 @@ final class NotificationViewController: UIViewController, UITableViewDataSource,
 
     private let db = Firestore.firestore()
 
+    private var currentUid: String?
+    private var currentRole: UserRole?
+
     struct NotifItem {
         let id: String
         let title: String
@@ -67,6 +70,10 @@ final class NotificationViewController: UIViewController, UITableViewDataSource,
                 .lowercased()
 
             let role = UserRole(rawValue: roleStr) ?? .donor
+
+            self.currentUid = uid
+            self.currentRole = role
+
             self.listenNotifications(uid: uid, role: role)
             print("✅ uid:", uid)
             print("✅ roleStr:", roleStr, " -> roleEnum:", role.rawValue)
@@ -191,6 +198,80 @@ final class NotificationViewController: UIViewController, UITableViewDataSource,
         }
     }
 
+    @objc private func didTapClear() {
+        let alert = UIAlertController(
+            title: "Clear notifications",
+            message: "This will delete all your notifications. This action cannot be undone.",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        alert.addAction(UIAlertAction(title: "Clear", style: .destructive) { [weak self] _ in
+            self?.clearAllNotifications()
+        })
+        present(alert, animated: true)
+    }
+
+    private func clearAllNotifications() {
+        guard let uid = currentUid, let role = currentRole else {
+            print("❌ Missing uid/role for clearing notifications")
+            return
+        }
+
+        func deleteQuery(_ query: Query, completion: @escaping () -> Void) {
+            query.getDocuments { [weak self] snap, err in
+                guard let self else {
+                    completion()
+                    return
+                }
+                if let err {
+                    print("❌ Clear notifications query failed:", err.localizedDescription)
+                    completion()
+                    return
+                }
+
+                let docs = snap?.documents ?? []
+                if docs.isEmpty {
+                    completion()
+                    return
+                }
+
+                let batch = self.db.batch()
+                for d in docs {
+                    batch.deleteDocument(d.reference)
+                }
+                batch.commit { error in
+                    if let error {
+                        print("❌ Clear notifications batch failed:", error.localizedDescription)
+                    }
+                    completion()
+                }
+            }
+        }
+
+        let group = DispatchGroup()
+
+        group.enter()
+        deleteQuery(db.collection("Notifications").whereField("toUserId", isEqualTo: uid)) {
+            group.leave()
+        }
+
+        group.enter()
+        deleteQuery(db.collection("Notifications").whereField("audience", arrayContains: role.rawValue)) {
+            group.leave()
+        }
+
+        group.enter()
+        deleteQuery(db.collection("Notifications").whereField("audience", isEqualTo: role.rawValue)) {
+            group.leave()
+        }
+
+        group.notify(queue: .main) { [weak self] in
+            guard let self else { return }
+            self.items = []
+            self.tableView.reloadData()
+        }
+    }
+
     private func setupHeader() {
         guard let header = Bundle.main.loadNibNamed("HeaderView", owner: nil, options: nil)?.first as? HeaderView else {
             print("❌ Failed to load HeaderView.xib")
@@ -201,10 +282,15 @@ final class NotificationViewController: UIViewController, UITableViewDataSource,
         header.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         header.takaffalLabel.text = "Notification"
         header.backBtn.isHidden = false
+        header.clear.isHidden = false
         header.search.isHidden = true
         header.notiBtn.isHidden = true
         header.backBtn.addTarget(self, action: #selector(didTapBack), for: .touchUpInside)
         header.notiBtn.addTarget(self, action: #selector(openNotifications), for: .touchUpInside)
+
+        header.clear.isUserInteractionEnabled = true
+        header.clear.gestureRecognizers?.forEach { header.clear.removeGestureRecognizer($0) }
+        header.clear.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapClear)))
 
         headerContainer.addSubview(header)
         headerContainer.backgroundColor = .clear

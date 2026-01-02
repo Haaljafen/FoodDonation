@@ -164,6 +164,8 @@ final class CreateDonationViewController: UIViewController,
 
         let item = itemTF.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let qtyText = quantityTF.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let expiryText = expiryTF.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let mfgText = mfgTF.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
 
         guard !item.isEmpty else { showAlert(message: "Enter item name"); return }
         guard let quantity = Int(qtyText), quantity > 0 else { showAlert(message: "Enter valid quantity"); return }
@@ -184,6 +186,33 @@ final class CreateDonationViewController: UIViewController,
             return
         }
 
+        let dateParser: DateFormatter = {
+            let f = DateFormatter()
+            f.locale = Locale(identifier: "en_US_POSIX")
+            f.dateFormat = "dd MMM yyyy"
+            return f
+        }()
+
+        let expiryDate: Date?
+        if expiryText.isEmpty {
+            expiryDate = nil
+        } else if let d = dateParser.date(from: expiryText) {
+            expiryDate = d
+        } else {
+            showAlert(message: "Invalid expiry date")
+            return
+        }
+
+        let manufacturingDate: Date?
+        if mfgText.isEmpty {
+            manufacturingDate = nil
+        } else if let d = dateParser.date(from: mfgText) {
+            manufacturingDate = d
+        } else {
+            showAlert(message: "Invalid manufacturing date")
+            return
+        }
+
         setUploadingUI(true)
         CloudinaryService.shared.upload(image: image) { [weak self] result in
             guard let self = self else { return }
@@ -198,8 +227,8 @@ final class CreateDonationViewController: UIViewController,
                         item: item,
                         quantity: quantity,
                         unit: typeStr,
-                        manufacturingDate: nil,
-                        expiryDate: nil,
+                        manufacturingDate: manufacturingDate,
+                        expiryDate: expiryDate,
                         category: categoryEnum,
                         impactType: typeEnum,
                         imageUrl: imageUrl,

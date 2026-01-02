@@ -28,6 +28,7 @@ final class HistoryViewController: BaseChromeViewController {
     // MARK: - Firestore
     private let db = Firestore.firestore()
     private var donations: [DonationHistoryItem] = []
+    private var donationsListener: ListenerRegistration?
 
     
     private var didResolveRole = false
@@ -125,8 +126,14 @@ final class HistoryViewController: BaseChromeViewController {
         //  Refresh using already-known role
         guard let role = currentRole else { return }
         updateTitleForRole(role)
-//        loadDonationsForCurrentRole()
 
+        // Ensure listener is attached (in case user comes back from another screen)
+        loadDonationsForCurrentRole()
+
+    }
+
+    deinit {
+        donationsListener?.remove()
     }
 
     private func redonateDonation(donationID: String) {
@@ -258,41 +265,41 @@ final class HistoryViewController: BaseChromeViewController {
 
         }
 
-        query.getDocuments { [weak self] snapshot, error in
-                   guard let self = self else { return }
+        donationsListener?.remove()
+        donationsListener = query.addSnapshotListener { [weak self] snapshot, error in
+            guard let self = self else { return }
 
-                   if let error = error {
-                       print("❌ Firestore error:", error)
-                       self.donations = []
-                       self.showEmptyPlaceholder(message: "Failed to load Donations.")
-//                       self.showEmptyPlaceholder(message: "No donations yet.")
-                       self.table.reloadData()
-                       return
-                   }
+            if let error = error {
+                print("❌ Firestore listen error:", error)
+                self.donations = []
+                self.showEmptyPlaceholder(message: "Failed to load Donations.")
+                self.table.reloadData()
+                return
+            }
 
-                   let docs = snapshot?.documents ?? []
+            let docs = snapshot?.documents ?? []
 
-                   self.donations = docs.compactMap { doc in
-                       let data = doc.data()
+            self.donations = docs.compactMap { doc in
+                let data = doc.data()
 
-                       guard
-                           let method = data["donationMethod"] as? String,
-                           let status = data["status"] as? String,
-                           let createdAt = data["createdAt"] as? Timestamp
-                       else {
-                           print("⚠️ Skipping donation \(doc.documentID) (missing donationMethod/status/createdAt)")
-                           return nil
-                       }
+                guard
+                    let method = data["donationMethod"] as? String,
+                    let status = data["status"] as? String,
+                    let createdAt = data["createdAt"] as? Timestamp
+                else {
+                    print("⚠️ Skipping donation \(doc.documentID) (missing donationMethod/status/createdAt)")
+                    return nil
+                }
 
-                       let donationID = (data["id"] as? String) ?? doc.documentID
+                let donationID = (data["id"] as? String) ?? doc.documentID
 
-                       return DonationHistoryItem(
-                           donationID: donationID,
-                           method: method,
-                           createdAt: createdAt,
-                           status: status
-                       )
-                   }
+                return DonationHistoryItem(
+                    donationID: donationID,
+                    method: method,
+                    createdAt: createdAt,
+                    status: status
+                )
+            }
 
             if self.donations.isEmpty {
                 self.showEmptyPlaceholder(message: "No Donations yet.")
@@ -301,7 +308,6 @@ final class HistoryViewController: BaseChromeViewController {
             }
 
             self.table.reloadData()
-
         }
     }
     

@@ -352,7 +352,8 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
         let dateString = dateFormatter.string(from: donation.createdAt.dateValue())
         cell.methodLabel.textColor = .label
 
-        cell.donationIDLabel.text = "ID: \(donation.donationID)"
+        let shortID = donation.donationID.components(separatedBy: "-").first ?? donation.donationID
+        cell.donationIDLabel.text = "ID: \(shortID)"
         cell.methodLabel.text = "Method: \(donation.method.displayText)"
         cell.dateLabel.text = dateString
         cell.statusLabel.text = donation.status.displayText

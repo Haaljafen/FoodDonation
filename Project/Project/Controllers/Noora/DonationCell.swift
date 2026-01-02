@@ -26,6 +26,9 @@ final class DonationCell: UITableViewCell {
 
         // Cell base
         backgroundColor = .clear
+        statusLabel.textAlignment = .center
+        statusLabel.textColor = .white
+
 
 
         // Text styling (force visible)

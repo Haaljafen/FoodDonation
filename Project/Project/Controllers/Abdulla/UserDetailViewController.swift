@@ -1,6 +1,8 @@
 import UIKit
 import FirebaseFirestore  // ✅ ADD THIS
 
+// Uses DonationService for Notifications
+
 class UserDetailViewController: UIViewController {
 
     // MARK: - Outlets
@@ -333,6 +335,15 @@ class UserDetailViewController: UIViewController {
                 }
                 
                 print("✅ SUCCESS: Status updated to \(newStatus.rawValue)")
+
+                if newStatus == .verified {
+                    DonationService.shared.notify(
+                        type: .userApproved,
+                        relatedDonationId: nil,
+                        toUserId: userId,
+                        audience: nil
+                    )
+                }
                 
                 // Show success message
                 self?.showSuccessAlert(newStatus: newStatus)
@@ -386,6 +397,7 @@ class UserDetailViewController: UIViewController {
             return
         }
         
+        header.clear.isHidden = true
         header.frame = headerContainer.bounds
         header.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         header.takaffalLabel.text = "Takaffal"

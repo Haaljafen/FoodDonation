@@ -399,6 +399,13 @@ class FacilityDropOffViewController: UIViewController, DonationDraftReceivable {
                             audience: nil
                         )
 
+                        DonationService.shared.notify(
+                            type: .pickupReminder,
+                            relatedDonationId: draft.id,
+                            toUserId: ngoId,
+                            audience: nil
+                        )
+
                         self.showSuccessAndRedirect()
                     case .failure(let error):
                         self.showAlert(
@@ -508,6 +515,7 @@ class FacilityDropOffViewController: UIViewController, DonationDraftReceivable {
 
         header.takaffalLabel.text = "Takaffal"
         header.search.isHidden = true
+        header.clear.isHidden = true
         header.backBtn.isHidden = false
 
         header.backBtn.addTarget(

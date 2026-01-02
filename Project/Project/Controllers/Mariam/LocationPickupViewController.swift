@@ -426,6 +426,7 @@ class LocationPickupViewController: UIViewController, DonationDraftReceivable {
         header.frame = headerContainer.bounds
         header.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
+        header.clear.isHidden = true
         header.takaffalLabel.text = "Takaffal"
         header.search.isHidden = true
         header.backBtn.isHidden = false

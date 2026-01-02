@@ -195,6 +195,7 @@ class AbdullaViewController2: UIViewController {
             return
         }
 
+        header.clear.isHidden = true
         header.frame = headerContainer.bounds
         header.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         header.takaffalLabel.text = "Takaffal"

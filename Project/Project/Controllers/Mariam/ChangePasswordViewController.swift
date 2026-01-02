@@ -151,6 +151,7 @@ class ChangePasswordViewController: UIViewController {
 
         header.takaffalLabel.text = "Takaffal"
         header.search.isHidden = true
+        header.clear.isHidden = true
         header.backBtn.isHidden = false
         header.backBtn.addTarget(self,
                                  action: #selector(didTapBack),

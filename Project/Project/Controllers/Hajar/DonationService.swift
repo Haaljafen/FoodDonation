@@ -16,6 +16,7 @@ final class DonationService {
         case donationCollected
         case donationExpired
         case userRegistered
+        case userApproved
         case profileUpdated
         case ngoAssignedDonation
         case ngoPickupScheduled
@@ -35,6 +36,8 @@ final class DonationService {
             return ("Donation expired", "A donation has expired and is no longer available", "notif_user")
         case .userRegistered:
             return ("Welcome to Takaffal", "Your account has been created successfully", "notif_user")
+        case .userApproved:
+            return ("User Approved", "Account verification completed", "notif_user")
         case .profileUpdated:
             return ("Profile updated", "Your profile information has been updated", "notif_user")
         case .ngoAssignedDonation:
@@ -145,9 +148,36 @@ final class DonationService {
         let scope = relatedDonationId ?? "none"
         let docId = "\(type.rawValue)_\(scope)_\(target)"
 
-        db.collection("Notifications").document(docId).setData(data, merge: true) { error in
-            if let error = error {
-                print("❌ Failed to write notification:", error.localizedDescription)
+        let ref = db.collection("Notifications").document(docId)
+        ref.getDocument { snap, err in
+            if let err {
+                print("❌ Failed to check notification existence:", err.localizedDescription)
+                return
+            }
+            if snap?.exists == true {
+                return
+            }
+            ref.setData(data, merge: false) { error in
+                if let error = error {
+                    print("❌ Failed to write notification:", error.localizedDescription)
+                }
+            }
+        }
+    }
+
+    private func processExpiryNotifications(_ donations: [Donation]) {
+        let now = Date()
+        let warningThresholdSeconds: TimeInterval = 24 * 60 * 60
+
+        for d in donations {
+            guard let expiry = d.expiryDate else { continue }
+
+            if expiry <= now {
+                notify(type: .donationExpired, relatedDonationId: d.id, toUserId: d.donorId, audience: nil)
+                notify(type: .donationExpired, relatedDonationId: d.id, toUserId: nil, audience: ["admin", "ngo"])
+            } else if expiry.timeIntervalSince(now) <= warningThresholdSeconds {
+                notify(type: .itemExpiryWarning, relatedDonationId: d.id, toUserId: d.donorId, audience: nil)
+                notify(type: .itemExpiryWarning, relatedDonationId: d.id, toUserId: nil, audience: ["admin", "ngo"])
             }
         }
     }
@@ -187,7 +217,7 @@ final class DonationService {
         return db.collection("Donations")
             .whereField("status", isEqualTo: DonationStatus.pending.rawValue)
             .order(by: "createdAt", descending: true)
-            .addSnapshotListener { snapshot, error in
+            .addSnapshotListener { [weak self] snapshot, error in
 
                 if let error = error {
                     onChange(.failure(error))
@@ -224,6 +254,8 @@ final class DonationService {
                         return nil
                     }
                 }
+
+                self?.processExpiryNotifications(donations)
 
                 onChange(.success(donations))
             }

@@ -353,6 +353,7 @@ class ProfileViewController: UIViewController {
             header.bottomAnchor.constraint(equalTo: headerContainer.bottomAnchor)
         ])
 
+        header.clear.isHidden = true
         header.takaffalLabel.text = "Profile"
         header.backBtn.isHidden = true
         header.search.isHidden = true

@@ -201,15 +201,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KMJ-Av-aON">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="170"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="170" id="Ycc-YC-6ex"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="J2D-hm-IGp">
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="J2D-hm-IGp">
                                 <rect key="frame" x="0.0" y="178" width="393" height="574"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xxA-kR-aPV">
                                         <rect key="frame" x="121" y="102" width="257" height="21"/>
@@ -334,12 +328,16 @@
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GM6-cf-DEY">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="170"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="170" id="z4W-gd-c6D"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="LRe-TW-rOu"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="J2D-hm-IGp" firstAttribute="top" secondItem="KMJ-Av-aON" secondAttribute="bottom" id="IEe-ax-fnF"/>
-                        </constraints>
                     </view>
                     <connections>
                         <outlet property="acceptButton" destination="vhe-52-PaC" id="aCi-hZ-CTM"/>
@@ -349,7 +347,7 @@
                         <outlet property="donorContactLabel" destination="a1d-KK-XXv" id="LCU-In-dI1"/>
                         <outlet property="donorImageView" destination="pRi-xh-tgp" id="TkE-GC-Pjp"/>
                         <outlet property="donorNameLabel" destination="Ppr-7j-nQC" id="SZ7-x5-tz5"/>
-                        <outlet property="headerContainer" destination="KMJ-Av-aON" id="qUY-xt-dpb"/>
+                        <outlet property="headerContainer" destination="GM6-cf-DEY" id="ZFX-Mk-EI0"/>
                         <outlet property="itemImageView" destination="nfj-WA-Y83" id="pNF-cq-cnL"/>
                         <outlet property="itemNameLabel" destination="mz6-7b-qPa" id="Pcl-Wf-fgI"/>
                         <outlet property="pickupDateLabel" destination="EWm-J7-uYV" id="ldY-wc-qJ6"/>

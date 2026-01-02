@@ -14,6 +14,8 @@ final class DonationHeaderCell: UITableViewCell {
     func configure(title: String, donationID: String) {
         selectionStyle = .none
         titleLabel.text = title
-        idLabel.text = "#ID: \(donationID)"
+        
+        let shortID = donationID.components(separatedBy: "-").first ?? donationID
+        idLabel.text = "#ID: \(shortID)"
     }
 }

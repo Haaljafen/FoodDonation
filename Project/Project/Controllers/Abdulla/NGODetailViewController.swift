@@ -163,7 +163,8 @@ class NGODetailViewController: UIViewController {
             .first as? HeaderView else {
             return
         }
-
+        
+        header.search.isHidden = true
         header.clear.isHidden = true
         header.frame = headerContainer.bounds
         header.autoresizingMask = [.flexibleWidth, .flexibleHeight]

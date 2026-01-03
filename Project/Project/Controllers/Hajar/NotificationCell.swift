@@ -17,7 +17,7 @@ final class NotificationCell: UITableViewCell {
     }
 
     func configure(title: String, subtitle: String, iconName: String, createdAt: Timestamp?) {
-        iconImageView.image = UIImage(named: iconName)
+        iconImageView.image = UIImage(named: iconName) ?? UIImage(named: "notif_user")
 
         let paragraph = NSMutableParagraphStyle()
         paragraph.lineSpacing = 12          // ✅ controls the gap

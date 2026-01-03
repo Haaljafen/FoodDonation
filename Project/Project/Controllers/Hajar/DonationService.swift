@@ -49,61 +49,61 @@ final class DonationService {
     private func content(for type: NotificationEventType) -> (title: String, subtitle: String, iconName: String) {
         switch type {
         case .donationCreated:
-            return ("Donation Created", "Your donation has been successfully created.", "notif_user")
+            return ("Donation Created", "Donation posted.", "notif_donation")
         case .donationAccepted:
-            return ("Donation Accepted", "An NGO has accepted your donation.", "notif_user")
+            return ("Donation Accepted", "Accepted by an NGO.", "notif_accept")
         case .donationRejected:
-            return ("Donation Not Accepted", "Your donation was not accepted by the NGO.", "notif_user")
+            return ("Donation Not Accepted", "Not accepted.", "notif_reject")
         case .donationPickupScheduled:
-            return ("Pickup Scheduled", "Your donation pickup has been scheduled.", "notif_user")
+            return ("Pickup Scheduled", "Pickup scheduled.", "notif_pickup")
         case .donationPickedUp:
-            return ("Donation Collected", "Your donation has been successfully collected.", "notif_user")
+            return ("Donation Collected", "Picked up.", "notif_pickup")
         case .donationExpired:
-            return ("Donation Expired", "Your donation expired before it could be accepted.", "notif_user")
+            return ("Donation Expired", "Expired.", "notif_warning")
 
         case .newDonationAvailable:
-            return ("New Donation Available", "A new donation has been posted", "notif_user")
+            return ("New Donation Available", "New donation posted.", "notif_donation")
         case .donationAcceptedByYou:
-            return ("Donation Accepted", "You have successfully accepted the donation.", "notif_user")
+            return ("Donation Accepted", "You accepted it.", "notif_accept")
         case .donationRejectedByYou:
-            return ("Donation Rejected", "You rejected the donation.", "notif_user")
+            return ("Donation Rejected", "You rejected it.", "notif_reject")
         case .donationCancelledByDonor:
-            return ("Donation Cancelled", "The donor has cancelled this donation.", "notif_user")
+            return ("Donation Cancelled", "Cancelled by donor.", "notif_warning")
         case .pickupConfirmed:
-            return ("Pickup Confirmed", "The pickup has been confirmed and is ready to proceed.", "notif_user")
+            return ("Pickup Confirmed", "Pickup confirmed.", "notif_pickup")
         case .donationCompleted:
-            return ("Donation Completed", "The donation process has been successfully completed.", "notif_user")
+            return ("Donation Completed", "Completed.", "notif_accept")
 
         case .newDonationCreated:
-            return ("New Donation Created", "A new donation has been added to the system.", "notif_user")
+            return ("New Donation Created", "New donation added.", "notif_admin")
         case .donationAcceptedAdmin:
-            return ("Donation Accepted", "An NGO has accepted a donation.", "notif_user")
+            return ("Donation Accepted", "Accepted by NGO.", "notif_accept")
         case .donationRejectedAdmin:
-            return ("Donation Rejected", "A donation was rejected by an NGO.", "notif_user")
+            return ("Donation Rejected", "Rejected by NGO.", "notif_reject")
         case .donationCancelledAdmin:
-            return ("Donation Cancelled", "A donation has been cancelled by the donor.", "notif_user")
+            return ("Donation Cancelled", "Cancelled by donor.", "notif_warning")
         case .donationCompletedAdmin:
-            return ("Donation Completed", "A donation has been successfully completed.", "notif_user")
+            return ("Donation Completed", "Completed.", "notif_accept")
         case .systemAlert:
-            return ("System Alert", "An important system action requires attention.", "notif_user")
+            return ("System Alert", "Action required.", "notif_warning")
 
         case .donationCollected:
-            return ("Donation Collected", "Your donation has been successfully collected.", "notif_user")
+            return ("Donation Collected", "Picked up.", "notif_pickup")
 
         case .userRegistered:
-            return ("Welcome to Takaffal", "Your account has been created successfully", "notif_user")
+            return ("Welcome to Takaffal", "Account created.", "notif_user")
         case .userApproved:
-            return ("User Approved", "Account verification completed", "notif_user")
+            return ("User Approved", "Verified.", "notif_accept")
         case .profileUpdated:
-            return ("Profile updated", "Your profile information has been updated", "notif_user")
+            return ("Profile updated", "Updated.", "notif_user")
         case .ngoAssignedDonation:
-            return ("Donation assigned", "A donation has been assigned to your NGO", "notif_user")
+            return ("Donation assigned", "Assigned to your NGO.", "notif_donation")
         case .ngoPickupScheduled:
-            return ("Pickup scheduled", "A pickup has been scheduled for a donation", "notif_user")
+            return ("Pickup scheduled", "Pickup scheduled.", "notif_pickup")
         case .pickupReminder:
-            return ("Pickup reminder", "Reminder: you have a scheduled pickup", "notif_user")
+            return ("Pickup reminder", "Scheduled pickup.", "notif_pickup")
         case .itemExpiryWarning:
-            return ("Expiry warning", "An item is close to expiring", "notif_user")
+            return ("Expiry warning", "Expiring soon.", "notif_warning")
         }
     }
 

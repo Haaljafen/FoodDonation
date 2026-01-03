@@ -28,6 +28,8 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
     // Make sure we only add them once
     private var didSetupViews = false
     private var items: [DonationItem] = []
+    private var allItems: [DonationItem] = []
+    private var currentSearchText: String = ""
 
     private var donationListener: ListenerRegistration?
 
@@ -150,7 +152,7 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
                     return !rejectedBy.contains(ngoId)
                 }
 
-                self?.items = visibleDocs.compactMap { doc in
+                let latestItems: [DonationItem] = visibleDocs.compactMap { doc in
                     let d = doc.data()
 
                     return DonationItem(
@@ -171,7 +173,9 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
                 }
 
                 DispatchQueue.main.async {
-                    self?.tableView.reloadData()
+                    guard let self else { return }
+                    self.allItems = latestItems
+                    self.applySearch(text: self.currentSearchText)
                 }
             }
         
@@ -302,9 +306,14 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
         header.takaffalLabel.text = "Takaffal"
         header.backBtn.isHidden = true
         header.clear.isHidden = true
+        header.search.isHidden = false
         header.notiBtn.addTarget(self,
                                  action: #selector(openNotifications),
                                  for: .touchUpInside)
+
+        header.onSearchTextChanged = { [weak self] text in
+            self?.applySearch(text: text)
+        }
 
         headerContainer.addSubview(header)
         headerContainer.backgroundColor = .clear
@@ -312,6 +321,26 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
         self.headerView = header
 
         print("✅ Header added to container, header frame:", header.frame)
+    }
+
+    private func applySearch(text: String) {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        currentSearchText = trimmed
+
+        guard !trimmed.isEmpty else {
+            items = allItems
+            tableView.reloadData()
+            return
+        }
+
+        let q = trimmed.lowercased()
+        items = allItems.filter { item in
+            item.name.lowercased().contains(q) ||
+            item.category.lowercased().contains(q) ||
+            item.location.lowercased().contains(q) ||
+            item.donorName.lowercased().contains(q)
+        }
+        tableView.reloadData()
     }
 
     @objc private func openNotifications() {

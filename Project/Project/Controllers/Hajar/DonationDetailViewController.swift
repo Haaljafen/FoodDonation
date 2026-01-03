@@ -94,6 +94,8 @@ Thank you for your continued efforts in supporting the community.
         setupHeader()
         applyStaticUIStyle()
 
+        navigationItem.hidesBackButton = true
+        
         backNot?.addTarget(self, action: #selector(backNotTapped), for: .touchUpInside)
         acceptButton.addTarget(self, action: #selector(acceptDonationTapped), for: .touchUpInside)
         rejectButton.addTarget(self, action: #selector(rejectDonationTapped), for: .touchUpInside)
@@ -152,7 +154,7 @@ Thank you for your continued efforts in supporting the community.
         itemImageView.contentMode = .scaleAspectFill
 
         // ✅ pill styling
-        categoryLabel.backgroundColor = UIColor.systemBlue
+//        categoryLabel.backgroundColor = UIColor.systemBlue
         categoryLabel.textColor = .white
         categoryLabel.textAlignment = .center
         categoryLabel.numberOfLines = 1

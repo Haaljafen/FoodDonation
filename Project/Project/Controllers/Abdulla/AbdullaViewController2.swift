@@ -24,6 +24,7 @@ class AbdullaViewController2: UIViewController {
     // ✅ Data
     private var allUsers: [User] = []
     private var filteredUsers: [User] = []
+    private var currentSearchText: String = ""
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -114,18 +115,8 @@ class AbdullaViewController2: UIViewController {
                 
                 DispatchQueue.main.async {
                     self?.updateStats()
-                    
-                    // ✅ REAPPLY CURRENT FILTER
-                    let currentSegment = self?.userTypeSegment.selectedSegmentIndex ?? 0
-                    if currentSegment == 0 {
-                        self?.filteredUsers = users.filter { $0.role == .ngo }
-                        print("🔄 Filtered to NGOs: \(self?.filteredUsers.count ?? 0)")
-                    } else {
-                        self?.filteredUsers = users.filter { $0.role == .donor }
-                        print("🔄 Filtered to Donors: \(self?.filteredUsers.count ?? 0)")
-                    }
-                    
-                    self?.tableView.reloadData()
+
+                    self?.applyFiltersAndSearch()
                     print("✅ Table reloaded - Showing \(self?.filteredUsers.count ?? 0) users")
                     print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
                 }
@@ -170,20 +161,7 @@ class AbdullaViewController2: UIViewController {
     }
     
     @objc private func segmentChanged(_ sender: UISegmentedControl) {
-        if sender.selectedSegmentIndex == 0 {
-            print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-            print("🔵 Filter: NGO")
-            filteredUsers = allUsers.filter { $0.role == .ngo }
-            print("   Showing \(filteredUsers.count) NGOs")
-            print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-        } else {
-            print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-            print("🔵 Filter: Donor")
-            filteredUsers = allUsers.filter { $0.role == .donor }
-            print("   Showing \(filteredUsers.count) Donors")
-            print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-        }
-        tableView.reloadData()
+        applyFiltersAndSearch()
     }
 
     // MARK: - Header Setup
@@ -200,11 +178,47 @@ class AbdullaViewController2: UIViewController {
         header.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         header.takaffalLabel.text = "Takaffal"
         header.backBtn.isHidden = true
+        header.search.isHidden = false
         header.notiBtn.addTarget(self, action: #selector(openNotifications), for: .touchUpInside)
+
+        header.onSearchTextChanged = { [weak self] text in
+            self?.applySearch(text: text)
+        }
 
         headerContainer.addSubview(header)
         headerContainer.backgroundColor = .clear
         self.headerView = header
+    }
+
+    private func applySearch(text: String) {
+        currentSearchText = text
+        applyFiltersAndSearch()
+    }
+
+    private func applyFiltersAndSearch() {
+        let segment = userTypeSegment.selectedSegmentIndex
+        let q = currentSearchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+
+        var base: [User]
+        if segment == 0 {
+            base = allUsers.filter { $0.role == .ngo }
+            print("🔄 Filtered to NGOs: \(base.count)")
+        } else {
+            base = allUsers.filter { $0.role == .donor }
+            print("🔄 Filtered to Donors: \(base.count)")
+        }
+
+        if !q.isEmpty {
+            filteredUsers = base.filter { u in
+                (u.organizationName ?? "").lowercased().contains(q) ||
+                (u.username ?? "").lowercased().contains(q) ||
+                u.email.lowercased().contains(q)
+            }
+        } else {
+            filteredUsers = base
+        }
+
+        tableView.reloadData()
     }
 
     @objc private func openNotifications() {

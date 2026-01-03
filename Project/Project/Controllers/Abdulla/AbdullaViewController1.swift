@@ -21,6 +21,7 @@ class AbdullaViewController1: UIViewController {
     // ✅ CHANGED: User objects instead of String
     private var ngos: [User] = []
     private var allNGOs: [User] = []
+    private var currentSearchText: String = ""
     
     private let db = Firestore.firestore()  // ✅ ADD THIS
 
@@ -143,8 +144,8 @@ class AbdullaViewController1: UIViewController {
                 DispatchQueue.main.async {
                     let beforeCount = self.tableView.numberOfRows(inSection: 0)
                     print("   Table rows BEFORE reload:", beforeCount)
-                    
-                    self.tableView.reloadData()
+
+                    self.applySearch(text: self.currentSearchText)
                     
                     let afterCount = self.tableView.numberOfRows(inSection: 0)
                     print("   Table rows AFTER reload:", afterCount)
@@ -200,13 +201,23 @@ class AbdullaViewController1: UIViewController {
     }
     
     private func sortNGOs() {
+        var base = allNGOs
+        let q = currentSearchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        if !q.isEmpty {
+            base = base.filter { u in
+                (u.organizationName ?? "").lowercased().contains(q) ||
+                (u.username ?? "").lowercased().contains(q) ||
+                u.email.lowercased().contains(q)
+            }
+        }
+
         switch selectedFilter {
         case 1:
-            ngos.sort { ($0.organizationName ?? "") < ($1.organizationName ?? "") }
+            ngos = base.sorted { ($0.organizationName ?? "") < ($1.organizationName ?? "") }
         case 2:
-            ngos.sort { ($0.organizationName ?? "") > ($1.organizationName ?? "") }
+            ngos = base.sorted { ($0.organizationName ?? "") > ($1.organizationName ?? "") }
         default:
-            ngos = allNGOs
+            ngos = base
         }
         tableView.reloadData()
     }
@@ -223,10 +234,20 @@ class AbdullaViewController1: UIViewController {
         header.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         header.takaffalLabel.text = "Takaffal"
         header.backBtn.isHidden = true
+        header.search.isHidden = false
         header.notiBtn.addTarget(self, action: #selector(openNotifications), for: .touchUpInside)
+
+        header.onSearchTextChanged = { [weak self] text in
+            self?.applySearch(text: text)
+        }
 
         headerContainer.addSubview(header)
         self.headerView = header
+    }
+
+    private func applySearch(text: String) {
+        currentSearchText = text
+        sortNGOs()
     }
 
     @objc private func openNotifications() {

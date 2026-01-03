@@ -163,7 +163,28 @@
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LxQ-ts-7Jf">
                                 <rect key="frame" x="0.0" y="200" width="393" height="120"/>
-                                <color key="backgroundColor" systemColor="systemBlueColor"/>
+                                <subviews>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="ezB-71-Xkr">
+                                        <rect key="frame" x="8" y="26" width="377" height="32"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <segments>
+                                            <segment title="All"/>
+                                            <segment title="Fruits"/>
+                                            <segment title="Vegetables"/>
+                                            <segment title="Cooked Meals"/>
+                                        </segments>
+                                    </segmentedControl>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" translatesAutoresizingMaskIntoConstraints="NO" id="6vj-Sx-eoD">
+                                        <rect key="frame" x="45" y="65" width="303" height="32"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <segments>
+                                            <segment title="Bakery Items"/>
+                                            <segment title="Canned Meals"/>
+                                            <segment title="Beverages"/>
+                                        </segments>
+                                    </segmentedControl>
+                                </subviews>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="120" id="CXD-cV-LEm"/>
                                 </constraints>
@@ -184,6 +205,8 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="filter1" destination="ezB-71-Xkr" id="S45-WK-vhM"/>
+                        <outlet property="filter2" destination="6vj-Sx-eoD" id="2gY-EI-h7B"/>
                         <outlet property="headerContainer" destination="K34-kG-L2n" id="A15-qc-YcF"/>
                         <outlet property="navContainer" destination="VJw-2U-oVm" id="Fxb-bu-xkp"/>
                         <outlet property="tableView" destination="X8d-sJ-YJd" id="RFp-Hy-IBT"/>

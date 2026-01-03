@@ -252,6 +252,8 @@ class LocationPickupViewController: UIViewController, DonationDraftReceivable {
         let pickupRequest = PickupRequest(
             id: pickupRef.documentID,
             donationId: draft.id,
+            donorId: draft.donorId,
+            ngoId: nil,
             method: DonationMethod.locationPickup.rawValue,
 
             facilityName: nil,

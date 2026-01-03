@@ -17,6 +17,8 @@ func createPickupRequest() {
         // Required
         "donationId": "pbMwtpX7pMXU7orppD1jNLRiL4C2",
         "id": pickupId,
+        "donorId": "sampleDonorId",
+        "ngoId": "sampleNgoId",
         "method": "locationPickup",
 
         // Pickup info

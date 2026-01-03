@@ -19,6 +19,22 @@ class BaseChromeViewController: UIViewController {
 
     var currentRole: UserRole? = nil
 
+    func onHeaderSearchTextChanged(_ text: String) {
+    }
+
+    func onHeaderSearchCancelled() {
+    }
+
+    func onHeaderSearchButtonTapped(_ text: String) {
+    }
+
+    func onHeaderCalendarTapped() {
+        let vc = CalendarViewController()
+        let nav = UINavigationController(rootViewController: vc)
+        nav.modalPresentationStyle = .fullScreen
+        present(nav, animated: true)
+    }
+
     
     override func viewDidLoad() {
             super.viewDidLoad()
@@ -38,10 +54,26 @@ class BaseChromeViewController: UIViewController {
         header.frame = headerContainer.bounds
         header.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         header.takaffalLabel.text = "Takaffal"
-        header.search.isHidden = true
+        header.search.isHidden = false
         header.clear.isHidden = true
         header.backBtn.isHidden = true
         header.notiBtn.addTarget(self, action: #selector(openNotifications), for: .touchUpInside)
+
+        header.onSearchTextChanged = { [weak self] text in
+            self?.onHeaderSearchTextChanged(text)
+        }
+
+        header.onSearchCancelled = { [weak self] in
+            self?.onHeaderSearchCancelled()
+        }
+
+        header.onSearchButtonTapped = { [weak self] text in
+            self?.onHeaderSearchButtonTapped(text)
+        }
+
+        header.onCalendarTapped = { [weak self] in
+            self?.onHeaderCalendarTapped()
+        }
 
         headerContainer.addSubview(header)
         self.headerView = header

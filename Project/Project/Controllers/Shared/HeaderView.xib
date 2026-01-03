@@ -3,7 +3,6 @@
     <device id="retina6_3" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -52,9 +51,17 @@
                             <rect key="frame" x="345" y="90" width="40" height="21"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <color key="textColor" name="size_red"/>
+                            <color key="textColor" red="0.92615550756454468" green="0.10195174619794163" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e3B-Dt-Yhm">
+                            <rect key="frame" x="300" y="83" width="51" height="35"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="plain" image="calendar" catalog="system">
+                                <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </buttonConfiguration>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" red="0.030337337410000002" green="0.030725426300000001" blue="0.1612304688" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                 </view>
@@ -63,6 +70,7 @@
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <connections>
                 <outlet property="backBtn" destination="uZ2-D9-c2f" id="5rx-hh-fHB"/>
+                <outlet property="calendar" destination="e3B-Dt-Yhm" id="KhW-1K-94G"/>
                 <outlet property="clear" destination="05T-wL-IYe" id="OAk-fY-ccw"/>
                 <outlet property="notiBtn" destination="vCh-rk-0R0" id="r6K-jE-eb5"/>
                 <outlet property="search" destination="k9n-yT-sJt" id="f9d-5Z-SRu"/>
@@ -73,10 +81,8 @@
     </objects>
     <resources>
         <image name="bell.fill" catalog="system" width="123" height="128"/>
+        <image name="calendar" catalog="system" width="128" height="107"/>
         <image name="chevron.left" catalog="system" width="97" height="128"/>
-        <namedColor name="size_red">
-            <color red="1" green="0.34901960784313724" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

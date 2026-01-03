@@ -572,6 +572,18 @@
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bNM-s1-btJ">
                                 <rect key="frame" x="0.0" y="208" width="393" height="90"/>
+                                <subviews>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="boG-pX-75A">
+                                        <rect key="frame" x="8" y="30" width="377" height="32"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <segments>
+                                            <segment title="All"/>
+                                            <segment title="Pending"/>
+                                            <segment title="Accepted"/>
+                                            <segment title="Delivered"/>
+                                        </segments>
+                                    </segmentedControl>
+                                </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                         </subviews>
@@ -598,6 +610,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="Dg7-Tv-Rac"/>
                     <connections>
+                        <outlet property="filter" destination="boG-pX-75A" id="gSN-Ds-L4j"/>
                         <outlet property="headerContainer" destination="Z9O-t3-fcV" id="zIJ-wk-qWm"/>
                         <outlet property="navContainer" destination="RFX-EM-kvA" id="D36-IK-Edl"/>
                         <outlet property="table" destination="te1-el-am5" id="yRX-V0-XmR"/>

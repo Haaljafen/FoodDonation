@@ -20,7 +20,8 @@ struct DonationHistoryItem {
 
 final class HistoryViewController: BaseChromeViewController {
 
-
+    @IBOutlet weak var filter: UISegmentedControl!
+    
     // MARK: - Outlets (from storyboard)
     @IBOutlet weak var table: UITableView!
 
@@ -28,7 +29,10 @@ final class HistoryViewController: BaseChromeViewController {
     // MARK: - Firestore
     private let db = Firestore.firestore()
     private var donations: [DonationHistoryItem] = []
+    private var allDonations: [DonationHistoryItem] = []
     private var donationsListener: ListenerRegistration?
+
+    private var currentSearchText: String = ""
 
     
     private var didResolveRole = false
@@ -56,6 +60,7 @@ final class HistoryViewController: BaseChromeViewController {
         
         guard Auth.auth().currentUser != nil || TEST_USER_ID != nil else {
             donations.removeAll()
+            allDonations.removeAll()
             showEmptyPlaceholder(message: "Please log in.")
             table.reloadData()
             return
@@ -67,6 +72,8 @@ final class HistoryViewController: BaseChromeViewController {
         table.rowHeight = UITableView.automaticDimension
         table.estimatedRowHeight = 100
         table.tableFooterView = UIView()
+
+        filter.addTarget(self, action: #selector(filterChanged(_:)), for: .valueChanged)
 
         showEmptyPlaceholder(message: "Loading…")
         
@@ -91,6 +98,7 @@ final class HistoryViewController: BaseChromeViewController {
                         self.didResolveRole = false
                         self.updateTitleForUnknownRole()
                         self.donations = []
+                        self.allDonations = []
                         self.showEmptyPlaceholder(message: "Role missing/invalid. Fix Users/{uid}.role")
                         self.table.reloadData()
                         return
@@ -102,6 +110,67 @@ final class HistoryViewController: BaseChromeViewController {
                     self.loadDonationsForCurrentRole()
             }
         
+    }
+
+    override func onHeaderSearchTextChanged(_ text: String) {
+        currentSearchText = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        applyFilterAndReload()
+    }
+
+    override func onHeaderSearchCancelled() {
+        currentSearchText = ""
+        applyFilterAndReload()
+    }
+
+    override func onHeaderSearchButtonTapped(_ text: String) {
+        currentSearchText = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        applyFilterAndReload()
+    }
+
+    @objc private func filterChanged(_ sender: UISegmentedControl) {
+        applyFilterAndReload()
+    }
+
+    private func applyFilterAndReload() {
+        let selected = filter.selectedSegmentIndex
+
+        let q = currentSearchText.lowercased()
+
+        var searched: [DonationHistoryItem]
+        if q.isEmpty {
+            searched = allDonations
+        } else {
+            searched = allDonations.filter { item in
+                let fullId = item.donationID.lowercased()
+                let shortId = (item.donationID.components(separatedBy: "-").first ?? item.donationID).lowercased()
+                return fullId.contains(q) ||
+                    shortId.contains(q) ||
+                    item.method.lowercased().contains(q) ||
+                    item.status.lowercased().contains(q)
+            }
+        }
+
+        // History storyboard segments: All / Pending / Accepted / Delivered
+        switch selected {
+        case 0:
+            donations = searched
+        case 1:
+            donations = searched.filter { $0.status.lowercased() == DonationStatus.pending.rawValue }
+        case 2:
+            donations = searched.filter { $0.status.lowercased() == DonationStatus.accepted.rawValue }
+        case 3:
+            donations = searched.filter { $0.status.lowercased() == DonationStatus.delivered.rawValue }
+        default:
+            donations = searched
+        }
+
+        if donations.isEmpty {
+            showEmptyPlaceholder(message: "No Donations yet.")
+        } else {
+            hideEmptyPlaceholder()
+        }
+
+        table.reloadData()
     }
 
     
@@ -116,6 +185,7 @@ final class HistoryViewController: BaseChromeViewController {
         // ALWAYS clear UI if no user(in case)
             guard Auth.auth().currentUser != nil || TEST_USER_ID != nil else {
                 donations.removeAll()
+                allDonations.removeAll()
                 showEmptyPlaceholder(message: "Please log in.")
                 table.reloadData()
                 didResolveRole = false
@@ -137,6 +207,10 @@ final class HistoryViewController: BaseChromeViewController {
     }
 
     private func redonateDonation(donationID: String) {
+            guard let role = currentRole, role == .donor else {
+                return
+            }
+
             Firestore.firestore()
                 .collection("Donations")
                 .whereField("id", isEqualTo: donationID)
@@ -272,6 +346,7 @@ final class HistoryViewController: BaseChromeViewController {
             if let error = error {
                 print("❌ Firestore listen error:", error)
                 self.donations = []
+                self.allDonations = []
                 self.showEmptyPlaceholder(message: "Failed to load Donations.")
                 self.table.reloadData()
                 return
@@ -279,7 +354,7 @@ final class HistoryViewController: BaseChromeViewController {
 
             let docs = snapshot?.documents ?? []
 
-            self.donations = docs.compactMap { doc in
+            let latestDonations: [DonationHistoryItem] = docs.compactMap { doc in
                 let data = doc.data()
 
                 guard
@@ -301,13 +376,10 @@ final class HistoryViewController: BaseChromeViewController {
                 )
             }
 
-            if self.donations.isEmpty {
-                self.showEmptyPlaceholder(message: "No Donations yet.")
-            } else {
-                self.hideEmptyPlaceholder()
+            DispatchQueue.main.async {
+                self.allDonations = latestDonations
+                self.applyFilterAndReload()
             }
-
-            self.table.reloadData()
         }
     }
     
@@ -375,12 +447,12 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
 
 
 
-        // ✅ Show redonate button ONLY if completed
-            cell.redonateButton.isHidden = donation.status != "delivered"
+        let canRedonate = (self.currentRole == .donor) && (donation.status.lowercased() == DonationStatus.delivered.rawValue)
+        cell.redonateButton.isHidden = !canRedonate
 
-            // ✅ Handle redonate button tap
-            cell.onRedonateTapped = { [weak self] in
-                guard let self = self else { return }
+        // ✅ Handle redonate button tap
+        cell.onRedonateTapped = canRedonate ? { [weak self] in
+            guard let self = self else { return }
 
                 let alert = UIAlertController(
                     title: "Confirmation",
@@ -389,39 +461,18 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
                 )
 
                 alert.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
-                    Firestore.firestore()
-                        .collection("Donations")
-                        .whereField("id", isEqualTo: donation.donationID)
-                        .getDocuments { snapshot, _ in
-                            guard let donationData = snapshot?.documents.first?.data() else { return }
-
-                            DonationRedonate.redonate(from: donationData) { success in
-                                if success {
-                                    DispatchQueue.main.async {
-                                        let successAlert = UIAlertController(
-                                            title: "Success",
-                                            message: "Re-donated successfully",
-                                            preferredStyle: .alert
-                                        )
-                                        successAlert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
-                                            self.loadDonationsForCurrentRole()
-                                        })
-                                        self.present(successAlert, animated: true)
-                                    }
-                                }
-                            }
-                        }
+                    self.redonateDonation(donationID: donation.donationID)
                 })
 
                 alert.addAction(UIAlertAction(title: "No", style: .cancel))
                 self.present(alert, animated: true)
-            }
+        } : nil
         
         return cell
     }
 
     //  Role-based segue:
-
+// ...
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
 

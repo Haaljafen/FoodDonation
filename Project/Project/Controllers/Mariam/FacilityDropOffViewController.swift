@@ -362,6 +362,8 @@ class FacilityDropOffViewController: UIViewController, DonationDraftReceivable {
         let pickupRequest = PickupRequest(
             id: pickupRef.documentID,
             donationId: draft.id,
+            donorId: draft.donorId,
+            ngoId: ngoId,
             method: DonationMethod.dropoff.rawValue,
 
             facilityName: facilityName,
@@ -795,6 +797,8 @@ extension PickupRequest {
         return [
             "id": id,
             "donationId": donationId,
+            "donorId": donorId as Any,
+            "ngoId": ngoId as Any,
             "method": method,
             "facilityName": facilityName as Any,
             "dropoffDate": dropoffDate as Any,

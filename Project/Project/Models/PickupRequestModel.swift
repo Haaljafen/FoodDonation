@@ -11,6 +11,8 @@ import FirebaseFirestore
 struct PickupRequest: Codable {
     let id: String
     let donationId: String
+    let donorId: String?
+    let ngoId: String?
     let method: String
     
     // Drop-off

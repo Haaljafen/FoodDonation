@@ -19,6 +19,8 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
     @IBOutlet weak var headerContainer: UIView!
     @IBOutlet weak var navContainer: UIView!
 
+    @IBOutlet weak var filter2: UISegmentedControl!
+    @IBOutlet weak var filter1: UISegmentedControl!
     @IBOutlet weak var tableView: UITableView!
     // Keep references if you need them later
     private var headerView: HeaderView?
@@ -30,6 +32,8 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
     private var items: [DonationItem] = []
     private var allItems: [DonationItem] = []
     private var currentSearchText: String = ""
+
+    private var selectedCategoryFilter: String? = nil
 
     private var donationListener: ListenerRegistration?
 
@@ -101,9 +105,31 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
         tableView.allowsSelection = true
 
+        filter1.addTarget(self, action: #selector(filter1Changed(_:)), for: .valueChanged)
+        filter2.addTarget(self, action: #selector(filter2Changed(_:)), for: .valueChanged)
+
         // Keep your current registration (but see note below if it crashes)
 
         listenForPendingDonations()
+    }
+
+    @objc private func filter1Changed(_ sender: UISegmentedControl) {
+        filter2.selectedSegmentIndex = UISegmentedControl.noSegment
+
+        if sender.selectedSegmentIndex == 0 {
+            selectedCategoryFilter = nil
+        } else {
+            selectedCategoryFilter = sender.titleForSegment(at: sender.selectedSegmentIndex)
+        }
+
+        applyFiltersAndReload()
+    }
+
+    @objc private func filter2Changed(_ sender: UISegmentedControl) {
+        filter1.selectedSegmentIndex = 0
+
+        selectedCategoryFilter = sender.titleForSegment(at: sender.selectedSegmentIndex)
+        applyFiltersAndReload()
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -155,6 +181,16 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
                 let latestItems: [DonationItem] = visibleDocs.compactMap { doc in
                     let d = doc.data()
 
+                    let expiryDateString: String = {
+                        if let ts = d["expiryDate"] as? Timestamp {
+                            return self?.dateFormatter.string(from: ts.dateValue()) ?? ""
+                        }
+                        if let s = d["expiryDate"] as? String {
+                            return s
+                        }
+                        return ""
+                    }()
+
                     return DonationItem(
                         id: doc.documentID, // ✅ use Firestore doc id
                         donorId: d["donorId"] as? String ?? "",
@@ -163,7 +199,7 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
                         name: d["item"] as? String ?? "",
                         quantity: "\(d["quantity"] as? Int ?? 1) \(d["unit"] as? String ?? "")",
                         location: d["donorCity"] as? String ?? "Bahrain",
-                        expiryDate: d["expiryDate"] as? String ?? "",
+                        expiryDate: expiryDateString,
                         donorName: d["donorName"] as? String ?? "Donor",
                         imageURL: d["imageUrl"] as? String ?? "",
 
@@ -175,7 +211,7 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
                 DispatchQueue.main.async {
                     guard let self else { return }
                     self.allItems = latestItems
-                    self.applySearch(text: self.currentSearchText)
+                    self.applyFiltersAndReload()
                 }
             }
         
@@ -327,19 +363,29 @@ class HajarViewController: UIViewController, UITableViewDataSource, UITableViewD
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
         currentSearchText = trimmed
 
-        guard !trimmed.isEmpty else {
-            items = allItems
-            tableView.reloadData()
-            return
+        applyFiltersAndReload()
+    }
+
+    private func applyFiltersAndReload() {
+        var base = allItems
+
+        if let category = selectedCategoryFilter?.trimmingCharacters(in: .whitespacesAndNewlines),
+           !category.isEmpty {
+            let c = category.lowercased()
+            base = base.filter { $0.category.lowercased() == c }
         }
 
-        let q = trimmed.lowercased()
-        items = allItems.filter { item in
-            item.name.lowercased().contains(q) ||
-            item.category.lowercased().contains(q) ||
-            item.location.lowercased().contains(q) ||
-            item.donorName.lowercased().contains(q)
+        let q = currentSearchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        if !q.isEmpty {
+            base = base.filter { item in
+                item.name.lowercased().contains(q) ||
+                item.category.lowercased().contains(q) ||
+                item.location.lowercased().contains(q) ||
+                item.donorName.lowercased().contains(q)
+            }
         }
+
+        items = base
         tableView.reloadData()
     }
 

@@ -85,6 +85,12 @@ Extra Features:
    - These QR codes enhance transparency, traceability, and trust between
      donors and NGOs.
 
+1. Calendar (Developer: Hajar Aljafen)
+   - A dedicated iOS-style Month Calendar is accessible from the header calendar icon across the app.
+   - Users can add personal agenda events with the (+)
+   - Scheduled pickup and drop-off requests appear.
+   - Donation expiry dates are automatically added as calendar events labeled “Expires”.
+     
 --------------------------------------------------------------
 Design Changes:
 

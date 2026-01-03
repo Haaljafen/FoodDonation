@@ -24,6 +24,7 @@ class AbdullaViewController2: UIViewController {
     // ✅ Data
     private var allUsers: [User] = []
     private var filteredUsers: [User] = []
+    private var currentSearchText: String = ""
     
     private var donationCounts: [String: Int] = [:]  // [userId: count]
 
@@ -128,18 +129,8 @@ class AbdullaViewController2: UIViewController {
                 
                 DispatchQueue.main.async {
                     self?.updateStats()
-                    
-                    // ✅ REAPPLY CURRENT FILTER
-                    let currentSegment = self?.userTypeSegment.selectedSegmentIndex ?? 0
-                    if currentSegment == 0 {
-                        self?.filteredUsers = users.filter { $0.role == .ngo }
-                        print("🔄 Filtered to NGOs: \(self?.filteredUsers.count ?? 0)")
-                    } else {
-                        self?.filteredUsers = users.filter { $0.role == .donor }
-                        print("🔄 Filtered to Donors: \(self?.filteredUsers.count ?? 0)")
-                    }
-                    
-                    self?.tableView.reloadData()
+
+                    self?.applyFiltersAndSearch()
                     print("✅ Table reloaded - Showing \(self?.filteredUsers.count ?? 0) users")
                     print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
                     
@@ -329,7 +320,7 @@ class AbdullaViewController2: UIViewController {
 
     private func applyFiltersAndSearch() {
         let segment = userTypeSegment.selectedSegmentIndex
-        let q = currentSearchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        let q = currentSearchText.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).lowercased()
 
         var base: [User]
         if segment == 0 {

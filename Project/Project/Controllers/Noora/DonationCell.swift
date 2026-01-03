@@ -26,13 +26,16 @@ final class DonationCell: UITableViewCell {
 
         // Cell base
         backgroundColor = .clear
+        statusLabel.textAlignment = .center
+        statusLabel.textColor = .white
+
 
 
         // Text styling (force visible)
         donationIDLabel.textColor = .label
         methodLabel.textColor = .label
         dateLabel.textColor = .secondaryLabel
-        statusLabel.textColor = .label
+//        statusLabel.textColor = .label
 
         donationIDLabel.font = .systemFont(ofSize: 15, weight: .semibold)
         methodLabel.font = .systemFont(ofSize: 14, weight: .regular)

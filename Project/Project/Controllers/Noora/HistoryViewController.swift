@@ -362,7 +362,18 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
         cell.donationIDLabel.text = "ID: \(shortID)"
         cell.methodLabel.text = "Method: \(donation.method.displayText)"
         cell.dateLabel.text = dateString
-        cell.statusLabel.text = donation.status.displayText
+//        cell.statusLabel.text = donation.status.displayText
+        if let status = DonationStatus(rawValue: donation.status.lowercased()) {
+            cell.statusLabel.text = donation.status.displayText
+            cell.statusLabel.textColor = .white                // ✅ FIX
+            cell.statusLabel.backgroundColor = status.color    // ✅ FIX
+        } else {
+            cell.statusLabel.text = donation.status.displayText
+            cell.statusLabel.textColor = .white
+            cell.statusLabel.backgroundColor = .secondaryLabel
+        }
+
+
 
         // ✅ Show redonate button ONLY if completed
             cell.redonateButton.isHidden = donation.status != "delivered"

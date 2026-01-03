@@ -17,32 +17,30 @@ class UserCell: UITableViewCell {
     
     // MARK: - Styling
     private func styleCell() {
-        // Status badge styling
         statusBadge.layer.cornerRadius = 14
         statusBadge.layer.masksToBounds = true
         statusBadge.textAlignment = .center
         
-        // Cell styling
         backgroundColor = .clear
         contentView.backgroundColor = .clear
     }
     
-    // ✅ NEW METHOD - Use this one!
+    // ✅ UPDATED: Handle nil status intelligently
     func configure(with user: User, donationCount: Int = 0) {
         nameLabel.text = user.organizationName ?? user.username ?? "Unknown"
         donationsLabel.text = "\(donationCount) donations"
         
-        // ✅ PROPER STATUS HANDLING
+        // ✅ Handle status (or lack of it)
         if let status = user.status {
+            // User HAS status field - use it
             configureStatus(status: status)
         } else {
-            statusBadge.text = "Unknown"
-            statusBadge.backgroundColor = .systemGray
-            statusBadge.textColor = .white
+            // User DOESN'T have status field - set default based on role
+            configureDefaultStatus(for: user.role)
         }
     }
     
-    // ✅ HELPER: Handle ALL status types
+    // ✅ HELPER: Handle explicit status values
     private func configureStatus(status: UserStatus) {
         statusBadge.textColor = .white
         
@@ -60,12 +58,34 @@ class UserCell: UITableViewCell {
             statusBadge.backgroundColor = .systemRed
             
         case .rejected:
-            statusBadge.text = "Rejected"  // ✅ NOW HANDLES REJECTED!
+            statusBadge.text = "Rejected"
             statusBadge.backgroundColor = .systemRed
             
         case .active:
             statusBadge.text = "Active"
             statusBadge.backgroundColor = .systemBlue
+        }
+    }
+    
+    // ✅ NEW: Set default status based on role when status field is missing
+    private func configureDefaultStatus(for role: UserRole) {
+        statusBadge.textColor = .white
+        
+        switch role {
+        case .donor:
+            // Donors without status = Active (normal users)
+            statusBadge.text = "Active"
+            statusBadge.backgroundColor = .systemBlue
+            
+        case .ngo:
+            // NGOs without status = Pending (waiting approval)
+            statusBadge.text = "Pending"
+            statusBadge.backgroundColor = .systemOrange
+            
+        case .admin:
+            // Admins without status = Active
+            statusBadge.text = "Active"
+            statusBadge.backgroundColor = .systemGreen
         }
     }
 }

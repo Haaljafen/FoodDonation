@@ -40,14 +40,14 @@
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <prototypes>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="DonationCell" id="im2-ZW-dLI" customClass="DonationCellHajar" customModule="Takaffal" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="50" width="377" height="249.33332824707031"/>
+                                                <rect key="frame" x="0.0" y="50" width="377" height="200.33332824707031"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="im2-ZW-dLI" id="dcq-G9-gGy">
-                                                    <rect key="frame" x="0.0" y="0.0" width="377" height="249.33332824707031"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="377" height="200.33332824707031"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VHv-gZ-xIp">
-                                                            <rect key="frame" x="16" y="10" width="345" height="229.33333333333334"/>
+                                                            <rect key="frame" x="16" y="10" width="345" height="180.33333333333334"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P9Y-hF-bNe">
                                                                     <rect key="frame" x="143" y="111" width="194" height="21"/>
@@ -126,7 +126,7 @@
                                                                 <constraint firstItem="b2K-U6-YoQ" firstAttribute="top" secondItem="U2s-wr-1DY" secondAttribute="bottom" constant="12" id="Gtj-bP-Mph"/>
                                                                 <constraint firstItem="U2s-wr-1DY" firstAttribute="top" secondItem="VHv-gZ-xIp" secondAttribute="top" constant="16" id="S2d-vP-ztg"/>
                                                                 <constraint firstItem="b2K-U6-YoQ" firstAttribute="leading" secondItem="VHv-gZ-xIp" secondAttribute="leading" constant="16" id="bNA-k0-DSj"/>
-                                                                <constraint firstAttribute="height" constant="229" id="iPN-TQ-u3z"/>
+                                                                <constraint firstAttribute="height" constant="180" id="iPN-TQ-u3z"/>
                                                                 <constraint firstItem="U2s-wr-1DY" firstAttribute="leading" secondItem="VHv-gZ-xIp" secondAttribute="leading" constant="16" id="qdB-NT-Tkt"/>
                                                             </constraints>
                                                         </view>

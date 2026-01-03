@@ -157,23 +157,23 @@ class DonationCellHajar: UITableViewCell {
 
     private func setupButtons() {
         acceptButton.setTitle("Accept", for: .normal)
-        acceptButton.backgroundColor = UIColor(
-            red: 0.06,
-            green: 0.14,
-            blue: 0.22,
-            alpha: 1.0
-        )
+//        acceptButton.backgroundColor = UIColor(
+//            red: 0.06,
+//            green: 0.14,
+//            blue: 0.22,
+//            alpha: 1.0
+//        )
         acceptButton.setTitleColor(.white, for: .normal)
         acceptButton.layer.cornerRadius = 10
         acceptButton.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
 
         rejectButton.setTitle("Reject", for: .normal)
-        rejectButton.backgroundColor = UIColor(
-            red: 0.72,
-            green: 0.35,
-            blue: 0.30,
-            alpha: 1.0
-        )
+//        rejectButton.backgroundColor = UIColor(
+//            red: 0.72,
+//            green: 0.35,
+//            blue: 0.30,
+//            alpha: 1.0
+//        )
         rejectButton.setTitleColor(.white, for: .normal)
         rejectButton.layer.cornerRadius = 10
         rejectButton.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)

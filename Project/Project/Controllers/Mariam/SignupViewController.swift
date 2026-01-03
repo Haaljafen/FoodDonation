@@ -120,6 +120,20 @@ class SignupViewController: UIViewController, UIImagePickerControllerDelegate, U
         present(alert, animated: true)
     }
     
+    private func showSuccessAlertAndRedirect() {
+        let alert = UIAlertController(
+            title: "Success",
+            message: "Account created successfully!",
+            preferredStyle: .alert
+        )
+        
+        alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+            self.routeAfterAuth(role: self.selectedRole)
+        })
+        
+        present(alert, animated: true)
+    }
+    
     
     // MARK: - Profile Image
     @IBAction func profileImageTapped(_ sender: UITapGestureRecognizer) {
@@ -306,7 +320,7 @@ class SignupViewController: UIViewController, UIImagePickerControllerDelegate, U
                             audience: nil
                         )
 
-                        self.showSuccessAlert()
+                        self.showSuccessAlertAndRedirect()
                     }
                 } catch {
                     self.showErrorAlert("Failed to save user data.")
